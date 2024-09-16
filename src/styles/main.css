@@ -526,8 +526,7 @@ video {
     --tw-backdrop-invert: ;
     --tw-backdrop-opacity: ;
     --tw-backdrop-saturate: ;
-    --tw-backdrop-sepia: 
-;
+    --tw-backdrop-sepia: ;
 }
 
 .button,
@@ -5606,4 +5605,18 @@ except for when immediately preceeded by a heading */
     top: 0;
     left: 0;
     border-radius: 0 2px 2px 0;
+}
+
+/* Contact */
+.pae-icon svg {
+    display: inline-block;
+    height: 64px;
+    width: 64px;
+}
+
+.pae-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 1.25rem 0;
 }

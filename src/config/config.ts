@@ -48,10 +48,6 @@ const configData: ConfigType = {
             label: 'Contact',
             url: '/contact/',
         },
-        {
-            label: 'Contribute',
-            url: '/contribute/',
-        },
     ],
     menuDropdown: [
         {
@@ -64,7 +60,7 @@ const configData: ConfigType = {
         },
         {
             label: 'Contact',
-            url: '/contact-us/',
+            url: '/contact/',
         },
         {
             label: 'Podcast',

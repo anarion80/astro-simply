@@ -1,0 +1,37 @@
+---
+import PageFeaturedImage from '../components/article/PageFeaturedImage.astro';
+import Layout from '@layouts/Layout.astro';
+import MetaData from '@components/meta/MetaData.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout footer={true} bodyClass="is-article" isPost={false}>
+    <MetaData slot="head" location={Astro.url.pathname} title={frontmatter.title} />
+    <article class="post relative mb-4 pt-8 lg:p-16">
+        <header class="post-header max-w-740 u-paddingTop30 z-3 relative mx-auto px-4">
+            <h1 class="post-title text-32 lg:text-44 text-title md:text-4xl">
+                {frontmatter.title}
+            </h1>
+            {
+                frontmatter.description && (
+                    <p class="post-excerpt mt-6 text-xl text-gray-500">{frontmatter.description}</p>
+                )
+            }
+        </header>
+
+        {
+            frontmatter.image && (
+                <PageFeaturedImage
+                    image={frontmatter.image}
+                    alt={frontmatter.title}
+                    figureClass="block mx-auto max-w-1000 mt-12"
+                />
+            )
+        }
+
+        <div class="post-wrap max-w-1100 relative mx-auto">
+            <div id="post-body" class="post-body max-w-740 relative mx-auto px-4"><slot /></div>
+        </div>
+    </article>
+</Layout>

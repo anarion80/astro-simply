@@ -1,0 +1,170 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { t } from '@utils/use-lang';
+import MetaData from '@components/meta/MetaData.astro';
+
+const errors = { name: '', email: '', message: '' };
+
+if (Astro.request.method === 'POST') {
+    try {
+        const data = await Astro.request.formData();
+        const name = data.get('name');
+        const email = data.get('email');
+        const message = data.get('message');
+
+        if (typeof name !== 'string' || name.length < 1) {
+            errors.name += 'Please enter a name. ';
+        }
+        if (typeof email !== 'string') {
+            errors.email += 'Email is not valid. ';
+        }
+        if (typeof message !== 'string') {
+            errors.message += 'Please enter your message. ';
+        }
+        const hasErrors = Object.values(errors).some((msg) => msg);
+        if (!hasErrors) {
+            // const submitResponse = document.querySelector(`#response`);
+            // const formURL = `https://your.service`;
+            // submit reposonse here
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(error.message);
+        }
+    }
+}
+---
+
+<MetaData slot="head" location={Astro.url.pathname} title="Contact us" />
+<Layout footer={true} isPost={false} bodyClass="archive-contact">
+    <article class="container mx-auto py-12 relative">
+        <header class="mx-auto max-w-740 mb-10 mt-10 text-center">
+            <h1 class="font-normal mb-8 text-xl text-gray-600">Contact us</h1>
+            <p class="text-3xl text-title font-semibold">Use the form below to contact us!</p>
+        </header>
+        <form class="max-w-740 mx-auto mb-16 pt-10" id="contact_form" method="POST">
+            {
+                /* <form method="post" netlify-honeypot="bot-field" data-netlify="true" name="contact">
+            <input type="hidden" name="bot-field" />
+            <input type="hidden" name="form-name" value="contact" /> use this for Netlify*/
+            }
+
+            <div class="row">
+                <div class="col s12 m6 mb-8">
+                    <input name="name" id="name" type="text" placeholder={t(`Name`, `Name`)} required />
+                </div>
+                <div class="col s12 m6 mb-8">
+                    <input
+                        name="email"
+                        id="email"
+                        type="email"
+                        placeholder={t(`Email Address`, `Email Address`)}
+                        required
+                    />
+                    {
+                        /* <input name="_replyto" type="email" id="email" placeholder={t(`Email_Address`,`Email Address`)} required />
+                    <input type="text" name="_gotcha" style="display:none" />  use this for Formspree */
+                    }
+                </div>
+
+                <div class="col s12 mb-8">
+                    <textarea id="message" placeholder={t(`Message`, `Message`)} required></textarea>
+                </div>
+                <div class="col s12 mb-8" id="response"></div>
+                <div class="col s12 text-center mb-10">
+                    <button type="submit" class="button is-primary">{t(`Send`, `Send`)}</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="pae row text-center mb-16">
+            <div class="col s12 m6 l4 mb-8">
+                <div class="pae-icon">
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="64"
+                        height="64"
+                        stroke="currentColor"
+                        stroke-width="1"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line
+                            x1="12"
+                            y1="18"
+                            x2="12"
+                            y2="18"></line></svg
+                    >
+                </div>
+                <h4 class="pae-title">{t(`PHONE`, `PHONE`)}</h4>
+                <div class="pae-des">
+                    <p>123 456 789</p>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l4 mb-8">
+                <div class="pae-icon">
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="64"
+                        height="64"
+                        stroke="currentColor"
+                        stroke-width="1"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"
+                        ></circle></svg
+                    >
+                </div>
+                <h4 class="pae-title">{t(`ADDRESS`, `ADDRESS`)}</h4>
+                <div class="pae-des">
+                    <p>Beverly Hills 90210</p>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l4 mb-8">
+                <div class="pae-icon">
+                    <svg
+                        viewBox="0 0 24 24"
+                        width="64"
+                        height="64"
+                        stroke="currentColor"
+                        stroke-width="1"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                        ></path><polyline points="22,6 12,13 2,6"></polyline></svg
+                    >
+                </div>
+                <h4 class="pae-title">{t(`EMAIL`, `EMAIL`)}</h4>
+                <div class="pae-des">
+                    <p>example@email.com</p>
+                </div>
+            </div>
+        </div>
+        <div
+            class="mx-auto"
+            style={{
+                background: `#ccc`,
+                height: `50px`,
+                width: `2px`,
+                marginBottom: `90px`,
+            }}
+        >
+        </div>
+
+        <div class="archive-contact-maps text-center mb-16">
+            <div class="video-responsive">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26430.3824522563!2d-118.43205504986142!3d34.10031984447635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2bc35fbd217ef%3A0xcf1ef9352700d95c!2sBeverly%20Hills%2C%20Kalifornia%2090210%2C%20Stany%20Zjednoczone!5e0!3m2!1spl!2spl!4v1634830278900!5m2!1spl!2spl"
+                    width="600"
+                    height="450"
+                    style={{ border: `0` }}
+                    allowfullscreen=""
+                    loading="lazy"></iframe>
+            </div>
+        </div>
+    </article>
+</Layout>

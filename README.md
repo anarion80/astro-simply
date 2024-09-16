@@ -69,7 +69,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 
 - [ ] The whole re-used CSS is a mess and would need a proper rewrite.
 - [ ] Astro transistions
-- [ ] Contact Page
+- [x] Contact Page
 - [ ] Search
 - [ ] Comments
 
