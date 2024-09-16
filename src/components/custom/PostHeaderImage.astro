@@ -1,0 +1,36 @@
+---
+import ArticleHeader from '../article/ArticleHeader.astro';
+import ArticleFeaturedImage from '../article/ArticleFeaturedImage.astro';
+import ArticleBody from '../article/ArticleBody.astro';
+import ArticleRelated from '../article/ArticleRelated.astro';
+import Layout from '@layouts/Layout.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import type { Post } from 'src/schemas/post';
+
+export interface Props {
+    post: Post;
+    nextPost?: Post;
+    prevPost?: Post;
+    relatedPosts?: Post[];
+}
+const { post, nextPost, prevPost, relatedPosts } = Astro.props;
+---
+
+<Layout footer={true} bodyClass="is-article is-article-header-image is-head-transparent has-cover" isPost={true}>
+    <MetaData slot="head" location={Astro.url.pathname} type="article" data={post} />
+    <article class="post relative mb-10">
+        {
+            post.data.heroImage && (
+                <ArticleFeaturedImage
+                    article={post}
+                    figureClass="mb-8 -mt-16"
+                    divClass="block w-full object-cover h-88 lg:h-96"
+                    zoomable={false}
+                />
+            )
+        }
+        <ArticleHeader post={post} />
+        <ArticleBody post={post} nextPost={nextPost} prevPost={prevPost} />
+    </article>
+    {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
+</Layout>

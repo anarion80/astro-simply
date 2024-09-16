@@ -1,0 +1,55 @@
+---
+import Author from '../Author.astro';
+import { Image } from 'astro:assets';
+import { relativeUrl } from '../../utils/relativeUrl';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+import { Icon } from 'astro-icon/components';
+export interface Props {
+    post: Post;
+    storyTitle?: string;
+    divClass?: string;
+}
+
+const { post } = Astro.props;
+const image = post.data.heroImage as ImageMetadata;
+---
+
+<article class="story-post mb-16">
+    <header class="story-post-header mb-5">
+        <h2 class="text-title hover:text-primary mb-5 text-4xl leading-tight">
+            <a href={relativeUrl(post.href)} data-astro-prefetch="hover">{post.data.title}</a>
+        </h2>
+        {/* {!-- Author - Primary Tag - Datetime - Read time - ./partials/components/author-meta.hbs --} */}
+        <Author post={post} />
+    </header>
+
+    {
+        post.data.heroImage && (
+            <figure class="story-post-media shadow-3xl has-overlay relative h-56 overflow-hidden rounded-lg">
+                <a href={relativeUrl(post.href)} data-astro-prefetch="hover">
+                    <Image
+                        src={image}
+                        alt={post.data.title}
+                        class="story-img image-inset blur-up lazyload absolute block"
+                        widths={[300, 600, 1000]}
+                        sizes="auto"
+                        width="630"
+                        height="225"
+                    />
+                    <span class="story-post-overlay bg-primary overlay-toggle absolute inset-0 flex items-center justify-center">
+                        <Icon name="fa6-solid:arrow-right" class="icon h-6 w-6 text-white" />
+                    </span>
+                </a>
+            </figure>
+        )
+    }
+
+    <div class="story-post-body">
+        <div class="post-body mb-5 text-xl"><p>{post.data.excerpt}</p></div>
+        <a href={relativeUrl(post.href)} class="link is-hover font-medium" data-astro-prefetch="hover"
+            >{t(`Read more`)}<svg class="icon is-medium"><use xlink:href="#icon-arrow"></use></svg>
+        </a>
+    </div>
+</article>

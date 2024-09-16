@@ -1,0 +1,48 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import { getPosts } from '@utils/post';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import StoryGrid from '@components/story/StoryGrid.astro';
+import StoryFeatured from '@components/story/StoryFeatured.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+---
+
+<Layout
+    isHome={true}
+    footer={true}
+    isPost={false}
+    bodyClass={`is-frontpage has-cover` + (page.currentPage === 1 && ` is-head-transparent`)}
+>
+    <MetaData slot="head" location={Astro.url.pathname} />
+    {/* {!-- Featured Story --} */}
+    {
+        page.data.filter((item) => item.data.featured).length > 0 && (
+            <StoryFeatured post={page.data.filter((item) => item.data.featured)[0]} />
+        )
+    }
+    <div class="site-post feed-entry-content px-4 py-12">
+        <div class="max-w-1100 feed-entry-wrap mx-auto">
+            <div class="row">
+                {
+                    page.data.map((item) => (
+                        <div class="col s12 m6 l4">
+                            <StoryGrid post={item} imageSize={'small'} />
+                        </div>
+                    ))
+                }
+                <Pagination pageContext={page} />
+            </div>
+        </div>
+    </div>
+</Layout>

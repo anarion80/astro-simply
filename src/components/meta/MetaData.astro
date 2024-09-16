@@ -1,0 +1,32 @@
+---
+import WebsiteMeta from './WebsiteMeta.astro';
+import ArticleMeta from './ArticleMeta.astro';
+import AuthorMeta from './AuthorMeta.astro';
+import { URL } from 'node:url';
+import { CONFIG } from '@config/config';
+import type { Post } from 'src/schemas/post';
+import type { Author } from 'src/schemas/author';
+
+export interface Props {
+    data?: Post | Author;
+    canonical?: string;
+    title?: string;
+    description?: string;
+    location: string;
+    type?: string;
+}
+
+const { data, title, description, location, type } = Astro.props;
+const c = new URL(location, CONFIG.siteUrl).toString();
+const t = title || CONFIG.title;
+const d = description || CONFIG.siteDescriptionMeta;
+---
+
+{
+    (type === 'article' && <ArticleMeta data={data as Post} canonical={c} />) ||
+        (type && ['tag', 'category'].includes(type) && <WebsiteMeta canonical={c} type="Series" />) ||
+        (type === 'author' && <AuthorMeta data={data as Author} canonical={c} />) ||
+        (type === 'page' && <WebsiteMeta canonical={c} type="WebSite" />) || (
+            <WebsiteMeta canonical={c} title={t} description={d} type="WebSite" />
+        )
+}

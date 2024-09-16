@@ -1,0 +1,41 @@
+---
+import getReadingTime from 'reading-time';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+import { prettyDate } from '@utils/dateConvert';
+import { CONFIG } from '@config/config';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+    post: Post;
+    dateTimeClass?: string;
+}
+
+const { post, dateTimeClass } = Astro.props;
+// console.log("🚀 ~ post.data.updateDate :", post.data.updateDate )
+
+const readingTime = getReadingTime(post.body);
+// console.log("🚀 ~ readingTime:", readingTime);
+
+// const readingTime = readingTimeHelper(post, {
+//     minute: await t(`1 min read`),
+//     minutes: await t(`% min read`),
+// });
+---
+
+<div class={`hh-date flex items-center ` + (dateTimeClass ? dateTimeClass : `text-gray-500 text-sm`)}>
+    <time
+        class="datetime capitalize"
+        datetime={new Date(post.data.publishDate).toLocaleDateString()}
+        title={post.data.updateDate && `${t(`Updated`)} ${new Date(post.data.updateDate).toLocaleDateString()}`}
+        >{
+            prettyDate({
+                dateString: post.data.publishDate,
+                locale: CONFIG.locale,
+            })
+        }
+    </time>
+    <span class="bull mx-1">·</span>
+    <span class="readingTime cursor-default" title={readingTime.text}>{readingTime.text}</span>
+    {post.data.featured && <Icon name="fa6-solid:star" class="icon is-small p-1" />}
+</div>

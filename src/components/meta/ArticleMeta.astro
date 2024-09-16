@@ -1,0 +1,120 @@
+---
+import { CONFIG } from '@config/config';
+import { getAuthors, getCategory } from '@utils/post';
+import type { Post } from 'src/schemas/post';
+import { URL } from 'node:url';
+import { inferRemoteSize } from 'astro:assets';
+import ImageMeta from './ImageMeta.astro';
+const AvatarImage = '/assets/images/authors/default_avatar.png';
+export interface Props {
+    data: Post;
+    canonical?: string;
+}
+
+const Logo = 'full-logo-dark.png';
+
+const { data, canonical } = Astro.props;
+const post = data;
+const title = `${post.data.title} - ${CONFIG.title}`;
+const authors = await getAuthors(post.slug);
+const category = post?.data.category && (await getCategory(post.data.category.slug));
+
+const shareImage = post?.data.heroImage ?? null;
+const { width: shareImageWidth, height: shareImageHeight } =
+    typeof post.data.heroImage === 'string' ? await inferRemoteSize(post.data.heroImage) : post.data.heroImage;
+
+const publisherLogo = Logo || CONFIG.siteIcon ? new URL(Logo || CONFIG.siteIcon, CONFIG.siteUrl).toString() : null;
+
+const jsonLd = {
+    '@context': 'https://schema.org/',
+    '@type': 'Article',
+    author: authors.map((author) => ({
+        '@type': 'Person',
+        name: author.data.name,
+        image: author.data?.profile_image
+            ? new URL(author.data.profile_image, CONFIG.siteUrl).toString()
+            : new URL(AvatarImage, CONFIG.siteUrl).toString(),
+    })),
+
+    keywords: post.data.tags?.join(', ') || undefined,
+    headline: post.data.title || undefined,
+    url: canonical,
+    datePublished: post.data.publishDate,
+    dateModified: post.data.updateDate || undefined,
+    image: shareImage
+        ? {
+              '@type': 'ImageObject',
+              url: shareImage,
+              width: shareImageWidth || CONFIG.shareImageWidth,
+              height: shareImageHeight || CONFIG.shareImageHeight,
+          }
+        : undefined,
+    publisher: {
+        '@type': 'Organization',
+        name: CONFIG.title,
+        logo: {
+            '@type': 'ImageObject',
+            url: publisherLogo,
+            width: 60,
+            height: 60,
+        },
+    },
+    description: post.data.excerpt || undefined,
+    mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': CONFIG.siteUrl,
+    },
+};
+
+const schema = JSON.stringify(jsonLd, undefined, 4);
+---
+
+<title>{title}</title>
+<meta name="description" content={post.data.excerpt} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:site_name" content={CONFIG.title} />
+<meta property="og:type" content="article" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={post.data.excerpt} />
+<meta property="og:url" content={canonical} />
+<meta property="og:logo" content={publisherLogo} />
+<meta property="article:published_time" content={post.data.publishDate.toDateString()} />
+<meta name="twitter:widgets:theme" content="dark" />
+{post.data.updateDate && <meta property="article:modified_time" content={post.data.updateDate.toDateString()} />}
+{post.data.tags && post.data.tags.map((keyword: string) => <meta property="article:tag" content={keyword} />)}
+{
+    authors.map(
+        (author) =>
+            author.data.social?.facebook && (
+                <meta
+                    property="article:author"
+                    content={`https://www.facebook.com/${author.data.social.facebook.replace(/^\//, ``)}`}
+                />
+            )
+    )
+}
+
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={post.data.excerpt} />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:label1" content="Written by" />
+{authors.map((author) => <meta name="twitter:data1" content={author.data.name} />)}
+
+{category && <meta name="twitter:label2" content="Filed under" />}
+{category && <meta name="twitter:data2" content={category.data.title} />}
+
+{
+    (() => {
+        const account = CONFIG.followSocialMedia.find((item) => item.service === 'twitter');
+        return account ? <meta name="twitter:site" content={`${account.url.replace(/^@/, ``)}/`} /> : null;
+    })()
+}
+{
+    (() => {
+        const account = CONFIG.followSocialMedia.find((item) => item.service === 'twitter');
+        return account ? <meta name="twitter:creator" content={account.url} /> : null;
+    })()
+}
+<ImageMeta image={shareImage} />
+<script is:inline type="application/ld+json" set:html={schema} />

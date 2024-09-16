@@ -1,0 +1,75 @@
+---
+import ImageMeta from './ImageMeta.astro';
+import { CONFIG } from '@config/config';
+import type { Author } from 'src/schemas/author';
+import { resolveUrl } from '@utils/relativeUrl';
+const AvatarImage = '/assets/images/authors/default_avatar.png';
+
+export interface Props {
+    data: Author;
+    canonical?: string;
+}
+
+const Logo = 'full-logo-dark.png';
+const { data, canonical } = Astro.props;
+const author = data;
+const shareImage = author.data.profile_image
+    ? new URL(resolveUrl(author.data.profile_image), CONFIG.siteUrl).toString()
+    : AvatarImage;
+
+const title = `${author.data.name} - ${CONFIG.title}`;
+const description = author.data.bio || CONFIG.siteDescriptionMeta;
+const publisherLogo = Logo || CONFIG.siteIcon ? new URL(Logo || CONFIG.siteIcon, CONFIG.siteUrl).toString() : null;
+
+const jsonLd = {
+    '@context': 'https://schema.org/',
+    '@type': 'Person',
+    name: author.data.name,
+    // sameAs: author.sameAsArray ? author.sameAsArray : undefined,
+    url: canonical,
+    image: shareImage
+        ? {
+              '@type': 'ImageObject',
+              url: shareImage,
+              width: CONFIG.shareImageWidth,
+              height: CONFIG.shareImageHeight,
+          }
+        : undefined,
+    mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': CONFIG.siteUrl,
+    },
+    description,
+};
+const schema = JSON.stringify(jsonLd, undefined, 4);
+// console.log("🚀 ~ jsonLd:", jsonLd)
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta property="og:site_name" content={CONFIG.title} />
+<meta property="og:type" content="profile" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:logo" content={publisherLogo} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:widgets:theme" content="dark" />
+{
+    author.data.social?.twitter && (
+        <>
+            <link rel="me" href={`https://twitter.com/${author.data.social?.twitter.replace(/^@/, ``)}/`} />
+            <meta
+                name="twitter:site"
+                content={`https://twitter.com/${author.data.social?.twitter.replace(/^@/, ``)}/`}
+            />
+        </>
+    )
+}
+{author.data.social?.twitter && <meta name="twitter:creator" content={author.data.social?.twitter} />}
+<script is:inline type="application/ld+json" set:html={schema} />
+
+<ImageMeta image={shareImage} />

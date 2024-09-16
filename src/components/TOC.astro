@@ -1,0 +1,154 @@
+---
+// github.com/rezahedi/rezahedi.dev/blob/main/src/components/TOC.astro
+import TOCHeading from '@components/TOCHeading.astro';
+import generateToc from '@utils/generateTOC';
+import { t } from '@utils/use-lang';
+
+const { headings } = Astro.props;
+
+const toc = generateToc(headings);
+---
+
+{
+    toc && toc.length > 0 && (
+        <aside class="js-sidebar-right hidden py-vmin8 sticky top-16 overflow-auto scroll-transparent lg:max-h-(screen-16) lg:block pt-8 lg:pt-10 order-2 pl-2">
+            <div class="uppercase font-medium text-sm text-gray-600 mb-3">{t('On this page', 'On this page')}</div>
+            <nav class="toc hidden lg:block order-2 sticky toc top-0">
+                <ul class="text-sm js-table-content leading-none text-gray-500">
+                    {toc.map((heading) => (
+                        <TOCHeading heading={heading} className="py-2 px-3 block hover:text-primary" />
+                    ))}
+                </ul>
+                <svg
+                    class="toc-progress h-full absolute inset-0 nojs:hidden pointer-events-none w-full"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        class="toc-marker text-primary duration-300 stroke-current toc-marker transition-all"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-dasharray="1 0 0 1000"
+                        stroke-dashoffset="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    {/* <path class="toc-marker text-primary duration-300 stroke-current toc-marker transition-all" fill="red" stroke-dasharray="1 0 52 548" stroke-dashoffset="1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M 2 32 L 2 52 L 2 59 L 2 84 L 2 91 L 2 116 L 2 123 L 34 123 L 34 168 L 34 175 L 2 175 L 2 200 L 2 207 L 2 252 L 2 259 L 2 284 L 2 291 L 2 336 L 2 343 L 34 343 L 34 388 L 34 395 L 2 395 L 2 420 L 2 427 L 2 452"></path> */}
+                </svg>
+            </nav>
+        </aside>
+    )
+}
+
+<script>
+    window.onload = function () {
+        // Create some WeakMaps to store the distances to the top and
+        // bottom of each link
+        const linkStarts = new WeakMap();
+        const linkEnds = new WeakMap();
+
+        drawPath();
+
+        addResizeObserver();
+
+        function addResizeObserver() {
+            const navToc = document.querySelector('nav.toc');
+            if (navToc) {
+                const observer = new ResizeObserver(() => {
+                    drawPath();
+                    updatePath();
+                });
+                observer.observe(navToc);
+            }
+        }
+
+        function updatePath() {
+            const path: SVGGeometryElement | null = document.querySelector('path.toc-marker');
+            const pathLength = path?.getTotalLength();
+            const activeLinks = document.querySelectorAll('nav.toc a.active');
+            let linkStart: number = pathLength || 0;
+            let linkEnd: number = 0;
+            activeLinks.forEach((link) => {
+                // Set linkStart to the top of the earliest active link
+                linkStart = Math.min(linkStart, linkStarts.get(link));
+                // Set linkEnd to the bottom of the furthest active link
+                linkEnd = Math.max(linkEnd, linkEnds.get(link));
+            });
+            if (path) {
+                // If there are no active links, hide the path
+                path.style.display = activeLinks.length ? 'inline' : 'none';
+                // FINALLY, do the thing!
+                path.setAttribute('stroke-dasharray', `1 ${linkStart} ${linkEnd - linkStart} ${pathLength}`);
+            }
+        }
+
+        function drawPath() {
+            const path: SVGGeometryElement | null = document.querySelector('path.toc-marker');
+            if (!path) return;
+            const links: HTMLElement[] = Array.from(document.querySelectorAll('nav.toc a'));
+            if (!links.length) return;
+
+            const pathData: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+            let left = 0;
+            links.forEach((link, i) => {
+                const x = link.offsetLeft + 2;
+                const y = link.offsetTop;
+                const height = link.offsetHeight;
+                if (i === 0) {
+                    // The top of the first link starts at 0px along the path.
+                    linkStarts.set(link, 0);
+                    pathData.push('M', x, y, 'L', x, y + height);
+                } else {
+                    if (left !== x) pathData.push('L', left, y);
+                    pathData.push('L', x, y);
+
+                    // Apply the current path data to the path element
+                    path.setAttribute('d', pathData.join(' '));
+
+                    // Get the total length of the path now that it extends
+                    // to the top of this link, and store it in our linkStarts
+                    // WeakMap.
+                    linkStarts.set(link, path.getTotalLength());
+                    pathData.push('L', x, y + height);
+                }
+                left = x;
+
+                // Apply the current path data to the path element again
+                path.setAttribute('d', pathData.join(' '));
+
+                // Get the length of the path that now extends to the
+                // bottom of this link, and store it in our linkEnds WeakMap.
+                linkEnds.set(link, path.getTotalLength());
+            });
+            // We no longer need to call `path.setAttribute('d')` at the end
+            // since we are doing it in the loop.
+        }
+
+        // github.com/rezahedi/rezahedi.dev/blob/main/src/layouts/BlogPost.astro
+        // Source: https://kld.dev/toc-animation/#marking-active-links
+        const observer = new IntersectionObserver((sections) => {
+            sections.forEach((section) => {
+                // console.log("🚀 ~ sections.forEach ~ section:", section)
+                const heading = section.target.querySelector('h2, h3, h4, h5');
+                if (!heading) return;
+                const id = heading.getAttribute('id');
+                // console.log("🚀 ~ sections.forEach ~ id:", id)
+
+                // Get the link to this section's heading
+                const link = document.querySelector(`nav.toc li a[href="#${id}"]`);
+                if (!link) return;
+                // console.log("🚀 ~ sections.forEach ~ link:", link)
+
+                // Add/remove the .active class based on whether the
+                // section is visible
+                const addRemove = section.intersectionRatio > 0 ? 'add' : 'remove';
+                link.classList[addRemove]('active');
+            });
+            updatePath();
+        });
+
+        document.querySelectorAll('.post-body section').forEach((section) => {
+            observer.observe(section);
+        });
+    };
+</script>

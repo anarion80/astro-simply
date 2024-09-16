@@ -1,0 +1,97 @@
+---
+import { CONFIG } from '@config/config';
+import Header from '@components/Header.astro';
+import FooterDark from '@components/FooterDark.astro';
+// import Footer from "@components/Footer.astro";
+import { getContrastRatio, adjustColorForContrast } from '@utils/colors';
+import '@styles/main.css';
+//import FooterNotMenu from '@components/FooterNotMenu.astro';
+
+export interface Props {
+    bodyClass?: string;
+    footer?: boolean;
+    isPost?: boolean;
+    isHome?: boolean;
+    title?: string;
+}
+
+const { bodyClass, footer } = Astro.props;
+const site = CONFIG;
+let accentColor = CONFIG.accentColor;
+if (getContrastRatio('#FFFFFF', accentColor) < 4.5) {
+    accentColor = adjustColorForContrast('#FFFFFF', accentColor);
+}
+const hasDropDown = !!CONFIG.menuDropdown;
+---
+
+<!doctype html>
+<html lang={site.lang}>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <slot name="head" />
+    </head>
+    <body class={bodyClass}>
+        <div class="simply-viewport flexColumnTop">
+            <script>
+                /* to turn the Header transparent when hero picture is used (and back to normal when srolled down) */
+                const headerTransparency = () => {
+                    const hasCover = document.body.closest('.has-cover');
+                    const $jsHeader = document.querySelector('.js-header');
+
+                    window.addEventListener('scroll', () => {
+                        const lastScrollY = window.scrollY;
+
+                        if (lastScrollY > 5) {
+                            $jsHeader && $jsHeader.classList.add('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
+                        } else {
+                            $jsHeader && $jsHeader.classList.remove('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
+                        }
+
+                        if (!hasCover) return;
+
+                        lastScrollY >= 20 // eslint-disable-line @typescript-eslint/no-unused-expressions
+                            ? document.body.classList.remove('is-head-transparent')
+                            : document.body.classList.add('is-head-transparent');
+                    });
+                };
+
+                headerTransparency();
+            </script>
+            <Header site={site} hasDropDown={hasDropDown} />
+
+            <main class="simply-main min-h-lg relative"><slot /></main>
+
+            {
+                footer && (
+                    // <Footer site={site} isPost={true}/>
+                    <FooterDark site={site} />
+                    //<FooterNotMenu site={site} isPost={false} />
+                )
+            }
+        </div>
+        <div class="loadingBar fixed left-0 right-0 top-0 hidden"></div>
+    </body>
+</html>
+<style set:text={`:root {--ghost-accent-color: ${accentColor};}`}></style>
+<script>
+    import resizeImageGalleries from '@utils/resizeImageGalleries';
+    import videoResponsive from '@utils/videoResponsive';
+
+    videoResponsive(); // responsive, bigger embedded videos in posts
+    resizeImageGalleries(); // proper sizes of images in galleries in posts
+
+    (function () {
+        document.querySelector(`.js-menu-toggle`)?.addEventListener(`click`, function (e) {
+            e.preventDefault();
+            document.body.classList.toggle(`has-menu`);
+        });
+        document.querySelector(`.nav-mob-wrap`)?.addEventListener(`click`, function () {
+            //e.preventDefault()
+            document.body.classList.toggle(`has-menu`);
+        });
+    })();
+</script>

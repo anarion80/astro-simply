@@ -1,0 +1,38 @@
+---
+import Layout from '@layouts/Layout.astro';
+import StoryCardSmall from '@components/story/StoryCardSmall.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import { t } from '@utils/use-lang';
+import { getPosts } from '@utils/post';
+import type { Post } from 'src/schemas/post';
+
+type Props = Record<string, never>;
+
+const posts: Post[] = await getPosts(6);
+---
+
+<Layout isHome={true} footer={false} isPost={false} bodyClass="is-error-page bg-gray-200">
+    <MetaData location={Astro.url.href} slot="head" />
+    <section class="errorPage lg:py-vw8 py-12 leading-none">
+        <div class="errorPage-wrap container mx-auto text-center text-gray-500">
+            <div class="errorPage-emoji text-title text-8xl font-bold lg:text-9xl">404</div>
+            <div class="errorPage-text mt-10">
+                {t(`Unfortunately, this page doesn't exist`)}
+            </div>
+        </div>
+    </section>
+
+    <div class="container mx-auto">
+        <div class="max-w-1100 mx-auto pb-8">
+            <div class="row">
+                {
+                    posts.map((item) => (
+                        <div class="col s12 m6 l4">
+                            <StoryCardSmall post={item} />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</Layout>

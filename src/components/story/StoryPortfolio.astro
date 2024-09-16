@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import { relativeUrl } from '@utils/relativeUrl';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+export interface Props {
+    post: Post;
+    storyTitle?: string;
+    divClass?: string;
+}
+
+const { post } = Astro.props;
+const image = post.data.heroImage as ImageMetadata;
+---
+
+<article
+    class="portfolio-card h-90 has-overlay relative mb-8 flex items-center justify-center overflow-hidden rounded-sm"
+>
+    <a href={relativeUrl(post.href)} data-astro-prefetch="hover">
+        {
+            post.data.heroImage && (
+                <Image
+                    src={image}
+                    alt={post.data.title}
+                    style={{
+                        position: `absolute`,
+                        height: `100%`,
+                        width: `100%`,
+                        inset: 0,
+                        objectFit: `cover`,
+                    }}
+                    class="image-inset"
+                    widths={[300, 600, 1000]}
+                    sizes={`(max-width: 1000px) 400px, 800px`}
+                    width="300"
+                    height="280"
+                />
+            )
+        }
+
+        <div class="portfolio-card-body z-4 overlay-toggle relative px-4 py-16 text-center text-white">
+            <h2 class="mb-4 text-xl font-medium capitalize">{post.data.title}</h2>
+            <div class="tracking-wide">
+                <span class="button is-small is-primary">{t(`View Project`)}</span>
+            </div>
+        </div>
+
+        <div class="portfolio-card-bg z-2 overlay-toggle absolute inset-0 bg-black bg-opacity-80"></div>
+    </a>
+</article>

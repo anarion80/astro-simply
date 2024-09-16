@@ -1,0 +1,79 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import { getFeaturedPosts, getPosts } from '@utils/post';
+import type { GetStaticPaths, InferGetStaticPropsType, ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Sidebar from '@components/sidebar/Sidebar.astro';
+import { relativeUrl } from '@utils/relativeUrl';
+import { t } from '@utils/use-lang';
+import StoryGridMedium from '@components/story/StoryGridMedium.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+
+const featuredPosts = await getFeaturedPosts();
+const featuredPost = featuredPosts[0];
+const image = featuredPost.data.heroImage as ImageMetadata;
+---
+
+<Layout isHome={true} footer={true} isPost={false} bodyClass="medium-sidebar has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} />
+    {
+        featuredPost && (
+            <div class="simply-hero-cover u-primaryGradient overflow-hidden pt-16">
+                <div class="md:py-vw4 container relative mx-auto flex flex-col items-center justify-between py-12 md:flex-row md:px-5">
+                    <div class="flex-none text-center text-white md:max-w-md md:pr-5 md:text-left lg:max-w-xl">
+                        <h1 class="pt-5 font-serif text-5xl lg:text-6xl">{featuredPost.data.title}</h1>
+                        {featuredPost.data.excerpt && <p class="text-22 mt-6">{featuredPost.data.excerpt}</p>}
+                        <a
+                            class="button is-medium is-primary gh-portal-close mt-12"
+                            href={relativeUrl(featuredPost.href)}
+                        >
+                            {t(`Read more`)}
+                        </a>
+                    </div>
+
+                    {image && (
+                        <figure class="relative mt-10 hidden w-full max-w-lg md:mt-0 md:flex">
+                            <Image
+                                src={image}
+                                alt={featuredPost.data.title}
+                                class="blur-up lazyloaded animated bounceIn max-h-96 w-full object-cover object-center"
+                                widths={[300, 600, 1000, 2000]}
+                                sizes="auto"
+                                width="512"
+                                height="384"
+                                loading="eager"
+                            />
+                        </figure>
+                    )}
+                </div>
+            </div>
+        )
+    }
+
+    <div class="container mx-auto mt-12 lg:px-5">
+        <div class="row">
+            <div class="col s12 l7 feed-entry-content">
+                <div class="feed-entry-wrap">
+                    {page.data.map((item) => <StoryGridMedium post={item} />)}
+
+                    <Pagination pageContext={page} />
+                </div>
+            </div>
+
+            <div class="col s12 l1"></div>
+
+            <Sidebar />
+        </div>
+    </div>
+</Layout>

@@ -1,0 +1,44 @@
+---
+import Navigation from './Navigation.astro';
+import SocialMediaWidget from './SocialMediaWidget.astro';
+import { t } from '@utils/use-lang';
+import type { ConfigType } from '@schemas/config';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+    site: ConfigType;
+    isPost?: boolean;
+}
+
+const { site, isPost } = Astro.props;
+---
+
+<footer class={`footer-light py-10 lg:pt-16 text-center lg:text-left` + (isPost === true ? ` bg-gray-150` : ``)}>
+    <div class="max-w-extreme mx-auto px-4">
+        <div class="flex flex-col justify-between lg:flex-row">
+            {/* {{!-- Copy Right --}} */}
+            <div class="footer-copy order-3 mt-8 flex-none text-sm lg:order-none lg:mt-0 lg:text-left">
+                &copy; {new Date().getFullYear()}
+                {site.title}. {t(`All rights reserved.`, `All rights reserved.`)}<br />
+                <a href="https://github.com/anarion80/astro-simply" title="Astro-Simply">Created</a> with <a
+                    href="https://www.astro.build/"
+                    title="Astro"><Icon name="devicon-plain:astro" class="icon is-stroke" /></a
+                ><a href="https://reactjs.org/" title="ReactJS"
+                    ><Icon name="fa6-brands:react" class="icon is-stroke" /></a
+                >and <a href="https://godofredo.ninja" title="Developer FullStack.">@GodoFredoNinja</a> styling.
+            </div>
+
+            {/* {{!-- Footer Menu --}} */}
+            {
+                site.secondary_navigation && (
+                    <div class="mx-8">
+                        <Navigation site={site} navClass="menu-secondary" isSecondary={true} />
+                    </div>
+                )
+            }
+
+            {/* {{!-- Social Media --}} */}
+            <SocialMediaWidget site={site} divClass="footer-social-media mt-8 flex-none lg:mt-0 is-inline" />
+        </div>
+    </div>
+</footer>

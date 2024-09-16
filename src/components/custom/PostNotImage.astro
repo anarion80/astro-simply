@@ -1,0 +1,25 @@
+---
+import ArticleBody from '../article/ArticleBody.astro';
+import ArticleRelated from '../article/ArticleRelated.astro';
+import Layout from '@layouts/Layout.astro';
+import ArticleHeader from '@components/article/ArticleHeader.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import type { Post } from 'src/schemas/post';
+
+export interface Props {
+    post: Post;
+    nextPost?: Post;
+    prevPost?: Post;
+    relatedPosts?: Post[];
+}
+const { post, nextPost, prevPost, relatedPosts } = Astro.props;
+---
+
+<Layout footer={true} bodyClass="is-article" isPost={true}>
+    <MetaData slot="head" location={Astro.url.pathname} type="article" data={post} />
+    <article class="post relative mb-10 pt-8 lg:pt-10">
+        <ArticleHeader post={post} />
+        <ArticleBody post={post} nextPost={nextPost} prevPost={prevPost} />
+    </article>
+    {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
+</Layout>

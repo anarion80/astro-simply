@@ -1,0 +1,30 @@
+---
+import StoryCardSmall from '../story/StoryCardSmall.astro';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+export interface Props {
+    relatedPosts: Post[];
+}
+
+const { relatedPosts } = Astro.props;
+---
+
+<div class="post-related bg-gray-150 py-10">
+    <div class="container mx-auto">
+        <div class="max-w-1100 mx-auto">
+            <div class="row">
+                <div class="col s12 mb-12 text-center">
+                    <h3 class="text-title text-32">{t(`Related Articles`)}</h3>
+                </div>
+
+                {
+                    relatedPosts.map((item) => (
+                        <div class="col s12 m6 l4 flex">
+                            <StoryCardSmall post={item} />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</div>

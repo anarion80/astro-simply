@@ -1,0 +1,39 @@
+---
+import type { ConfigType } from '@schemas/config';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+    site: ConfigType;
+    divClass?: string;
+}
+
+const { site, divClass } = Astro.props;
+const socialMedia = site.followSocialMedia;
+---
+
+<div class={divClass ? `js-social-media social-media ` + divClass : `js-social-media social-media`}>
+    {
+        socialMedia.map((item) => (
+            <a
+                class="godo-tracking hover:text-twitter inline-block p-2"
+                data-event-category="Header"
+                data-event-action="Social"
+                data-event-label={item.service}
+                data-event-non-interaction="true"
+                title={item.service + `: ` + item.title}
+                aria-label={item.service + `: ` + item.title}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <Icon name={item.icon} class="icon" />
+            </a>
+        ))
+    }
+</div>
+
+<style>
+    .footer-social-media a:first-child:not(:last-child) {
+        padding-left: 0;
+    }
+</style>

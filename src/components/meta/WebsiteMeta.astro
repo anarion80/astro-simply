@@ -1,0 +1,83 @@
+---
+import { URL } from 'node:url';
+import { CONFIG } from '@config/config';
+import ImageMeta from './ImageMeta.astro';
+
+export interface Props {
+    // data?: any;
+    canonical?: string;
+    title?: string;
+    description?: string;
+    type?: string;
+}
+
+const Logo = 'full-logo-dark.png';
+const { canonical, title, description, type } = Astro.props;
+const publisherLogo = new URL(Logo || CONFIG.siteIcon, CONFIG.siteUrl).toString();
+
+const shareImage = new URL(CONFIG.shareImage || CONFIG.siteIcon, CONFIG.siteUrl).toString();
+
+const desc = description || CONFIG.siteDescriptionMeta;
+const t = `${title || CONFIG.title} - ${CONFIG.title}`;
+
+const jsonLd = {
+    '@context': 'https://schema.org/',
+    '@type': type,
+    url: canonical,
+    image: shareImage
+        ? {
+              '@type': 'ImageObject',
+              url: shareImage,
+              width: CONFIG.shareImageWidth,
+              height: CONFIG.shareImageHeight,
+          }
+        : undefined,
+    publisher: {
+        '@type': 'Organization',
+        name: CONFIG.title,
+        logo: {
+            '@type': 'ImageObject',
+            url: publisherLogo,
+            width: 60,
+            height: 60,
+        },
+    },
+    mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': CONFIG.siteUrl,
+    },
+    description,
+};
+
+const schema = JSON.stringify(jsonLd, undefined, 4);
+---
+
+<title>{t}</title>
+<meta name="description" content={desc} />
+<link rel="canonical" href={canonical} />
+<meta property="og:site_name" content={CONFIG.title} />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={t} />
+<meta property="og:description" content={desc} />
+<meta property="og:url" content={canonical} />
+<meta property="og:logo" content={publisherLogo} />
+<meta name="twitter:title" content={t} />
+<meta name="twitter:description" content={desc} />
+<meta name="twitter:url" content={canonical} />
+<meta name="twitter:widgets:theme" content="dark" />
+{
+    (() => {
+        const account = CONFIG.followSocialMedia.find((item) => item.service === 'twitter');
+        return account ? <meta name="twitter:site" content={`${account.url.replace(/^@/, ``)}/`} /> : null;
+    })()
+}
+{
+    (() => {
+        const account = CONFIG.followSocialMedia.find((item) => item.service === 'twitter');
+        return account ? <meta name="twitter:creator" content={account.url} /> : null;
+    })()
+}
+
+<script is:inline type="application/ld+json" set:html={schema} />
+
+<ImageMeta image={shareImage} />

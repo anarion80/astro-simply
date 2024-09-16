@@ -1,0 +1,96 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import { getFeaturedPosts, getPosts } from '@utils/post';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import StoryFeatured from '@components/story/StoryFeatured.astro';
+import StoryGrid from '@components/story/StoryGrid.astro';
+import Pagination from '@components/Pagination.astro';
+import { Icon } from 'astro-icon/components';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+
+const featuredPosts = await getFeaturedPosts();
+---
+
+<Layout isHome={true} footer={true} isPost={false} bodyClass="is-frontpage has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css" />
+
+    {/* {!-- Featured Story --} */}
+    {
+        featuredPosts && (
+            <div class="simply-hero-cover relative overflow-hidden">
+                <div class="simply-slider flex overflow-hidden pt-16">
+                    {featuredPosts.map((item) => (
+                        <StoryFeatured post={item} />
+                    ))}
+                </div>
+
+                <div class="simply-slider-prev absolute bottom-0 right-16 cursor-pointer text-white opacity-30 hover:opacity-100 focus:outline-none lg:bottom-1/2 lg:left-4 lg:right-auto">
+                    <Icon name="fa6-solid:chevron-right" class="-mt-6 h-12 w-12 rotate-180 transform fill-current" />
+                </div>
+
+                <div class="simply-slider-next absolute bottom-0 right-4 cursor-pointer text-white opacity-30 hover:opacity-100 focus:outline-none lg:bottom-1/2">
+                    <Icon name="fa6-solid:chevron-right" class="-mt-6 h-12 w-12 fill-current" />
+                </div>
+            </div>
+        )
+    }
+
+    <div class="site-post feed-entry-content container mx-auto pt-10">
+        <div class="feed-entry-wrap max-w-1100 mx-auto">
+            <div class="row">
+                {
+                    page.data.map((item, i) => {
+                        if (i === 5) {
+                            return (
+                                <div class="col s12 m6 l12 ss1">
+                                    <StoryGrid post={item} imageSize={'large'} />
+                                </div>
+                            );
+                        } else if (i === 3 || i === 4) {
+                            return (
+                                <div class="col s12 m6 ss2">
+                                    <StoryGrid post={item} imageSize={'medium'} />
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <div class="col s12 m6 l4">
+                                    <StoryGrid post={item} imageSize={'small'} />
+                                </div>
+                            );
+                        }
+                    })
+                }
+
+                <Pagination pageContext={page} />
+            </div>
+        </div>
+    </div>
+</Layout>
+<script>
+    import { tns } from '../../../node_modules/tiny-slider/src/tiny-slider.js';
+    tns({
+        container: `.simply-slider`,
+        loop: true,
+        mouseDrag: true,
+        items: 1,
+        nav: false,
+        speed: 400,
+        autoplay: true,
+        autoplayButtonOutput: false,
+        prevButton: `.simply-slider-prev`,
+        nextButton: `.simply-slider-next`,
+        mode: `gallery`,
+    });
+</script>

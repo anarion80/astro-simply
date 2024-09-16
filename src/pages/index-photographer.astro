@@ -1,0 +1,140 @@
+---
+import Layout from '@layouts/Layout.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import { getPosts } from '@utils/post';
+import MediaCover from '@components/MediaCover.astro';
+import Category from '@components/Category.astro';
+import DateTimeComponent from '@components/DateTimeComponent.astro';
+import Author from '@components/Author.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import { Icon } from 'astro-icon/components';
+
+const posts = await getPosts(12);
+const featuredPosts = (await getCollection('blog'))
+    .filter((post) => post.data.featured)
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+    .slice(0, 3)
+    .map<CollectionEntry<'blog'> & { href: string }>((post) => {
+        return {
+            href: `/blog/${post.slug}/`,
+            ...post,
+        };
+    });
+---
+
+<Layout isHome={true} footer={false} isPost={false} bodyClass="is-photographer has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css" />
+
+    {/* {!-- Featured Story --} */}
+    {
+        featuredPosts && (
+            <div class="simply-hero-cover bg-dark relative">
+                <div class="simply-slider flex overflow-hidden">
+                    {featuredPosts.map((item) => (
+                        <article class="bg-dark z-2 relative flex-none overflow-hidden">
+                            <div class="py-vw8 min-h-lg flex h-screen items-center justify-center px-4">
+                                <div class="max-w-1100 mx-auto text-center">
+                                    {/* {!-- Primary Tag- partials/components/primary-tag.hbs --} */}
+                                    {item.data.category && (
+                                        <div class="mb-4">
+                                            <Category category={item.data.category.slug} tagClass=" relative z-3" />
+                                        </div>
+                                    )}
+
+                                    <h2 class="mb-4 text-4xl font-semibold leading-tight md:text-7xl">
+                                        <a href={item.href} class="z-3 relative text-white">
+                                            {item.data.title}
+                                        </a>
+                                    </h2>
+
+                                    {/* {!-- Date Time and reading Time - ./partials/components/datetime.hbs --} */}
+                                    <DateTimeComponent
+                                        dateTimeClass="relative z-3 text-white opacity-80 justify-center"
+                                        post={item}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* {!-- Featured Media - partials/components/media-cover.hbs --} */}
+                            <a href={item.href}>
+                                <MediaCover
+                                    background={item.data.heroImage as ImageMetadata}
+                                    hasGradient={true}
+                                    altTitle={item.data.title}
+                                />
+                            </a>
+                        </article>
+                    ))}
+                </div>
+
+                <div class="simply-slider-prev absolute bottom-0 right-16 cursor-pointer text-white opacity-30 hover:opacity-100 focus:outline-none lg:bottom-1/2 lg:left-4 lg:right-auto">
+                    <Icon name="fa6-solid:chevron-right" class="-mt-6 h-12 w-12 rotate-180 transform fill-current" />
+                </div>
+
+                <div class="simply-slider-next absolute bottom-0 right-4 cursor-pointer text-white opacity-30 hover:opacity-100 focus:outline-none lg:bottom-1/2">
+                    <Icon name="fa6-solid:chevron-right" class="-mt-6 h-12 w-12 fill-current" />
+                </div>
+            </div>
+        )
+    }
+
+    <div class="feed-entry-content">
+        <div class="feed-entry-wrap">
+            <div class="row is-gapless">
+                {
+                    posts.map((item) => (
+                        <article class="col s12 m6 l4 story-cover min-h-lg relative">
+                            {/* {!-- Featured Media - partials/components/media-cover.hbs --} */}
+                            <figure class="story-cover-thumbnail overflow-hidden pt-96">
+                                <a href={item.href}>
+                                    <MediaCover
+                                        background={item.data.heroImage as ImageMetadata}
+                                        hasGradient={true}
+                                        altTitle={item.data.title}
+                                    />
+                                </a>
+                            </figure>
+
+                            <header class="absolute bottom-0 left-0 right-0 px-4 py-10 text-white">
+                                {/* {!-- Primary Tag- partials/components/primary-tag.hbs --} */}
+                                {item.data.category && (
+                                    <div class="mb-4">
+                                        <Category category={item.data.category.slug} tagClass="relative z-3" />
+                                    </div>
+                                )}
+
+                                <h2 class="mb-4 text-4xl leading-tight">
+                                    <a class="z-3 relative" href={item.href}>
+                                        {item.data.title}
+                                    </a>
+                                </h2>
+
+                                {/* {!-- Author - Primary Tag - Datetime - Read time - ./partials/components/author-meta.hbs --} */}
+                                <Author post={item} />
+                            </header>
+                        </article>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { tns } from '../../node_modules/tiny-slider/src/tiny-slider.js';
+    tns({
+        container: `.simply-slider`,
+        loop: true,
+        mouseDrag: true,
+        items: 1,
+        nav: false,
+        speed: 400,
+        autoplay: true,
+        autoplayButtonOutput: false,
+        prevButton: `.simply-slider-prev`,
+        nextButton: `.simply-slider-next`,
+        mode: `gallery`,
+    });
+</script>

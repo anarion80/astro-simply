@@ -1,0 +1,32 @@
+# build output
+dist/
+.output/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.development
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# ignore .astro directory
+.astro/*
+!.astro/types.d.ts
+
+# ignore Jampack cache files
+.jampack/
+
+.cursorrules

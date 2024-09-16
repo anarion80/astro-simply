@@ -1,0 +1,126 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import { getPosts } from '@utils/post';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import StoryGrid from '@components/story/StoryGrid.astro';
+import HomeFirstPost from '@components/home/HomeFirstPost.astro';
+import HomeSmallPost from '@components/home/HomeSmallPost.astro';
+import HomeMediumPost from '@components/home/HomeMediumPost.astro';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+---
+
+<Layout isHome={true} footer={true} isPost={false} bodyClass="is-home is-frontpage">
+    <MetaData slot="head" location={Astro.url.pathname} />
+    {
+        page.currentPage > 0 ? (
+            <div class="site-post feed-entry-content container mx-auto pt-12">
+                <div class="feed-entry-wrap max-w-1100 mx-auto">
+                    <div class="row">
+                        {page.data.map((item, i) => {
+                            if (i === 6 || i === 7) {
+                                return (
+                                    <div class="col s12 m6 ss2">
+                                        <StoryGrid post={item} imageSize={'small'} />
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <div class="col s12 m6 l4">
+                                        <StoryGrid post={item} imageSize={'medium'} />
+                                    </div>
+                                );
+                            }
+                        })}
+                        <Pagination pageContext={page} />
+                    </div>
+                </div>
+            </div>
+        ) : (
+            <>
+                <section class="homeHero pt-10">
+                    <div class="homeHero-container lg: container mx-auto flex flex-col items-stretch md:flex-row md:flex-wrap lg:flex-nowrap">
+                        {/*{posts.map((item, i) => {
+                        if (i === 0) {
+                            return <HomeFirstPost post={item.node} />
+                        } else if (i > 0 && i < 4) {
+                            return <div className="homeHero-smallCardWrap flex flex-col md:w-3/6 lg:w-full">
+                                <HomeSmallPost post={item.node} last={i === 3 ? true : false } />
+                            </div>
+                        } else if (i === 4) {
+                            return <HomeMediumPost post={item.node} />
+                        } else {
+                            return null
+                        }
+                    })} */}
+
+                        {/* {}!--} First Large Post - partials/home/home-first-post.hbs --} */}
+                        <HomeFirstPost post={page.data[0]} />
+
+                        {/* {}!--} Post small - partials/home/home-small-post.hbs --} */}
+                        <div class="homeHero-smallCardWrap flex flex-col md:w-3/6 lg:w-full">
+                            {page.data.map((item, i) => {
+                                if (i > 0 && i < 4) {
+                                    return <HomeSmallPost post={item} last={i === 3 ? true : false} />;
+                                } else {
+                                    return null;
+                                }
+                            })}
+                        </div>
+
+                        {/* {}!--} Post medium - partials/home/home-medium-post.hbs --} */}
+                        {page.data.map((item, i) => {
+                            if (i === 4) {
+                                return <HomeMediumPost post={item} />;
+                            } else {
+                                return null;
+                            }
+                        })}
+                    </div>
+                </section>
+                <div class="site-post feed-entry-content container mx-auto pt-12">
+                    <div class="feed-entry-wrap max-w-1100 mx-auto">
+                        <div class="row">
+                            {page.data.map((item, i) => {
+                                if (i > 4 && i < 14) {
+                                    if (i === 11 || i === 12) {
+                                        return (
+                                            <div class="col s12 m6 ss2">
+                                                <StoryGrid post={item} imageSize={'large'} />
+                                            </div>
+                                        );
+                                    } else if (i === 13) {
+                                        return (
+                                            <div class="col s12 m6 l12 ss1">
+                                                <StoryGrid post={item} imageSize={'medium'} />
+                                            </div>
+                                        );
+                                    } else {
+                                        return (
+                                            <div class="col s12 m6 l4">
+                                                <StoryGrid post={item} imageSize={'small'} />
+                                            </div>
+                                        );
+                                    }
+                                } else {
+                                    return null;
+                                }
+                            })}
+                            <Pagination pageContext={page} />
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
+</Layout>

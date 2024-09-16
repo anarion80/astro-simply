@@ -1,0 +1,24 @@
+---
+import SidebarPostCard from './SidebarPostCard.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { t } from '@utils/use-lang';
+
+type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no-unused-vars
+
+const featuredPosts = (await getCollection('blog'))
+    .filter((post) => post.data.featured)
+    .sort((a, b) => a.data.publishDate.valueOf() - b.data.publishDate.valueOf())
+    .map<CollectionEntry<'blog'> & { href: string }>((post) => {
+        return {
+            href: `/blog/${post.slug}/`,
+            ...post,
+        };
+    });
+---
+
+<aside class="sidebar col s12 l4 mt-12 flex flex-col justify-start lg:mt-0">
+    <div class="flex flex-1 flex-col">
+        <SidebarPostCard widgetTitle={t(`Featured Articles`)} widgetPosts={featuredPosts} />
+    </div>
+</aside>

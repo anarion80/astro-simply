@@ -1,0 +1,67 @@
+---
+import ArticleBody from '../article/ArticleBody.astro';
+import ArticleRelated from '../article/ArticleRelated.astro';
+import Layout from '@layouts/Layout.astro';
+import Author from '@components/Author.astro';
+import Category from '@components/Category.astro';
+import { Image } from 'astro:assets';
+import MetaData from '@components/meta/MetaData.astro';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    post: Post;
+    nextPost?: Post;
+    prevPost?: Post;
+    relatedPosts?: Post[];
+}
+const { post, nextPost, prevPost, relatedPosts } = Astro.props;
+const image = post.data.heroImage as ImageMetadata;
+---
+
+<Layout footer={true} bodyClass="is-article is-article-image-right" isPost={true}>
+    <MetaData slot="head" location={Astro.url.pathname} type="article" data={post} />
+    <article class="post relative mb-10">
+        <div class="flex flex-col-reverse md:flex-row lg:mx-12">
+            <div class="flex flex-col justify-center md:w-3/6">
+                <header class="post-header max-w-740 px-4 pt-8 md:pb-8 lg:mr-16">
+                    {
+                        post.data.category && (
+                            <div class="mb-3 text-sm font-medium tracking-wider text-gray-500">
+                                <Category category={post.data.category.slug} tagClass="uppercase hover:underline" />
+                            </div>
+                        )
+                    }
+
+                    <h1 class="post-title text-32 text-title leading-tight md:text-4xl lg:text-5xl">
+                        {post.data.title}
+                    </h1>
+                    {post.data.excerpt && <p class="post-excerpt mt-6 text-xl text-gray-500">{post.data.excerpt}</p>}
+
+                    {/* {!-- [Author, DateTime, Reading Time] - ./partials/components/author-meta.hbs --} */}
+                    <div class="mt-8 flex"><Author post={post} /></div>
+                </header>
+            </div>
+
+            {
+                post.data.heroImage && (
+                    <figure class="post-image md:w-3/6">
+                        <Image
+                            src={image}
+                            class="h-88 lg:h-98 block w-full object-cover"
+                            alt={post.data.title}
+                            widths={[300, 600, 1000, 2000]}
+                            sizes="(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw"
+                            width="750"
+                            height="520"
+                        />
+                    </figure>
+                )
+            }
+        </div>
+
+        {/* {!-- Article Body - partials/article/article-body.hbs --} */}
+        <ArticleBody post={post} nextPost={nextPost} prevPost={prevPost} />
+    </article>
+    {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
+</Layout>

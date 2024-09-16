@@ -1,0 +1,708 @@
+---
+export interface Props {
+    videoFile: string;
+    cardWidth?: 'regular' | 'wide' | 'full';
+    caption?: string;
+    loop?: boolean;
+    thumbnailSrc?: string;
+}
+
+const { videoFile, cardWidth = 'regular', caption, loop = false, thumbnailSrc } = Astro.props;
+
+const cardClasses = ['kg-card kg-video-card', cardWidth && `kg-width-${cardWidth}`, caption && 'kg-card-hascaption']
+    .filter(Boolean)
+    .join(' ');
+const hideControlsClass = loop ? ' kg-video-hide' : '';
+
+const posterSpacerSrc = `https://img.spacergif.org/v1/960x540/0a/spacer.png`;
+---
+
+<figure class={cardClasses}>
+    <div class="kg-video-container">
+        <video
+            src={videoFile}
+            poster={posterSpacerSrc}
+            width="{{payload.width}}"
+            height="{{payload.height}}"
+            {...loop ? { loop: true, autoplay: true, muted: true } : {}}
+            playsinline
+            preload="metadata"
+            style={`background: transparent url('${thumbnailSrc}') 50% 50% / cover no-repeat;`}></video>
+
+        <div class="kg-video-overlay">
+            <button class="kg-video-large-play-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M23.14 10.608 2.253.164A1.559 1.559 0 0 0 0 1.557v20.887a1.558 1.558 0 0 0 2.253 1.392L23.14 13.393a1.557 1.557 0 0 0 0-2.785Z"
+                    ></path>
+                </svg>
+            </button>
+        </div>
+        <div class={`kg-video-player-container${hideControlsClass}`}>
+            <div class="kg-video-player">
+                <button class="kg-video-play-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M23.14 10.608 2.253.164A1.559 1.559 0 0 0 0 1.557v20.887a1.558 1.558 0 0 0 2.253 1.392L23.14 13.393a1.557 1.557 0 0 0 0-2.785Z"
+                        ></path>
+                    </svg>
+                </button>
+                <button class="kg-video-pause-icon kg-video-hide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <rect x="3" y="1" width="7" height="22" rx="1.5" ry="1.5"></rect>
+                        <rect x="14" y="1" width="7" height="22" rx="1.5" ry="1.5"></rect>
+                    </svg>
+                </button>
+                <span class="kg-video-current-time">0:00</span>
+                <div class="kg-video-time">
+                    /<span class="kg-video-duration">0:00</span>
+                </div>
+                <input type="range" class="kg-video-seek-slider" max="100" value="0" />
+                <button class="kg-video-playback-rate">1&#215;</button>
+                <button class="kg-video-unmute-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M15.189 2.021a9.728 9.728 0 0 0-7.924 4.85.249.249 0 0 1-.221.133H5.25a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1.794a.249.249 0 0 1 .221.133 9.73 9.73 0 0 0 7.924 4.85h.06a1 1 0 0 0 1-1V3.02a1 1 0 0 0-1.06-.998Z"
+                        ></path>
+                    </svg>
+                </button>
+                <button class="kg-video-mute-icon kg-video-hide">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path
+                            d="M16.177 4.3a.248.248 0 0 0 .073-.176v-1.1a1 1 0 0 0-1.061-1 9.728 9.728 0 0 0-7.924 4.85.249.249 0 0 1-.221.133H5.25a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h.114a.251.251 0 0 0 .177-.073ZM23.707 1.706A1 1 0 0 0 22.293.292l-22 22a1 1 0 0 0 0 1.414l.009.009a1 1 0 0 0 1.405-.009l6.63-6.631A.251.251 0 0 1 8.515 17a.245.245 0 0 1 .177.075 10.081 10.081 0 0 0 6.5 2.92 1 1 0 0 0 1.061-1V9.266a.247.247 0 0 1 .073-.176Z"
+                        ></path>
+                    </svg>
+                </button>
+                <input type="range" class="kg-video-volume-slider" max="100" value="100" />
+            </div>
+        </div>
+    </div>
+    {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+    (() => {
+        interface PlaybackRate {
+            rate: number;
+            label: string;
+        }
+
+        const handleVideoPlayer = (videoElementContainer: HTMLElement) => {
+            const videoPlayer = videoElementContainer.querySelector('.kg-video-player') as HTMLElement;
+            const videoPlayerContainer = videoElementContainer.querySelector(
+                '.kg-video-player-container'
+            ) as HTMLElement;
+            const playIconContainer = videoElementContainer.querySelector('.kg-video-play-icon') as HTMLElement;
+            const pauseIconContainer = videoElementContainer.querySelector('.kg-video-pause-icon') as HTMLElement;
+            const seekSlider = videoElementContainer.querySelector('.kg-video-seek-slider') as HTMLInputElement;
+            const playbackRateContainer = videoElementContainer.querySelector('.kg-video-playback-rate') as HTMLElement;
+            const muteIconContainer = videoElementContainer.querySelector('.kg-video-mute-icon') as HTMLElement;
+            const unmuteIconContainer = videoElementContainer.querySelector('.kg-video-unmute-icon') as HTMLElement;
+            const volumeSlider = videoElementContainer.querySelector('.kg-video-volume-slider') as HTMLInputElement;
+            const videoEl = videoElementContainer.querySelector('video') as HTMLVideoElement;
+            const durationContainer = videoElementContainer.querySelector('.kg-video-duration') as HTMLElement;
+            const currentTimeContainer = videoElementContainer.querySelector('.kg-video-current-time') as HTMLElement;
+            const largePlayIcon = videoElementContainer.querySelector('.kg-video-large-play-icon') as HTMLElement;
+            const videoOverlay = videoElementContainer.querySelector('.kg-video-overlay') as HTMLElement;
+
+            const playbackRates: PlaybackRate[] = [
+                { rate: 0.75, label: '0.7×' },
+                { rate: 1.0, label: '1×' },
+                { rate: 1.25, label: '1.2×' },
+                { rate: 1.75, label: '1.7×' },
+                { rate: 2.0, label: '2×' },
+            ];
+
+            let raf: number | null = null;
+            let currentPlaybackRateIdx = 1;
+
+            if (videoEl.loop) {
+                largePlayIcon.classList.add('kg-video-hide-animated');
+                videoOverlay.classList.add('kg-video-hide-animated');
+            }
+
+            const whilePlaying = () => {
+                seekSlider.value = Math.floor(videoEl.currentTime).toString();
+                currentTimeContainer.textContent = calculateTime(parseInt(seekSlider.value));
+                videoPlayer.style.setProperty(
+                    '--seek-before-width',
+                    `${(parseInt(seekSlider.value) / parseInt(seekSlider.max)) * 100}%`
+                );
+                raf = requestAnimationFrame(whilePlaying);
+            };
+
+            const showRangeProgress = (rangeInput: HTMLInputElement) => {
+                if (rangeInput === seekSlider) {
+                    videoPlayer.style.setProperty(
+                        '--seek-before-width',
+                        `${(parseInt(rangeInput.value) / parseInt(rangeInput.max)) * 100}%`
+                    );
+                } else {
+                    videoPlayer.style.setProperty(
+                        '--volume-before-width',
+                        `${(parseInt(rangeInput.value) / parseInt(rangeInput.max)) * 100}%`
+                    );
+                }
+            };
+
+            const calculateTime = (secs: number): string => {
+                const minutes = Math.floor(secs / 60);
+                const seconds = Math.floor(secs % 60);
+                const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+                return `${minutes}:${returnedSeconds}`;
+            };
+
+            const displayDuration = () => {
+                durationContainer.textContent = calculateTime(videoEl.duration);
+            };
+
+            const setSliderMax = () => {
+                seekSlider.max = Math.floor(videoEl.duration).toString();
+            };
+
+            const displayBufferedAmount = () => {
+                if (videoEl.buffered.length > 0) {
+                    const bufferedAmount = Math.floor(videoEl.buffered.end(videoEl.buffered.length - 1));
+                    videoPlayer.style.setProperty(
+                        '--buffered-width',
+                        `${(bufferedAmount / parseInt(seekSlider.max)) * 100}%`
+                    );
+                }
+            };
+
+            const initializeVideo = () => {
+                displayDuration();
+                setSliderMax();
+                displayBufferedAmount();
+                if (videoEl.autoplay) {
+                    raf = requestAnimationFrame(whilePlaying);
+                    playIconContainer.classList.add('kg-video-hide');
+                    pauseIconContainer.classList.remove('kg-video-hide');
+                }
+                if (videoEl.muted) {
+                    unmuteIconContainer.classList.add('kg-video-hide');
+                    muteIconContainer.classList.remove('kg-video-hide');
+                }
+            };
+
+            if (videoEl.readyState > 0) {
+                initializeVideo();
+            } else {
+                videoEl.addEventListener('loadedmetadata', initializeVideo);
+            }
+
+            videoElementContainer.onmouseover = () => {
+                if (!videoEl.loop) {
+                    videoPlayerContainer.classList.remove('kg-video-hide-animated');
+                }
+            };
+
+            videoElementContainer.onmouseleave = () => {
+                const isPlaying = !!(
+                    videoEl.currentTime > 0 &&
+                    !videoEl.paused &&
+                    !videoEl.ended &&
+                    videoEl.readyState > 2
+                );
+                if (isPlaying) {
+                    videoPlayerContainer.classList.add('kg-video-hide-animated');
+                }
+            };
+
+            const handleOnPlay = () => {
+                largePlayIcon.classList.add('kg-video-hide-animated');
+                videoOverlay.classList.add('kg-video-hide-animated');
+                playIconContainer.classList.add('kg-video-hide');
+                pauseIconContainer.classList.remove('kg-video-hide');
+                videoEl.play();
+                raf = requestAnimationFrame(whilePlaying);
+            };
+
+            const handleOnPause = () => {
+                pauseIconContainer.classList.add('kg-video-hide');
+                playIconContainer.classList.remove('kg-video-hide');
+                videoEl.pause();
+                if (raf !== null) {
+                    cancelAnimationFrame(raf);
+                }
+            };
+
+            videoElementContainer.addEventListener('click', () => {
+                if (!videoEl.loop) {
+                    const isPlaying = !!(
+                        videoEl.currentTime > 0 &&
+                        !videoEl.paused &&
+                        !videoEl.ended &&
+                        videoEl.readyState > 2
+                    );
+                    if (isPlaying) {
+                        handleOnPause();
+                    } else {
+                        handleOnPlay();
+                    }
+                }
+            });
+
+            videoEl.onplay = () => {
+                largePlayIcon.classList.add('kg-video-hide-animated');
+                videoOverlay.classList.add('kg-video-hide-animated');
+                playIconContainer.classList.add('kg-video-hide');
+                pauseIconContainer.classList.remove('kg-video-hide');
+            };
+
+            const addClickEventListener = (element: HTMLElement, handler: (event: Event) => void) => {
+                element.addEventListener('click', (event: Event) => {
+                    event.stopPropagation();
+                    handler(event);
+                });
+            };
+
+            addClickEventListener(largePlayIcon, handleOnPlay);
+            addClickEventListener(playIconContainer, handleOnPlay);
+            addClickEventListener(pauseIconContainer, handleOnPause);
+
+            addClickEventListener(muteIconContainer, () => {
+                muteIconContainer.classList.add('kg-video-hide');
+                unmuteIconContainer.classList.remove('kg-video-hide');
+                videoEl.muted = false;
+            });
+
+            addClickEventListener(unmuteIconContainer, () => {
+                unmuteIconContainer.classList.add('kg-video-hide');
+                muteIconContainer.classList.remove('kg-video-hide');
+                videoEl.muted = true;
+            });
+
+            addClickEventListener(playbackRateContainer, () => {
+                const nextPlaybackRate = playbackRates[(currentPlaybackRateIdx + 1) % playbackRates.length];
+                currentPlaybackRateIdx = (currentPlaybackRateIdx + 1) % playbackRates.length;
+                videoEl.playbackRate = nextPlaybackRate.rate;
+                playbackRateContainer.textContent = nextPlaybackRate.label;
+            });
+
+            videoEl.addEventListener('progress', displayBufferedAmount);
+
+            seekSlider.addEventListener('input', (e: Event) => {
+                e.stopPropagation();
+                const target = e.target as HTMLInputElement;
+                showRangeProgress(target);
+                currentTimeContainer.textContent = calculateTime(parseInt(seekSlider.value));
+                if (!videoEl.paused && raf !== null) {
+                    cancelAnimationFrame(raf);
+                }
+            });
+
+            seekSlider.addEventListener('change', (event: Event) => {
+                event.stopPropagation();
+                videoEl.currentTime = parseInt(seekSlider.value);
+                if (!videoEl.paused) {
+                    requestAnimationFrame(whilePlaying);
+                }
+            });
+
+            volumeSlider.addEventListener('click', (event: Event) => {
+                event.stopPropagation();
+            });
+
+            seekSlider.addEventListener('click', (event: Event) => {
+                event.stopPropagation();
+            });
+
+            volumeSlider.addEventListener('input', (e: Event) => {
+                e.stopPropagation();
+                const target = e.target as HTMLInputElement;
+                const value = parseInt(target.value);
+                showRangeProgress(target);
+                videoEl.volume = value / 100;
+            });
+        };
+
+        const videoCardElements = document.querySelectorAll('.kg-video-card');
+
+        videoCardElements.forEach((element) => {
+            handleVideoPlayer(element as HTMLElement);
+        });
+    })();
+</script>
+
+<style>
+    .kg-card {
+        @extend %font-sans;
+    }
+
+    .kg-video-card,
+    .kg-video-card * {
+        box-sizing: border-box;
+    }
+
+    .kg-width-full .kg-image {
+        max-width: 100vw;
+    }
+
+    .kg-video-container.kg-width-wide,
+    .kg-video-card.kg-width-wide {
+        width: 60vw;
+        margin-left: calc(-30vw + 50%);
+    }
+
+    .kg-video-card.kg-width-full {
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+    }
+    /*
+    .has-sidebar .kg-gallery-container,
+    .has-sidebar .kg-width-full .kg-image,
+    .has-sidebar .kg-width-wide .kg-image {
+        max-width: 100%;
+        width: 100%;
+    } */
+
+    /* @media only screen and (max-width: 767px) {
+        .kg-width-wide .kg-image {
+            width: 100%;
+        }
+    } */
+    .kg-video-card {
+        position: relative;
+        --seek-before-width: 0%;
+        --volume-before-width: 100%;
+        --buffered-width: 0%;
+    }
+
+    .kg-video-card video {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .kg-video-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kg-video-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0, transparent 70%, transparent 100%);
+        z-index: 999;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .kg-video-large-play-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 72px;
+        height: 72px;
+        padding: 0;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .kg-video-large-play-icon svg {
+        width: 20px;
+        height: auto;
+        margin-left: 2px;
+        fill: #fff;
+    }
+
+    .kg-video-player-container {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 80px;
+        background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+        z-index: 999;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .kg-video-player {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        z-index: 9999;
+        padding: 12px 16px;
+    }
+
+    .kg-video-current-time {
+        min-width: 38px;
+        padding: 0 4px;
+        color: #fff;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1.4em;
+        white-space: nowrap;
+    }
+
+    .kg-video-time {
+        color: rgba(255, 255, 255, 0.6);
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1.4em;
+        white-space: nowrap;
+    }
+
+    .kg-video-duration {
+        padding: 0 4px;
+    }
+
+    .kg-video-play-icon,
+    .kg-video-pause-icon {
+        position: relative;
+        padding: 0px 4px 0 0;
+        font-size: 0;
+        background: transparent;
+    }
+
+    .kg-video-hide {
+        display: none !important;
+    }
+
+    .kg-video-hide-animated {
+        opacity: 0 !important;
+        transition: opacity 0.2s ease-in-out;
+        cursor: initial;
+    }
+
+    .kg-video-play-icon svg,
+    .kg-video-pause-icon svg {
+        width: 14px;
+        height: 14px;
+        fill: #fff;
+    }
+
+    .kg-video-seek-slider {
+        flex-grow: 1;
+        margin: 0 4px;
+    }
+
+    @media (max-width: 520px) {
+        .kg-video-seek-slider {
+            display: none;
+        }
+    }
+
+    .kg-video-playback-rate {
+        min-width: 37px;
+        padding: 0 4px;
+        color: #fff;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1.4em;
+        text-align: left;
+        background: transparent;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 520px) {
+        .kg-video-playback-rate {
+            padding-left: 8px;
+        }
+    }
+
+    .kg-video-mute-icon,
+    .kg-video-unmute-icon {
+        position: relative;
+        bottom: -1px;
+        padding: 0 4px;
+        font-size: 0;
+        background: transparent;
+    }
+
+    @media (max-width: 520px) {
+        .kg-video-mute-icon,
+        .kg-video-unmute-icon {
+            margin-left: auto;
+        }
+    }
+
+    .kg-video-mute-icon svg,
+    .kg-video-unmute-icon svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+    }
+
+    .kg-video-volume-slider {
+        width: 80px;
+    }
+
+    @media (max-width: 300px) {
+        .kg-video-volume-slider {
+            display: none;
+        }
+    }
+
+    .kg-video-seek-slider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: var(--seek-before-width) !important;
+        height: 4px;
+        cursor: pointer;
+        background-color: #ebeef0;
+        border-radius: 2px;
+    }
+
+    .kg-video-volume-slider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: var(--volume-before-width) !important;
+        height: 4px;
+        cursor: pointer;
+        background-color: #ebeef0;
+        border-radius: 2px;
+    }
+
+    /* Resetting browser styles
+/* --------------------------------------------------------------- */
+
+    .kg-video-card input[type='range'] {
+        position: relative;
+        -webkit-appearance: none;
+        background: transparent;
+    }
+
+    .kg-video-card input[type='range']:focus {
+        outline: none;
+    }
+
+    .kg-video-card input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+    }
+
+    .kg-video-card input[type='range']::-ms-track {
+        cursor: pointer;
+        border-color: transparent;
+        color: transparent;
+        background: transparent;
+    }
+
+    .kg-video-card button {
+        display: flex;
+        align-items: center;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .kg-video-card input[type='range'] {
+        height: auto;
+        padding: 0;
+        border: 0;
+    }
+
+    /* Chrome & Safari styles
+/* --------------------------------------------------------------- */
+
+    .kg-video-card input[type='range']::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+    }
+
+    .kg-video-card input[type='range']::-webkit-slider-thumb {
+        position: relative;
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        margin: -5px 0 0 0;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-video-card input[type='range']:active::-webkit-slider-thumb {
+        transform: scale(1.2);
+    }
+
+    /* Firefox styles
+/* --------------------------------------------------------------- */
+
+    .kg-video-card input[type='range']::-moz-range-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+    }
+
+    .kg-video-card input[type='range']::-moz-range-progress {
+        background: #ebeef0;
+        border-radius: 2px;
+    }
+
+    .kg-video-card input[type='range']::-moz-range-thumb {
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-video-card input[type='range']:active::-moz-range-thumb {
+        transform: scale(1.2);
+    }
+
+    /* Edge & IE styles
+/* --------------------------------------------------------------- */
+
+    .kg-video-card input[type='range']::-ms-track {
+        width: 100%;
+        height: 3px;
+        border: solid transparent;
+        color: transparent;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    .kg-video-card input[type='range']::-ms-fill-lower {
+        background: #fff;
+    }
+
+    .kg-video-card input[type='range']::-ms-fill-upper {
+        background: #ebeef0;
+    }
+
+    .kg-video-card input[type='range']::-ms-thumb {
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-video-card input[type='range']:active::-ms-thumb {
+        transform: scale(1.2);
+    }
+</style>

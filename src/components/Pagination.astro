@@ -1,0 +1,44 @@
+---
+import { t } from '@utils/use-lang';
+import type { Page } from 'astro';
+
+export interface Props {
+    pageContext: Page;
+}
+
+const { pageContext } = Astro.props;
+---
+
+{
+    pageContext.lastPage > 1 && (
+        <nav class="pagination flex items-center mt-20 justify-center space-x-4" role="navigation">
+            <div>
+                {pageContext.url.prev && (
+                    <a
+                        href={pageContext.url.prev}
+                        rel="prev"
+                        class="button is-primary text-gray-600 text-sm font-medium"
+                        data-astro-prefetch="hover"
+                    >
+                        ← {t(`Newer Posts`)}
+                    </a>
+                )}
+            </div>
+            {pageContext.total > 1 && (
+                <span class="page-nums space-x-4">{`${t(`Page`)} ${pageContext.currentPage} ${t(`of`)} ${pageContext.lastPage}`}</span>
+            )}
+            <div>
+                {pageContext.url.next && (
+                    <a
+                        href={pageContext.url.next}
+                        rel="next"
+                        class="button is-primary text-gray-600 text-sm font-medium"
+                        data-astro-prefetch="hover"
+                    >
+                        {t(`Older Posts`)} →
+                    </a>
+                )}
+            </div>
+        </nav>
+    )
+}

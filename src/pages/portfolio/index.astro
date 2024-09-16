@@ -1,0 +1,92 @@
+---
+import Layout from '@layouts/Layout.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import StoryPortfolio from '@components/story/StoryPortfolio.astro';
+import { getPosts } from '@utils/post';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+
+const posts: Post[] = await getPosts(12);
+
+const tags = [...new Set(posts.map((item) => item.data.tags[0]).filter((a) => a))]; //return unique, non-null primary tags
+---
+
+<Layout footer={true} isPost={false} bodyClass="is-portfolio">
+    <MetaData slot="head" location={Astro.url.pathname} title={t(`Portfolio`, `Portfolio`)} />
+    <header class="topic-header">
+        <div class="lg:py-vw6 mx-auto max-w-3xl px-4 py-10 text-center lg:pb-8">
+            <h1 class="text-title text-5xl capitalize md:text-6xl">Portfolio</h1>
+            <div class="mx-auto mt-2 max-w-lg text-xl text-gray-500">Please check out my portfolio!</div>
+        </div>
+    </header>
+
+    {
+        tags.length > 0 && (
+            <ul class="list-inline mt-4 px-4 text-center">
+                <li
+                    class="js-filter-btn border-primary hover:border-primary mb-2 inline-block cursor-pointer border-b-2 border-transparent"
+                    data-id="all"
+                >
+                    All
+                </li>
+                {tags.map((item) => (
+                    <li
+                        class="js-filter-btn hover:border-primary mb-2 ml-4 inline-block cursor-pointer border-b-2 border-transparent"
+                        data-id={item}
+                    >
+                        {item}
+                    </li>
+                ))}
+            </ul>
+        )
+    }
+
+    <div class="site-post feed-entry-content px-4 py-12">
+        <div class="max-w-1100 feed-entry-wrap mx-auto">
+            <div class="row flex-row justify-center">
+                {
+                    posts.map((item) => {
+                        return (
+                            <div class="col s12 m6 l4 js-filter-items" data-id={item.data.tags[0] && item.data.tags[0]}>
+                                <StoryPortfolio post={item} />
+                            </div>
+                        );
+                    })
+                }
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    (() => {
+        const filterBtn = document.querySelectorAll<HTMLElement>(`.js-filter-btn`);
+
+        function filterSelection(str: string): void {
+            const allCard = document.querySelectorAll<HTMLElement>(`.js-filter-items`);
+            if (!allCard.length) {
+                return;
+            }
+
+            allCard.forEach((portfolioCard) => {
+                portfolioCard.classList.add(`hidden`);
+                if (portfolioCard.getAttribute(`data-id`) === str || str === `all`) {
+                    portfolioCard.classList.remove(`hidden`);
+                }
+            });
+        }
+
+        filterBtn.forEach((btn) => {
+            btn.addEventListener(`click`, function (this: HTMLElement, e: Event) {
+                e.preventDefault();
+                const current = document.querySelector<HTMLElement>(`.js-filter-btn.border-primary`);
+                current?.classList.remove(`border-primary`);
+                this.classList.add(`border-primary`);
+                const dataFilter = btn.getAttribute(`data-id`);
+                if (dataFilter) {
+                    filterSelection(dataFilter.split(` `).join(`-`).toLowerCase());
+                }
+            });
+        });
+    })();
+</script>

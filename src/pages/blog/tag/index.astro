@@ -1,0 +1,90 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { t } from '@utils/use-lang';
+import MetaData from '@components/meta/MetaData.astro';
+import { getCollection } from 'astro:content';
+import type { Post } from 'src/schemas/post';
+
+type Props = Record<string, never>;
+
+const posts: Post[] = await getCollection('blog');
+
+// Calculate posts for each category and turn into a list
+const tags = Object.entries(
+    posts
+        .flatMap((post) => post.data.tags)
+        .reduce<{
+            [key: string]: number;
+        }>((result, c: string) => {
+            const count = result[c] || 0;
+            result[c] = count + 1;
+            return result;
+        }, {})
+).map(([name, count]) => ({
+    name,
+    count,
+}));
+---
+
+<Layout footer={true} isPost={false} bodyClass="topic has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} title={t(`Tags`)} />
+    <header
+        style={{
+            background: `url("/assets/images/bg-setup.svg") bottom no-repeat, linear-gradient(60deg,#2e2ea2,#138395)`,
+        }}
+    >
+        <div class="md:py-vw6 simply-hero-cover mx-auto max-w-3xl px-4 py-12 text-center text-white">
+            <h1 class="text-4xl font-semibold capitalize lg:text-5xl">
+                {t(`Tags`)}
+            </h1>
+            <div class="mt-8 text-xl">{t(`All tags`)}</div>
+        </div>
+    </header>
+    <section class="container mx-auto py-8 lg:py-16">
+        <div class="max-w-1100 mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {
+                tags.map((tag) => (
+                    <article class="topic-story bg-primary relative overflow-hidden rounded-md">
+                        {/* {tag.data.image && (
+                            <>
+                                <a href={`/blog/category/${tag}/`}>
+                                    <Image
+                                        class="inset-image blur-up lazyloaded"
+                                        src={tag.data.image}
+                                        widths={[300, 600]}
+                                        sizes={`(max-width: 1000px) 400px, 600px`}
+                                        alt={tag.data.title}
+                                        width="600"
+                                        height="400"
+                                    />
+                                </a>
+                                <div
+                                    class="z-2 absolute inset-0"
+                                    style={{
+                                        background: `linear-gradient(135deg,rgb(6 10 25 / 70%),rgb(5 17 19 / 60%))`,
+                                    }}
+                                />
+                            </>
+                        )} */}
+
+                        <header class="z-4 relative w-full px-4 py-6 text-center text-white lg:px-6">
+                            <div class="mb-3 text-xs font-medium uppercase tracking-widest opacity-90">
+                                {tag.count}{' '}
+                                {tag.count === 0
+                                    ? t(`No Stories`, `No Stories`)
+                                    : tag.count === 1
+                                      ? t(`1 Story`, `1 Story`)
+                                      : t(`% Stories`, `% Stories`)}
+                            </div>
+                            <h2 class="text-xl font-semibold capitalize tracking-wide">
+                                <a href={`/blog/tag/${tag.name}`}>{tag.name}</a>
+                            </h2>
+                        </header>
+
+                        <a href={`/blog/tag/${tag.name}/`} class="z-4 absolute inset-0" aria-label={tag.name} />
+                    </article>
+                ))
+            }
+        </div>
+    </section>
+</Layout>

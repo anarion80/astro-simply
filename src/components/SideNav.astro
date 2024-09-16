@@ -1,0 +1,32 @@
+---
+import Navigation from './Navigation.astro';
+import type { ConfigType } from '@schemas/config';
+
+export interface Props {
+    site: ConfigType;
+}
+
+const { site } = Astro.props;
+---
+
+<div class="nav-mob fixed inset-0 pt-16 header-bg h-screen z-10 w-full text-center overflow-y-auto lg:hidden">
+    <div class="nav-mob-wrap absolute inset-0 top-16 pt-5 flex flex-col">
+        {/* {!-- Light and Dark Mode --} */}
+
+        {/* {!-- Navigation for Mobile --} */}
+        {
+            site.navigation && (
+                <div class="py-4 flex-auto">
+                    <Navigation
+                        site={site}
+                        navClass="mainMenu-link godo-tracking hover:text-primary font-medium"
+                        mobile={true}
+                    />
+                </div>
+            )
+        }
+
+        {/* {!-- Social Media - partilas/widget/social-media.hbs --} */}
+        <!-- <SocialMediaWidget site={site} divClass="nav-mob-social-media social-media is-inline py-4" /> -->
+    </div>
+</div>

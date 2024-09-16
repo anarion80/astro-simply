@@ -1,0 +1,86 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import { getPosts } from '@utils/post';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import DateTimeComponent from '@components/DateTimeComponent.astro';
+import { relativeUrl } from '@utils/relativeUrl';
+import { t } from '@utils/use-lang';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+const locale = CONFIG.locale || 'en';
+---
+
+<Layout isHome={true} footer={true} isPost={false} bodyClass="is-frontpage">
+    <MetaData slot="head" location={Astro.url.pathname} title={t(`The full archive`)} />
+    <header class="author-header">
+        <div class="md:py-vw6 mx-auto max-w-3xl px-4 py-12 text-center">
+            <h1 class="text-title text-3xl md:text-4xl">
+                {t(`The full archive`)}
+            </h1>
+            <div class="mt-5 text-lg text-gray-500">
+                {t(`Total number of posts`)}
+                {`: ${page.total}`}
+            </div>
+        </div>
+    </header>
+    <div class="site-post feed-entry-content container mx-auto pb-10">
+        <div class="feed-entry-wrap max-w-740 mx-auto">
+            {
+                page.data.map((item) => (
+                    <article
+                        class={
+                            `archive-post archive-date-` +
+                            new Date(item.data.publishDate).toLocaleString(locale, {
+                                month: '2-digit',
+                            })
+                        }
+                    >
+                        <div class="archive-label text-primary mb-2 mt-4 px-6 text-2xl font-bold capitalize">
+                            {new Date(item.data.publishDate).toLocaleString(locale, {
+                                month: 'long',
+                                year: 'numeric',
+                            })}
+                        </div>
+                        <a
+                            class="archive-link text-title hover:text-dark block rounded px-6 hover:bg-amber-300"
+                            href={relativeUrl(item.href)}
+                        >
+                            <div class="border-t border-gray-200 py-6">
+                                <h2 class="archive-title text-xl font-bold md:text-2xl">{item.data.title}</h2>
+                                <DateTimeComponent post={item} dateTimeClass="mt-2 text-gray-500 text-sm" />
+                            </div>
+                        </a>
+                    </article>
+                ))
+            }
+            <Pagination pageContext={page} />
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .archive-date-01 + .archive-date-01 .archive-label,
+    .archive-date-02 + .archive-date-02 .archive-label,
+    .archive-date-03 + .archive-date-03 .archive-label,
+    .archive-date-04 + .archive-date-04 .archive-label,
+    .archive-date-05 + .archive-date-05 .archive-label,
+    .archive-date-06 + .archive-date-06 .archive-label,
+    .archive-date-07 + .archive-date-07 .archive-label,
+    .archive-date-08 + .archive-date-08 .archive-label,
+    .archive-date-09 + .archive-date-09 .archive-label,
+    .archive-date-10 + .archive-date-10 .archive-label,
+    .archive-date-11 + .archive-date-11 .archive-label,
+    .archive-date-12 + .archive-date-12 .archive-label {
+        display: none;
+    }
+</style>

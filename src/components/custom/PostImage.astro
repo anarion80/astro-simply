@@ -1,0 +1,59 @@
+---
+import ArticleBody from '../article/ArticleBody.astro';
+import ArticleRelated from '../article/ArticleRelated.astro';
+import Layout from '@layouts/Layout.astro';
+import Author from '@components/Author.astro';
+import Category from '@components/Category.astro';
+import MediaCover from '@components/MediaCover.astro';
+import MetaData from '@components/meta/MetaData.astro';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    post: Post;
+    nextPost?: Post;
+    prevPost?: Post;
+    relatedPosts?: Post[];
+}
+const { post, nextPost, prevPost, relatedPosts } = Astro.props;
+---
+
+<Layout footer={true} bodyClass="is-article has-cover is-head-transparent" isPost={true}>
+    <MetaData slot="head" location={Astro.url.pathname} title={post.data.title} data={post} />
+    <article class="post relative mb-10">
+        <div class="postImage simply-hero-cover bg-dark min-h-lg relative py-24 lg:min-h-screen">
+            {/* {!-- Featured Media - partials/components/media-cover.hbs --} */}
+            <MediaCover
+                background={post.data.heroImage as ImageMetadata}
+                hasGradient={true}
+                altTitle={post.data.title}
+            />
+
+            <header class="post-header max-w-740 z-3 relative mx-auto p-24 px-4">
+                {
+                    post.data.category && (
+                        <div class="mb-3 text-sm tracking-wider text-white">
+                            <Category category={post.data.category.slug} tagClass="uppercase hover:underline" />
+                        </div>
+                    )
+                }
+
+                <h1 class="post-title mb-5 text-4xl leading-tight text-white lg:text-5xl">
+                    {post.data.title}
+                </h1>
+                {
+                    post.data.excerpt && (
+                        <p class="post-excerpt mb-8 text-2xl leading-snug text-white">{post.data.excerpt}</p>
+                    )
+                }
+
+                {/* {!-- [Author, DateTime, Reading Time] - ./partials/components/author-meta.hbs --} */}
+                <Author post={post} />
+            </header>
+        </div>
+
+        {/* {!-- Article Body - partials/article/article-body.hbs --} */}
+        <ArticleBody post={post} nextPost={nextPost} prevPost={prevPost} />
+    </article>
+    {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
+</Layout>

@@ -1,0 +1,115 @@
+---
+import { Image } from 'astro:assets';
+import { t } from '@utils/use-lang';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+import { getPosts } from '@utils/post';
+import { prettyDate } from '@utils/dateConvert';
+import { CONFIG } from '@config/config';
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+    widgetTitle?: string;
+    widgetPosts: Post[];
+}
+
+const { widgetTitle, widgetPosts } = Astro.props;
+
+const posts: Post[] = await getPosts();
+
+// Calculate posts for each category and turn into a list
+const tags = Object.entries(
+    posts
+        .flatMap((post) => post.data.tags)
+        .reduce<{
+            [key: string]: number;
+        }>((result, c: string) => {
+            const count = result[c] || 0;
+            result[c] = count + 1;
+            return result;
+        }, {})
+).map(([name, count]) => ({
+    name,
+    count,
+}));
+---
+
+<div class="sidebar-items mb-8 lg:sticky lg:top-32">
+    <h3 class="sidebar-title underscore is-center text-title text-center text-lg font-medium">
+        <span>{widgetTitle}</span>
+    </h3>
+
+    {
+        widgetPosts.map((item, i) => (
+            <div
+                class={
+                    `sp-small relative ` +
+                    (i < widgetPosts.length - 1 ? `mb-5` : `mb-10`) +
+                    ` has-overlay godo-tracking`
+                }
+                data-event-category="Sidebar"
+                data-event-action="Post"
+                data-event-label={item.href}
+                data-event-non-interaction="true"
+                data-astro-prefetch="hover"
+            >
+                {/* {!-- <div class="sp-n flex-none u-fontSizeLarger u-lineHeight1">0{{@number}}</div> --} */}
+                <a href={item.href} class="flex">
+                    {item.data.heroImage && (
+                        <figure class="relative h-20 w-32 overflow-hidden rounded">
+                            <Image
+                                class="absolute inset-0 block h-full w-full object-cover object-center"
+                                src={item.data.heroImage as ImageMetadata}
+                                alt={item.data.title}
+                                width="128"
+                                height="80"
+                                widths={[50, 80, 150]}
+                                sizes={`(max-width: 1000px) 150px, 80px, 50px`}
+                                loading="eager"
+                            />
+                            <span class="bg-primary overlay-toggle absolute inset-0 flex items-center justify-center">
+                                <Icon name="fa6-solid:arrow-right" class="icon h-6 w-6 text-white" />
+                            </span>
+                        </figure>
+                    )}
+
+                    <div class="flex flex-1 flex-col justify-center overflow-hidden pl-4">
+                        <h3 class="sp-small-title text-title mb-1 text-base font-semibold leading-tight">
+                            {item.data.title}
+                        </h3>
+
+                        <div class="hh-date flex items-center text-sm text-gray-500">
+                            <time
+                                class="datetime capitalize"
+                                datetime={new Date(item.data.publishDate).toLocaleDateString()}
+                                title={
+                                    item.data.updateDate &&
+                                    `${t(`Updated`)} ${new Date(item.data.updateDate).toLocaleDateString()}`
+                                }
+                            >
+                                {prettyDate({
+                                    dateString: item.data.publishDate,
+                                    locale: CONFIG.locale,
+                                })}
+                            </time>
+                            {/* <FormattedDate date={item.data.publishDate} /> */}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        ))
+    }
+    <h3 class="is-center mb-4 text-center text-sm uppercase">
+        {t(`Discover more of what matters to you`)}
+    </h3>
+    <div class="buttons">
+        {
+            tags.map((item) => (
+                <a href={`/blog/tag/${item.name}`} class="button is-light text-sm font-medium capitalize">
+                    {`#${item.name} (${item.count})`}
+                </a>
+            ))
+        }
+    </div>
+    <hr />
+</div>

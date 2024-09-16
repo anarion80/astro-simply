@@ -1,0 +1,95 @@
+---
+import SocialMediaWidget from './SocialMediaWidget.astro';
+import { CONFIG } from '@config/config';
+import type { ConfigType } from '@schemas/config';
+import { t } from '@utils/use-lang';
+import { Icon } from 'astro-icon/components';
+
+const menuDropdown = CONFIG.menuDropdown;
+
+export interface Props {
+    site: ConfigType;
+    hasDropDown?: boolean;
+}
+
+const { site, hasDropDown } = Astro.props;
+---
+
+{
+    hasDropDown && (
+        <li
+            class={
+                `dropdown is-hoverable ml-5 ` +
+                (!(
+                    site.followSocialMedia.some((item) => item.service === 'twitter') ||
+                    site.followSocialMedia.some((item) => item.service === 'facebook')
+                ) && `hidden`)
+            }
+        >
+            <span class="mainMenu-link dropdown-trigger hover:text-primary font-medium" data-astro-prefetch="hover">
+                <span>{t(`More`)}</span>
+                <Icon name="fa6-solid:angle-down" class="icon is-small" />
+            </span>
+            <div class="dropdown-menu whitespace-normal">
+                <div class="dropdown-content">
+                    <div class="js-dropdown-menu">
+                        {menuDropdown.map((menuItem) => (
+                            <a
+                                class="dropdown-item hover:text-primary"
+                                href={menuItem.url}
+                                partially-active={true}
+                                data-event-category="Header"
+                                data-event-action="Menu - DropDown"
+                                data-event-label={menuItem.label}
+                                data-event-non-interaction="true"
+                                data-astro-prefetch="hover"
+                                aria-label={menuItem.label}
+                            >
+                                {menuItem.label}
+                            </a>
+                        ))}
+                    </div>
+                    <hr class="dropdown-divider" />
+                    <SocialMediaWidget site={site} divClass="social-media" />
+                </div>
+            </div>
+        </li>
+    )
+    /* Or use secondary navigation in the drop down */
+    /* <li
+                class={
+                    `dropdown is-hoverable ml-5 ` +
+                    (!(
+                        site.followSocialMedia.some((item) => item.service === 'twitter') ||
+                        site.followSocialMedia.some((item) => item.service === 'facebook')
+                    ) && `hidden`)
+                }
+            >
+                <a href="#" class="mainMenu-link dropdown-trigger hover:text-primary font-medium">
+                    <span>More</span>
+                    <Icon name="fa6-solid:angle-down" class="icon is-small" />
+                </a>
+                <div class="dropdown-menu whitespace-normal">
+                    <div class="dropdown-content">
+                        <div class="js-dropdown-menu">
+                            {site.secondary_navigation?.map((menuItem, i) => (
+                                <a
+                                    class="dropdown-item hover:text-primary"
+                                    href={menuItem.url}
+                                    partially-active={true}
+                                    data-event-category="Header"
+                                    data-event-action="Menu - DropDown"
+                                    data-event-label={menuItem.label}
+                                    data-event-non-interaction="true"
+                                >
+                                    {menuItem.label}
+                                </a>
+                            ))}
+                        </div>
+                        <hr class="dropdown-divider" />
+                        <SocialMediaWidget site={site} divClass="social-media" />
+                    </div>
+                </div>
+            </li>
+    )*/
+}

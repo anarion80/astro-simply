@@ -1,0 +1,15 @@
+---
+import SidebarPostCard from './SidebarPostCard.astro';
+import { getPosts } from '@utils/post';
+import { t } from '@utils/use-lang';
+
+type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no-unused-vars
+
+const latestPosts = await getPosts(5);
+---
+
+<aside class="sidebar col s12 l4 mt-12 flex flex-col justify-start lg:mt-0">
+    <div class="flex flex-1 flex-col">
+        <SidebarPostCard widgetTitle={t(`Latest Posts`)} widgetPosts={latestPosts} />
+    </div>
+</aside>

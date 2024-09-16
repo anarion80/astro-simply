@@ -1,0 +1,89 @@
+---
+import Category from '../Category.astro';
+import Author from '../Author.astro';
+import { Image, inferRemoteSize } from 'astro:assets';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    post: Post;
+    imageSize: 'small' | 'medium' | 'large';
+}
+
+const { post, imageSize } = Astro.props;
+const url = post.href || `/blog/${post.slug}/`;
+const featureImage = post.data.heroImage as ImageMetadata;
+const { width: featureImageWidth, height: featureImageHeight } =
+    typeof post.data.heroImage === 'string' ? await inferRemoteSize(post.data.heroImage) : post.data.heroImage;
+
+const category = post.data.category?.slug;
+
+const { width, size } = {
+    small: { width: 340, size: '340px' },
+    medium: { width: 540, size: '540px' },
+    large: { width: 720, size: '720px' },
+}[imageSize] || { width: 720, size: '720px' };
+---
+
+<article class="story relative mb-5 border-b border-gray-100 pb-5 md:border-0">
+    <figure class="story-image relative block overflow-hidden border border-gray-300 bg-gray-200">
+        {
+            featureImage ? (
+                <a href={url} class="block" aria-label={post.data.title} data-astro-prefetch="hover">
+                    <Image
+                        src={featureImage}
+                        alt={post.data.title}
+                        width={width}
+                        height={width / (featureImageWidth / featureImageHeight)}
+                        widths={[width]}
+                        sizes={`(max-width: ${size}) ${size}`}
+                        loading="eager"
+                        style={{
+                            position: `absolute`,
+                            height: `100%`,
+                            width: `100%`,
+                            inset: 0,
+                            objectFit: `cover`,
+                        }}
+                        class="story-img u-image blur-up lazyloaded absolute block"
+                    />
+                </a>
+            ) : (
+                <a href={url} class="block" aria-label={post.data.title} data-astro-prefetch="hover" />
+            )
+        }
+        {
+            category && (
+                <div class="absolute right-0 top-0">
+                    <Category category={category} />
+                </div>
+            )
+        }
+    </figure>
+
+    <div class="story-body flexColumnTop pt-5">
+        <!-- {<DateTimeComponent post={post} />} -->
+
+        <h2 class="story-title text-title mb-3 font-sans text-2xl leading-tight">
+            <a href={url} class="block" data-astro-prefetch="hover">{post.data.title}</a>
+        </h2>
+
+        {
+            post.data.excerpt && (
+                <p class="story-excerpt mb-5 text-lg leading-normal text-gray-500">
+                    <a href={url} class="block" data-astro-prefetch="hover">
+                        {post.data.excerpt.split(` `).splice(0, 30).join(` `)}
+                    </a>
+                </p>
+            )
+        }
+
+        <Author post={post} />
+
+        {
+
+                /*{{!-- Read more --}}*/
+                // <a href={url} class="link is-hover font-medium">{t(`Read more`)}<svg class="icon is-medium"><use xlink:href="#icon-arrow"></use></svg></Link>
+        }
+    </div>
+</article>

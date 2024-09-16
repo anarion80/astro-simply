@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import dynamic from 'astro:import';
+import { getCustomTemplate } from '@utils/customTemplate';
+import type { InferGetStaticPropsType } from 'astro';
+import { getPost } from '@utils/post';
+import type { Post as PostSchema } from 'src/schemas/post';
+import { getPrevPost, getNextPost, getRelatedPosts } from '@utils/post';
+
+export async function getStaticPaths() {
+    const posts = (await getCollection('blog')).filter((post) => !post.data.draft);
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: post,
+    }));
+}
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { slug } = Astro.params;
+
+const post = await getPost(slug);
+
+const nextPost = await getNextPost(Astro.params.slug);
+const prevPost = await getPrevPost(Astro.params.slug);
+const relatedPosts = await getRelatedPosts(post?.slug);
+
+const isPost = true;
+const postType = getCustomTemplate(post);
+
+const CustomPage = await dynamic(postType);
+---
+
+<>
+    {
+        post && isPost && (
+            <CustomPage
+                post={post}
+                nextPost={nextPost as PostSchema}
+                prevPost={prevPost as PostSchema}
+                relatedPosts={relatedPosts}
+            />
+        )
+    }
+</>
+
+<script>
+    import mediumZoomImg from '@utils/mediumZoom.ts';
+    mediumZoomImg();
+</script>
+
+<script>
+    import { annotate, annotationGroup } from 'rough-notation';
+    const notions = document.querySelectorAll('span[data-notion-identity]');
+    const annotations = new Array(notions.length).fill(0).map((_, index) => {
+        const node = notions[index] as HTMLSpanElement;
+        const type = node.dataset.notionType;
+        const color = node.dataset.notionColor;
+        const strokeWidth = node.dataset.notionStrokewidth;
+        return annotate(node, {
+            type: (type as 'underline') ?? 'underline',
+            color: color ?? 'red',
+            animate: false,
+            multiline: type === 'bracket' ? false : true,
+            brackets: ['left', 'right'],
+            strokeWidth: Number(strokeWidth) || 1.5,
+        });
+    });
+    annotationGroup(annotations).show();
+</script>

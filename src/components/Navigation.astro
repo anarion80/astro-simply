@@ -1,0 +1,122 @@
+---
+import { CONFIG } from '@config/config';
+import { relativeUrl } from '@utils/relativeUrl';
+import type { ConfigType } from '@schemas/config';
+const menuDropdown = CONFIG.menuDropdown;
+
+export interface Props {
+    site: ConfigType;
+    navClass?: string;
+    isSecondary?: boolean;
+    mobile?: boolean;
+}
+
+const { site, navClass, isSecondary, mobile } = Astro.props;
+const pathname = new URL(Astro.request.url).pathname;
+---
+
+{
+    isSecondary ? (
+        <nav class="menu-secondary">
+            <ul itemscope itemtype="http://www.schema.org/SiteNavigationElement" role="menu">
+                {site.secondary_navigation &&
+                    site.secondary_navigation?.map((navItem, i) => (
+                        <li
+                            itemprop="name"
+                            role="menuitem"
+                            class={
+                                site.secondary_navigation && i !== site.secondary_navigation.length - 1
+                                    ? `separator inline-block`
+                                    : `inline-block`
+                            }
+                        >
+                            <a
+                                class="godo-tracking hover:text-primary inline-block p-2 font-medium"
+                                href={relativeUrl(navItem.url)}
+                                data-event-category="Footer"
+                                data-event-action="Menu"
+                                data-event-label={navItem.label}
+                                data-event-non-interaction="true"
+                                data-astro-prefetch="viewport"
+                            >
+                                {navItem.label}
+                            </a>
+                        </li>
+                    ))}
+            </ul>
+        </nav>
+    ) : mobile ? (
+        <ul>
+            {site.navigation.map((navItem) => (
+                <li>
+                    <a
+                        href={relativeUrl(navItem.url)}
+                        class="text-22 block px-5 py-2 font-medium leading-tight"
+                        data-astro-prefetch="tap"
+                    >
+                        {navItem.label}
+                    </a>
+                </li>
+            ))}
+            {menuDropdown.map((navItem) => (
+                <li>
+                    <a
+                        href={relativeUrl(navItem.url)}
+                        class="text-22 block px-5 py-2 font-medium leading-tight"
+                        data-astro-prefetch="tap"
+                    >
+                        {navItem.label}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    ) : (
+        site.navigation.map((navItem, i) => {
+            if (navItem.url.match(/^\s?http(s?)/gi)) {
+                return (
+                    <li itemprop="name" class={i === 0 ? `ml-0` : `ml-5`}>
+                        <a
+                            itemprop="url"
+                            class={
+                                pathname === relativeUrl(navItem.url)
+                                    ? navClass + ' active text-primary font-semibold'
+                                    : navClass
+                            }
+                            href={relativeUrl(navItem.url)}
+                            target="_self"
+                            rel="noopener noreferrer"
+                            data-event-category="Header"
+                            data-event-action="Menu"
+                            data-event-label={navItem.label}
+                            data-event-non-interaction="true"
+                            data-astro-prefetch="hover"
+                        >
+                            {navItem.label}
+                        </a>
+                    </li>
+                );
+            } else {
+                return (
+                    <li itemprop="name" class={i === 0 ? `ml-0` : `ml-5`}>
+                        <a
+                            itemprop="url"
+                            class={
+                                pathname === relativeUrl(navItem.url)
+                                    ? navClass + ' active text-primary font-semibold'
+                                    : navClass
+                            }
+                            href={relativeUrl(navItem.url)}
+                            data-event-category="Header"
+                            data-event-action="Menu"
+                            data-event-label={navItem.label}
+                            data-event-non-interaction="true"
+                            data-astro-prefetch="hover"
+                        >
+                            {navItem.label}
+                        </a>
+                    </li>
+                );
+            }
+        })
+    )
+}

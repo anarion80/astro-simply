@@ -1,0 +1,30 @@
+---
+import type { Post } from 'src/schemas/post';
+
+export interface Props {
+    tags: Post['data']['tags'];
+}
+
+const { tags } = Astro.props;
+---
+
+<div class="flex flex-auto items-center">
+    <div class="buttons">
+        {
+            tags &&
+                tags.map((tag) => (
+                    <a
+                        href={`/blog/tag/${tag}/`}
+                        class="button is-light font-medium text-sm capitalize godo-tracking"
+                        data-event-category="Article"
+                        data-event-action="Tags"
+                        data-event-label={tag}
+                        data-event-non-interaction="true"
+                        data-astro-prefetch="hover"
+                    >
+                        {tag}
+                    </a>
+                ))
+        }
+    </div>
+</div>

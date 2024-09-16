@@ -1,0 +1,114 @@
+---
+postFormat: Post
+publishDate: 2024-08-29T00:00:00Z
+authors: ['anarion-dunedain']
+title: Card examples
+excerpt: Collection of card examples.
+heroImage: https://images.unsplash.com/photo-1694878982063-9c41c1d94f4c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+# heroImage: '../../content/blog/_images/2024-08-06-strange-connection-issues/connection.jpg'
+featured: true
+draft: false
+category: technology
+tags:
+    - cards
+    - ui
+    - astro
+---
+export const components = {blockquote: Blockquote};
+import defaultImage from '../../assets/images/default_category_image.jpg';
+
+
+## Gallery
+
+<Gallery
+    images={['https://images.unsplash.com/photo-1694878982063-9c41c1d94f4c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1719937051058-63705ed35502?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1724856699034-e80a5799abf5?q=80&w=2186&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1725109431763-36524de95bf9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1725067807346-7340abf76b0d?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1724942462164-7c30f103d91c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1724754608947-f86db9039cf9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    defaultImage]}
+    caption="This is a caption" />
+
+## Button
+
+<Button title="Astro website" href="https://astro.build" />
+
+<Button title="Astro website" href="https://astro.build" align="left"/>
+
+<Button title="Astro website" href="https://astro.build" align="right"/>
+
+## Callout
+
+<Callout text="Callout test" calloutEmoji="💡"/>
+<Callout text="Callout test" backgroundColor="red" />
+<Callout text="Callout test" backgroundColor="green" calloutEmoji="🔥" />
+
+## Image/GIF
+
+https://media.tenor.com/images/72b1616c0accea91881b3a66aa15c3f2/tenor.gif
+
+## Toggle
+
+<Toggle title="Click for more info" text="Explanation text" />
+
+## Heading Text
+
+<Header header="Heading Default" subheader="Subheading text" buttonTitle="Button!" buttonHref="https://www.google.com" style="dark" />
+
+<Header header="Heading Color" subheader="Subheading text" buttonTitle="Button!" buttonHref="https://www.google.com" size="small" style="image" backgroundImageSrc={defaultImage.src}/>
+
+## Product card
+
+<Product image="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Wikipedia-logo-v2-wordmark.svg/480px-Wikipedia-logo-v2-wordmark.svg.png" title="Product title" description="Product description" buttonText="Button!" buttonHref="https://www.google.com" rating={1}/>
+<Product image={defaultImage} title="Product title" description="Product description" buttonHref="https://www.google.com" rating={1}/>
+
+## Audio card
+
+<Audio audioTitle="sample file" audioFile="https://download.samplelib.com/mp3/sample-6s.mp3" />
+<Audio audioTitle="sample file" audioFile="https://download.samplelib.com/mp3/sample-12s.mp3" thumbnailSrc="https://images.unsplash.com/photo-1724754608947-f86db9039cf9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+
+## Video card
+
+<Video
+    videoFile="https://download.samplelib.com/mp4/sample-10s.mp4"
+    caption="Video caption"
+    thumbnailSrc="https://images.unsplash.com/photo-1724754608947-f86db9039cf9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    loop={false}
+/>
+
+<Video
+    videoFile="https://download.samplelib.com/mp4/sample-10s.mp4"
+    caption="Video caption"
+    thumbnailSrc="https://images.unsplash.com/photo-1724754608947-f86db9039cf9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    loop={false}
+    cardWidth="wide"
+/>
+
+## File card
+
+<File fileLink="https://www.soundczech.cz/temp/lorem-ipsum.pdf" fileTitle="Test title" fileCaption="Test caption" />
+
+## Blockquote
+
+<blockquote>
+    This is a blockquote.
+</blockquote>
+
+> This is a custom blockquote.
+
+## Bookmark
+Note: This needs to be automated into some remark plugin.
+
+<Bookmark
+    title="Open Subscription Platforms"
+    description="A shared movement for independent subscription data."
+    icon="https://opensubscriptionplatforms.com/images/favicon.png"
+    author="Test author"
+    link="https://opensubscriptionplatforms.com/"
+    thumbnail="https://opensubscriptionplatforms.com/images/osp-card.png"
+    publisher="Open Subscription Platforms"
+/>
+
+https://opensubscriptionplatforms.com/

@@ -1,0 +1,52 @@
+---
+import Author from '../Author.astro';
+import { Image } from 'astro:assets';
+import { relativeUrl } from '../../utils/relativeUrl';
+import type { Post } from 'src/schemas/post';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<article class="homeHero-mediumCard mt-8 w-full flex-auto lg:ml-6 lg:mt-0">
+    <a href={relativeUrl(post.href)} class="hhp-image" aria-label={post.data.title} data-astro-prefetch="hover">
+        <div class="hhp-img relative mb-4 h-40">
+            {
+                post.data.heroImage && (
+                    <Image
+                        src={post.data.heroImage as ImageMetadata}
+                        alt={post.data.title}
+                        class="u-image absolute inset-0"
+                        widths={[300, 600]}
+                        sizes={`(max-width: 1000px) 600px, 300px`}
+                        width="320"
+                        height="160"
+                    />
+                )
+            }
+        </div>
+    </a>
+
+    <div class="hhp-body mb-4">
+        <h2 class="hhp-title text-title lineClamp-2 mb-3 overflow-hidden text-2xl leading-tight">
+            <a href={relativeUrl(post.href)} class="block" aria-label={post.data.title}>{post.data.title}</a>
+        </h2>
+
+        {
+            post.data.excerpt && (
+                <div class="hhp-excerpt lineClamp mb-3 overflow-hidden text-lg leading-snug text-gray-500">
+                    <a href={relativeUrl(post.href)} aria-label={post.data.title}>
+                        {post.data.excerpt.split(` `).splice(0, 30).join(` `)}
+                    </a>
+                </div>
+            )
+        }
+    </div>
+
+    {/* {!-- Author - Primary Tag - Datetime - Read time - ./partials/components/author-meta.hbs --} */}
+    <Author post={post} hideAvatar={true} />
+</article>

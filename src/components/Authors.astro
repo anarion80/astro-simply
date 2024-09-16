@@ -1,0 +1,19 @@
+---
+import type { Author } from 'src/schemas/author';
+export interface Props {
+    authors: Author[];
+}
+
+const { authors } = Astro.props;
+---
+
+{
+    authors.map((author, i) => (
+        <span class="hh-author-name noWrapWithEllipsis text-sm">
+            <a href={`/blog/author` + `/${author.slug}/`} data-astro-prefetch="hover" aria-label={author.data.name}>
+                {author.data.name}
+            </a>
+            {authors.length === 2 && i === 0 && `,\u00A0`}
+        </span>
+    ))
+}

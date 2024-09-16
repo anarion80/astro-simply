@@ -1,0 +1,109 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { t } from '@utils/use-lang';
+import MetaData from '@components/meta/MetaData.astro';
+import { getPosts, getCategories } from '@utils/post';
+import type { Post } from 'src/schemas/post';
+import type { Category } from 'src/schemas/category';
+import type { ImageMetadata } from 'astro';
+
+type Props = Record<string, never>;
+
+const categories: Category[] = await getCategories();
+const posts: Post[] = await getPosts();
+
+// Calculate posts for each category and turn into a list
+const counts = Object.entries(
+    posts
+        .flatMap((post) => post.data.category.slug)
+        .reduce<{
+            [key: string]: number;
+        }>((result, c) => {
+            const count = result[c] || 0;
+            result[c] = count + 1;
+            return result;
+        }, {})
+).map(([name, count]) => ({
+    name,
+    count,
+}));
+
+// Append to original list
+for (const category of categories) {
+    const matchingCount = counts.find((count) => count.name === category.slug);
+    category.data.count = matchingCount ? matchingCount.count : 0;
+}
+---
+
+<Layout footer={true} isPost={false} bodyClass="topic has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} title={t(`Categories`)} />
+    <header
+        style={{
+            background: `url("/assets/images/bg-setup.svg") bottom no-repeat, linear-gradient(60deg,#2e2ea2,#138395)`,
+        }}
+    >
+        <div class="md:py-vw6 simply-hero-cover mx-auto max-w-3xl px-4 py-12 text-center text-white">
+            <h1 class="text-4xl font-semibold capitalize lg:text-5xl">
+                {t(`Categories`)}
+            </h1>
+            <div class="mt-8 text-xl">{t(`Main blog categories`)}</div>
+        </div>
+    </header>
+    <section class="container mx-auto py-8 lg:py-16">
+        <div class="max-w-1100 mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {
+                categories.map((category) => (
+                    <article class="topic-story bg-dark relative overflow-hidden rounded-md">
+                        {category.data.image && (
+                            <>
+                                <a href={`/blog/category/${category.slug}/`}>
+                                    <Image
+                                        class="inset-image blur-up lazyloaded"
+                                        src={category.data.image as ImageMetadata}
+                                        widths={[300, 600]}
+                                        sizes={`(max-width: 1000px) 400px, 600px`}
+                                        alt={category.data.title}
+                                        width={600}
+                                        height={400}
+                                        loading="eager"
+                                    />
+                                </a>
+                                <div
+                                    class="z-2 absolute inset-0"
+                                    style={{
+                                        background: `linear-gradient(135deg,rgb(6 10 25 / 70%),rgb(5 17 19 / 60%))`,
+                                    }}
+                                />
+                            </>
+                        )}
+
+                        <header class="z-4 relative w-full px-4 py-16 text-center text-white lg:px-6">
+                            <div class="mb-3 text-xs font-medium uppercase tracking-widest opacity-90">
+                                {(category.data.count ?? 0 > 0) ? (
+                                    <>
+                                        {category.data.count}{' '}
+                                        {category.data.count === 1
+                                            ? t(`1 Story`, `1 Story`)
+                                            : t(`% Stories`, `% Stories`)}
+                                    </>
+                                ) : (
+                                    t(`No Stories`, `No Stories`)
+                                )}
+                            </div>
+                            <h2 class="text-2xl font-semibold capitalize tracking-wide">
+                                <a href={`/blog/category/${category.slug}`}>{category.data.title}</a>
+                            </h2>
+                        </header>
+
+                        <a
+                            href={`/blog/category/${category.slug}/`}
+                            class="z-4 absolute inset-0"
+                            aria-label={category.data.title}
+                        />
+                    </article>
+                ))
+            }
+        </div>
+    </section>
+</Layout>

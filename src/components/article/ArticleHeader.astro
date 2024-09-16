@@ -1,0 +1,40 @@
+---
+import SocialShare from '@components/SocialShare.astro';
+import Author from '@components/Author.astro';
+import { getCategory } from '@utils/post';
+import type { Post } from 'src/schemas/post';
+
+export interface Props {
+    post: Post;
+}
+
+const { post } = Astro.props;
+const category = post.data.category && (await getCategory(post.data.category.slug));
+---
+
+<header class="post-header max-w-740 z-3 relative mx-auto px-4">
+    {
+        category && (
+            <div class="mb-3 text-sm font-medium tracking-wider text-gray-500">
+                <a
+                    class="uppercase hover:underline"
+                    href={`/blog/category/${category.slug}/`}
+                    data-astro-prefetch="hover"
+                >
+                    {category.data.title}
+                </a>{' '}
+                {/* TODO: update to proper link */}
+            </div>
+        )
+    }
+
+    <h1 class="post-title text-32 lg:text-44 text-title leading-tight md:text-4xl">
+        {post.data.title}
+    </h1>
+    {post.data.excerpt && <p class="post-excerpt text-22 mt-6 text-gray-500">{post.data.excerpt}</p>}
+
+    <div class="post-share mt-8 flex flex-col md:flex-row">
+        <Author post={post} />
+        <SocialShare post={post} trackingName="Header" divClass="order-first mb-6 md:mb-0 md:order-none" />
+    </div>
+</header>

@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+const AvatarImage = '/assets/images/authors/default_avatar.png';
+import type { Post } from 'src/schemas/post';
+import DateTimeComponent from '@components/DateTimeComponent.astro';
+import { t } from '@utils/use-lang';
+import { getEntries, getEntry, type CollectionEntry } from 'astro:content';
+import { getCategory } from '@utils/post';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    post: Post;
+}
+
+const { post } = Astro.props;
+
+const post_ref = (await getEntry('blog', post.slug)) as CollectionEntry<'blog'>;
+const authors = await getEntries(post_ref.data.authors);
+const category = await getCategory(post.data.category.slug);
+
+const url = post.href || `/blog/${post.slug}/`;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/authors/*.{jpeg,jpg,png,gif,svg}');
+
+const authorImages = await Promise.all(
+    authors.map(async (author) => {
+        const image = author.data.profile_image ? `/src${author.data.profile_image}` : undefined;
+        if (image && !images[image]) {
+            throw new Error(`"${image}" does not exist in glob: "/src/assets/images/authors/*.{jpeg,jpg,png,gif,svg}"`);
+        }
+        if (image && images[image]) {
+            return { [author.slug]: await images[image]() };
+        }
+        return {};
+    })
+);
+const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), {});
+---
+
+<article class="mb-12 flex items-center justify-between">
+    <header class="mr-5 w-full">
+        <div class="mb-2 flex flex-row items-center">
+            <a
+                href={`/blog/author/${authors[0].slug}/`}
+                title={t(`Go to the profile of`) + ' ' + authors[0].data.name}
+                data-astro-prefetch="hover"
+            >
+                {
+                    authors[0].data.profile_image ? (
+                        <Image
+                            class="h-5 w-5 rounded-full object-cover"
+                            src={authorImagesObj[authors[0].slug].default}
+                            alt={t(`Go to the profile of`) + authors[0].data.name}
+                            width="20"
+                            height="20"
+                            loading="eager"
+                        />
+                    ) : (
+                        <Image
+                            class="h-5 w-5 rounded-full object-cover"
+                            src={AvatarImage}
+                            alt={t(`Go to the profile of`) + authors[0].data.name}
+                            width="20"
+                            height="20"
+                            loading="eager"
+                        />
+                    )
+                }
+            </a>
+
+            <div class="ml-2 text-sm">
+                <a
+                    href={`/blog/author/${authors[0].slug}/`}
+                    title={t(`Go to the profile of`) + ' ' + authors[0].data.name}
+                    data-astro-prefetch="hover"
+                >
+                    {authors[0].data.name}
+                </a>
+                {
+                    category && (
+                        <>
+                            <span class="text-gray-500"> {t(`in`)} </span>
+                            <a href={`/blog/category/${category.slug}/`} data-astro-prefetch="hover">
+                                {category.data.title}
+                            </a>
+                        </>
+                    )
+                }
+            </div>
+        </div>
+
+        <a href={url}>
+            <h2 class="lineClamp-2 text-title text-2xl leading-tight">
+                {post.data.title}
+            </h2>
+            {
+                post.data.excerpt && (
+                    <p class="mt-2 text-gray-500 text-base line-clamp-2">
+                        {post.data.excerpt.split(``).splice(0, 150).join(``)}
+                    </p>
+                )
+            }
+        </a>
+
+        {/* {!-- Date Time and reading Time - ./partials/components/datetime.hbs --} */}
+        <DateTimeComponent post={post} dateTimeClass="mt-3 text-gray-500 text-sm" />
+    </header>
+
+    {
+        post.data.heroImage && (
+            <a href={url} class="flex-none" data-astro-prefetch="hover">
+                <Image
+                    src={post.data.heroImage as ImageMetadata}
+                    alt={post.data.title}
+                    class="lazyload block h-32 w-52 object-cover"
+                    widths={[400, 750, 960]}
+                    sizes={`(max-width: 1000px) 400px, 600px`}
+                    width="208"
+                    height="128"
+                    loading="eager"
+                />
+            </a>
+        )
+    }
+</article>

@@ -1,0 +1,51 @@
+---
+const props = Astro.props;
+---
+
+<blockquote {...props} class="kg-blockquote-alt">
+    <!-- <span class="text-4xl text-blue-600 mb-2">“</span> -->
+    <slot />
+    <!-- Be sure to add a `<slot/>` for child content! -->
+</blockquote>
+
+<style>
+    .kg-blockquote-alt {
+        font-size: 1.5em;
+        font-style: italic;
+        line-height: 1.7em;
+        text-align: center;
+        padding: 0 2.5em;
+    }
+
+    .kg-blockquote-alt,
+    .pullquote {
+        color: var(--gray-500);
+        font-size: 1.2em;
+        font-style: italic;
+        line-height: 1.7em;
+        padding: 0 1.2em;
+        text-align: center;
+    }
+    @media (min-width: 768px) {
+        .kg-blockquote-alt {
+            font-size: 1.5em;
+            padding: 0 2em;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .kg-blockquote-alt {
+            font-size: 1.4em;
+            padding-left: 2em;
+            padding-right: 2em;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .kg-blockquote-alt {
+            font-size: 1.2em;
+            padding-left: 1.75em;
+            padding-right: 1.75em;
+        }
+    }
+</style>

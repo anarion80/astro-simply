@@ -1,0 +1,64 @@
+---
+import { t } from '@utils/use-lang';
+import { Icon } from 'astro-icon/components';
+type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no-unused-vars
+---
+
+<span
+    role="button"
+    aria-label="Toggle Search"
+    class="js-modal-button godo-tracking button is-white mr-2"
+    data-target="modal-search"
+    aria-haspopup="true"
+    data-event-category="Header"
+    data-event-action="Search"
+    data-event-label="Click"
+    data-event-non-interaction="true"
+>
+    <Icon name="fa6-solid:magnifying-glass" class="icon" />
+</span>
+<div id="modal-search" class="js-modal modal search fixed inset-0 z-50 flex flex-col flex-wrap items-center">
+    {/* {!-- Bg --}} */}
+    <div class="bg-modal js-modal-close absolute inset-0 bg-opacity-60"></div>
+
+    {/* {!-- Close --} */}
+    <div class="button is-dark is-circle js-modal-close z-3 absolute" style={{ top: `5px`, right: `5px` }}>
+        <Icon name="fa6-solid:xmark" class="icon" />
+    </div>
+
+    <div class="modal-content z-2 pt-vw6 relative w-full max-w-2xl px-5 pb-5">
+        <div class="search-wrap bg-blank rounded-md shadow-sm">
+            {/* {!-- search form --} */}
+            <form class="search-form flex w-full items-center px-3 text-base">
+                <Icon name="fa6-solid:magnifying-glass" class="icon" />
+                <input
+                    id="search-field"
+                    class="is-medium w-full"
+                    type="text"
+                    placeholder={`${t(`Search`)}...`}
+                    aria-label="Search box"
+                />
+            </form>
+            {/* {!-- show a message to the user if there is no post --} */}
+            <span class="js-search-message search-message hidden p-2 text-sm leading-none text-gray-500"
+                >{t(`No results found`)}</span
+            >
+            {/* {!-- Search results --} */}
+            <div id="search-results" class="search-results mx-auto w-full leading-none"></div>
+        </div>
+        {/* {!-- showing the function keys --} */}
+        <div class="mt-2 hidden justify-end text-xs leading-none text-white opacity-80 md:flex">
+            <div class="">
+                <span class="bg-orange inline-block rounded p-1">↑</span>&nbsp;<span
+                    class="bg-orange inline-block rounded p-1">↓</span
+                >&nbsp;{t(`Navigate up/down`)}
+            </div>
+            <div class="ml-3">
+                <span class="bg-orange inline-block rounded p-1">Enter</span>&nbsp;{t(`Go to article`)}
+            </div>
+            <div class="ml-3">
+                <span class="bg-orange inline-block rounded p-1">Esc</span>&nbsp;{t(`Close search`)}
+            </div>
+        </div>
+    </div>
+</div>

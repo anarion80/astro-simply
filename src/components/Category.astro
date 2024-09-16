@@ -1,0 +1,25 @@
+---
+import { t } from '@utils/use-lang';
+import { getEntry } from 'astro:content';
+
+export interface Props {
+    category: string;
+    tagClass?: string;
+}
+
+const { category, tagClass } = Astro.props;
+
+const categoryObject = await getEntry({
+    collection: 'categories',
+    slug: category,
+});
+---
+
+<a
+    href={`/blog/category/${categoryObject?.slug}/`}
+    title={`${t(`Go to`)} ` + categoryObject?.data.title}
+    class={`button is-x-small is-dark-blue ` + (tagClass ? tagClass : `mt-3 mr-3`)}
+    style={categoryObject && { backgroundColor: categoryObject?.slug }}
+    data-astro-prefetch="hover"
+    >{categoryObject?.data.title}
+</a>

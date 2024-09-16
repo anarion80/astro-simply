@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+    background?: ImageMetadata;
+    hasGradient?: boolean;
+    altTitle?: string;
+}
+
+const { background, hasGradient, altTitle } = Astro.props;
+---
+
+{
+    background && (
+        <Image
+            src={background}
+            style={{
+                position: `absolute`,
+                height: `100%`,
+                width: `100%`,
+                inset: 0,
+                objectFit: `cover`,
+            }}
+            class="image-inset blur-up lazyloaded !important"
+            alt={altTitle || null}
+            width="1200"
+            height="628"
+            widths={[300, 600, 1000, 2000]}
+            sizes={`(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw`}
+            loading="eager"
+        />
+    )
+}
+
+{hasGradient && <div class="simply-cover-gradient z-2 absolute inset-0 bg-black bg-opacity-50" />}

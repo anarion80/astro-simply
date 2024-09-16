@@ -1,0 +1,30 @@
+---
+// github.com/rezahedi/rezahedi.dev/blob/main/src/components/TOCHeading.astro
+interface Heading {
+    slug: string;
+    text: string;
+    children: Heading[];
+}
+
+interface Props {
+    heading: Heading;
+    className?: string;
+}
+
+const { heading, className = '' }: Props = Astro.props;
+---
+
+<li>
+    <a href={'#' + heading.slug} class={className}>
+        {heading.text}
+    </a>
+    {
+        heading.children.length > 0 && (
+            <ul class="px-3">
+                {heading.children.map((child: Heading) => (
+                    <Astro.self heading={child} className="py-2 px-3 block hover:text-primary" />
+                ))}
+            </ul>
+        )
+    }
+</li>

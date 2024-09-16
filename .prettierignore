@@ -1,0 +1,14 @@
+# Ignore everything
+/*
+*.md
+*.mdx
+
+# Except these files & folders
+!/src
+!/public
+!/.github
+!tsconfig.json
+!astro.config.ts
+!package.json
+!.prettierrc.cjs
+!eslint.config.cjs

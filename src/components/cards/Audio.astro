@@ -1,0 +1,587 @@
+---
+export interface Props {
+    audioFile: string;
+    audioTitle: string;
+    thumbnailSrc?: string;
+}
+
+const { audioFile, audioTitle, thumbnailSrc } = Astro.props;
+const thumbnailCls = thumbnailSrc ? 'kg-audio-thumbnail' : 'kg-audio-thumbnail kg-audio-hide';
+const emptyThumbnailCls = thumbnailSrc
+    ? 'kg-audio-thumbnail placeholder kg-audio-hide'
+    : 'kg-audio-thumbnail placeholder';
+---
+
+<div class="kg-card kg-audio-card">
+    {thumbnailSrc && <img src={thumbnailSrc} alt="audio-thumbnail" class={thumbnailCls} />}
+    <div class={emptyThumbnailCls}>
+        <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M7.5 15.33a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM15 13.83a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0Z"
+            ></path>
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M14.486 6.81A2.25 2.25 0 0 1 17.25 9v5.579a.75.75 0 0 1-1.5 0v-5.58a.75.75 0 0 0-.932-.727.755.755 0 0 1-.059.013l-4.465.744a.75.75 0 0 0-.544.72v6.33a.75.75 0 0 1-1.5 0v-6.33a2.25 2.25 0 0 1 1.763-2.194l4.473-.746Z"
+            ></path>
+            <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M3 1.5a.75.75 0 0 0-.75.75v19.5a.75.75 0 0 0 .75.75h18a.75.75 0 0 0 .75-.75V5.133a.75.75 0 0 0-.225-.535l-.002-.002-3-2.883A.75.75 0 0 0 18 1.5H3ZM1.409.659A2.25 2.25 0 0 1 3 0h15a2.25 2.25 0 0 1 1.568.637l.003.002 3 2.883a2.25 2.25 0 0 1 .679 1.61V21.75A2.25 2.25 0 0 1 21 24H3a2.25 2.25 0 0 1-2.25-2.25V2.25c0-.597.237-1.169.659-1.591Z"
+            ></path>
+        </svg>
+    </div>
+    <div class="kg-audio-player-container" style="--buffered-width: 9.803921568627452%;">
+        <audio src={audioFile} preload="metadata"></audio>
+        <div class="kg-audio-title">{audioTitle}</div>
+        <div class="kg-audio-player">
+            <button class="kg-audio-play-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M23.14 10.608 2.253.164A1.559 1.559 0 0 0 0 1.557v20.887a1.558 1.558 0 0 0 2.253 1.392L23.14 13.393a1.557 1.557 0 0 0 0-2.785Z"
+                    ></path>
+                </svg>
+            </button>
+            <button class="kg-audio-pause-icon kg-audio-hide">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <rect x="3" y="1" width="7" height="22" rx="1.5" ry="1.5"></rect>
+                    <rect x="14" y="1" width="7" height="22" rx="1.5" ry="1.5"></rect>
+                </svg>
+            </button>
+            <span class="kg-audio-current-time">0:00</span>
+            <div class="kg-audio-time">/<span class="kg-audio-duration">0:00</span></div>
+            <input type="range" class="kg-audio-seek-slider" max="102" value="0" />
+            <button class="kg-audio-playback-rate">1&#215;</button>
+            <button class="kg-audio-unmute-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M15.189 2.021a9.728 9.728 0 0 0-7.924 4.85.249.249 0 0 1-.221.133H5.25a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1.794a.249.249 0 0 1 .221.133 9.73 9.73 0 0 0 7.924 4.85h.06a1 1 0 0 0 1-1V3.02a1 1 0 0 0-1.06-.998Z"
+                    ></path>
+                </svg>
+            </button>
+            <button class="kg-audio-mute-icon kg-audio-hide">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M16.177 4.3a.248.248 0 0 0 .073-.176v-1.1a1 1 0 0 0-1.061-1 9.728 9.728 0 0 0-7.924 4.85.249.249 0 0 1-.221.133H5.25a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h.114a.251.251 0 0 0 .177-.073ZM23.707 1.706A1 1 0 0 0 22.293.292l-22 22a1 1 0 0 0 0 1.414l.009.009a1 1 0 0 0 1.405-.009l6.63-6.631A.251.251 0 0 1 8.515 17a.245.245 0 0 1 .177.075 10.081 10.081 0 0 0 6.5 2.92 1 1 0 0 0 1.061-1V9.266a.247.247 0 0 1 .073-.176Z"
+                    ></path>
+                </svg>
+            </button>
+            <input type="range" class="kg-audio-volume-slider" max="100" value="100" />
+        </div>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const handleAudioPlayer = (audioElementContainer: HTMLElement) => {
+            const audioPlayerContainer = audioElementContainer.querySelector(
+                '.kg-audio-player-container'
+            ) as HTMLElement;
+            const playIconContainer = audioElementContainer.querySelector('.kg-audio-play-icon') as HTMLElement;
+            const pauseIconContainer = audioElementContainer.querySelector('.kg-audio-pause-icon') as HTMLElement;
+            const seekSlider = audioElementContainer.querySelector('.kg-audio-seek-slider') as HTMLInputElement;
+            const playbackRateContainer = audioElementContainer.querySelector('.kg-audio-playback-rate') as HTMLElement;
+            const muteIconContainer = audioElementContainer.querySelector('.kg-audio-mute-icon') as HTMLElement;
+            const unmuteIconContainer = audioElementContainer.querySelector('.kg-audio-unmute-icon') as HTMLElement;
+            const volumeSlider = audioElementContainer.querySelector('.kg-audio-volume-slider') as HTMLInputElement;
+            const audio = audioElementContainer.querySelector('audio') as HTMLAudioElement;
+            const durationContainer = audioElementContainer.querySelector('.kg-audio-duration') as HTMLElement;
+            const currentTimeContainer = audioElementContainer.querySelector('.kg-audio-current-time') as HTMLElement;
+
+            interface PlaybackRate {
+                rate: number;
+                label: string;
+            }
+
+            const playbackRates: PlaybackRate[] = [
+                { rate: 0.75, label: '0.7×' },
+                { rate: 1.0, label: '1×' },
+                { rate: 1.25, label: '1.2×' },
+                { rate: 1.75, label: '1.7×' },
+                { rate: 2.0, label: '2×' },
+            ];
+
+            let raf: number | null = null;
+            let currentPlaybackRateIdx = 1;
+
+            const whilePlaying = () => {
+                seekSlider.value = Math.floor(audio.currentTime).toString();
+                currentTimeContainer.textContent = calculateTime(parseInt(seekSlider.value));
+                audioPlayerContainer.style.setProperty(
+                    '--seek-before-width',
+                    `${(parseInt(seekSlider.value) / parseInt(seekSlider.max)) * 100}%`
+                );
+                raf = requestAnimationFrame(whilePlaying);
+            };
+
+            const showRangeProgress = (rangeInput: HTMLInputElement) => {
+                if (rangeInput === seekSlider) {
+                    audioPlayerContainer.style.setProperty(
+                        '--seek-before-width',
+                        (parseInt(rangeInput.value) / parseInt(rangeInput.max)) * 100 + '%'
+                    );
+                } else {
+                    audioPlayerContainer.style.setProperty(
+                        '--volume-before-width',
+                        (parseInt(rangeInput.value) / parseInt(rangeInput.max)) * 100 + '%'
+                    );
+                }
+            };
+
+            const calculateTime = (secs: number): string => {
+                const minutes = Math.floor(secs / 60);
+                const seconds = Math.floor(secs % 60);
+                const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+                return `${minutes}:${returnedSeconds}`;
+            };
+
+            const displayDuration = () => {
+                durationContainer.textContent = calculateTime(audio.duration);
+            };
+
+            const setSliderMax = () => {
+                seekSlider.max = Math.floor(audio.duration).toString();
+            };
+
+            const displayBufferedAmount = () => {
+                if (audio.buffered.length > 0) {
+                    const bufferedAmount = Math.floor(audio.buffered.end(audio.buffered.length - 1));
+                    audioPlayerContainer.style.setProperty(
+                        '--buffered-width',
+                        `${(bufferedAmount / parseInt(seekSlider.max)) * 100}%`
+                    );
+                }
+            };
+
+            if (audio.readyState > 0) {
+                displayDuration();
+                setSliderMax();
+                displayBufferedAmount();
+            } else {
+                audio.addEventListener('loadedmetadata', () => {
+                    displayDuration();
+                    setSliderMax();
+                    displayBufferedAmount();
+                });
+            }
+
+            playIconContainer.addEventListener('click', () => {
+                playIconContainer.classList.add('kg-audio-hide');
+                pauseIconContainer.classList.remove('kg-audio-hide');
+                audio.play();
+                requestAnimationFrame(whilePlaying);
+            });
+
+            pauseIconContainer.addEventListener('click', () => {
+                pauseIconContainer.classList.add('kg-audio-hide');
+                playIconContainer.classList.remove('kg-audio-hide');
+                audio.pause();
+                if (raf) {
+                    cancelAnimationFrame(raf);
+                }
+            });
+
+            muteIconContainer.addEventListener('click', () => {
+                muteIconContainer.classList.add('kg-audio-hide');
+                unmuteIconContainer.classList.remove('kg-audio-hide');
+                audio.muted = false;
+            });
+
+            unmuteIconContainer.addEventListener('click', () => {
+                unmuteIconContainer.classList.add('kg-audio-hide');
+                muteIconContainer.classList.remove('kg-audio-hide');
+                audio.muted = true;
+            });
+
+            playbackRateContainer.addEventListener('click', () => {
+                const nextPlaybackRate = playbackRates[(currentPlaybackRateIdx + 1) % 5];
+                currentPlaybackRateIdx = (currentPlaybackRateIdx + 1) % 5;
+                audio.playbackRate = nextPlaybackRate.rate;
+                playbackRateContainer.textContent = nextPlaybackRate.label;
+            });
+
+            audio.addEventListener('progress', displayBufferedAmount);
+
+            seekSlider.addEventListener('input', (e: Event) => {
+                const target = e.target as HTMLInputElement;
+                showRangeProgress(target);
+                currentTimeContainer.textContent = calculateTime(parseInt(seekSlider.value));
+                if (raf !== null) {
+                    cancelAnimationFrame(raf);
+                }
+            });
+
+            seekSlider.addEventListener('change', () => {
+                audio.currentTime = parseInt(seekSlider.value);
+                if (!audio.paused) {
+                    requestAnimationFrame(whilePlaying);
+                }
+            });
+
+            volumeSlider.addEventListener('input', (e: Event) => {
+                const target = e.target as HTMLInputElement;
+                const value = parseInt(target.value);
+                showRangeProgress(target);
+                audio.volume = value / 100;
+            });
+        };
+
+        const audioCardElements = document.querySelectorAll('.kg-audio-card');
+
+        audioCardElements.forEach((element) => {
+            handleAudioPlayer(element as HTMLElement);
+        });
+    })();
+</script>
+
+<style>
+    .kg-card {
+        @extend %font-sans;
+    }
+
+    .kg-card:not(.kg-callout-card) {
+        font-size: 1rem;
+    }
+
+    .kg-audio-card,
+    .kg-audio-card * {
+        box-sizing: border-box;
+    }
+
+    .kg-audio-card {
+        display: flex;
+        width: 100%;
+        min-height: 96px;
+        border-radius: 6px;
+        padding: 4px;
+        background: #fff;
+        color: #222;
+        box-shadow: inset 0 0 0 1px rgba(124, 139, 154, 0.25);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+            'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .kg-audio-card + .kg-audio-card {
+        margin-top: 1em;
+    }
+
+    .kg-audio-thumbnail {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        min-width: 80px;
+        margin: 8px;
+        background: transparent;
+        object-fit: cover;
+        aspect-ratio: 1/1;
+        border-radius: 3px;
+    }
+
+    .kg-audio-thumbnail.placeholder {
+        background: var(--ghost-accent-color);
+    }
+
+    .kg-audio-thumbnail.placeholder svg {
+        width: 24px;
+        height: 24px;
+        fill: white;
+    }
+
+    .kg-audio-player-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        --seek-before-width: 0%;
+        --volume-before-width: 100%;
+        --buffered-width: 0%;
+    }
+
+    .kg-audio-title {
+        width: 100%;
+        margin: 8px 0 0 0;
+        padding: 8px 12px;
+        border: none;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.15em;
+        background: transparent;
+    }
+
+    .kg-audio-player {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        padding: 8px 12px;
+    }
+
+    .kg-audio-current-time {
+        min-width: 38px;
+        padding: 0 4px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1em;
+        white-space: nowrap;
+    }
+
+    .kg-audio-time {
+        width: 56px;
+        color: #ababab;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 500;
+        line-height: 1em;
+        white-space: nowrap;
+    }
+
+    .kg-audio-duration {
+        padding: 0 4px;
+    }
+
+    .kg-audio-play-icon,
+    .kg-audio-pause-icon {
+        position: relative;
+        bottom: 1px;
+        padding: 0px 4px 0 0;
+        font-size: 0;
+        background: transparent;
+    }
+
+    .kg-audio-hide {
+        display: none !important;
+    }
+
+    .kg-audio-play-icon svg,
+    .kg-audio-pause-icon svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+    }
+
+    .kg-audio-seek-slider {
+        flex-grow: 1;
+        margin: 0 4px;
+    }
+
+    @media (max-width: 640px) {
+        .kg-audio-seek-slider {
+            display: none;
+        }
+    }
+
+    .kg-audio-playback-rate {
+        min-width: 37px;
+        padding: 0 4px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1em;
+        text-align: left;
+        background: transparent;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+        .kg-audio-playback-rate {
+            padding-left: 8px;
+        }
+    }
+
+    .kg-audio-mute-icon,
+    .kg-audio-unmute-icon {
+        position: relative;
+        bottom: -1px;
+        padding: 0 4px;
+        font-size: 0;
+        background: transparent;
+    }
+
+    @media (max-width: 640px) {
+        .kg-audio-mute-icon,
+        .kg-audio-unmute-icon {
+            margin-left: auto;
+        }
+    }
+
+    .kg-audio-mute-icon svg,
+    .kg-audio-unmute-icon svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+    }
+
+    .kg-audio-volume-slider {
+        width: 80px;
+    }
+
+    @media (max-width: 400px) {
+        .kg-audio-volume-slider {
+            display: none;
+        }
+    }
+
+    .kg-audio-seek-slider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: var(--seek-before-width) !important;
+        height: 4px;
+        cursor: pointer;
+        background-color: currentColor;
+        border-radius: 2px;
+    }
+
+    .kg-audio-volume-slider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: var(--volume-before-width) !important;
+        height: 4px;
+        cursor: pointer;
+        background-color: currentColor;
+        border-radius: 2px;
+    }
+
+    /* Resetting browser styles
+/* --------------------------------------------------------------- */
+
+    .kg-audio-player-container input[type='range'] {
+        position: relative;
+        -webkit-appearance: none;
+        background: transparent;
+    }
+
+    .kg-audio-player-container input[type='range']:focus {
+        outline: none;
+    }
+
+    .kg-audio-player-container input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+    }
+
+    .kg-audio-player-container input[type='range']::-ms-track {
+        cursor: pointer;
+        border-color: transparent;
+        color: transparent;
+        background: transparent;
+    }
+
+    .kg-audio-player-container button {
+        display: flex;
+        align-items: center;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .kg-audio-player-container input[type='range'] {
+        height: auto;
+        padding: 0;
+        border: 0;
+    }
+
+    /* Chrome & Safari styles
+/* --------------------------------------------------------------- */
+
+    .kg-audio-player-container input[type='range']::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: rgba(124, 139, 154, 0.25);
+        border-radius: 2px;
+    }
+
+    .kg-audio-player-container input[type='range']::-webkit-slider-thumb {
+        position: relative;
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        margin: -5px 0 0 0;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-audio-player-container input[type='range']:active::-webkit-slider-thumb {
+        transform: scale(1.2);
+    }
+
+    /* Firefox styles
+/* --------------------------------------------------------------- */
+
+    .kg-audio-player-container input[type='range']::-moz-range-track {
+        width: 100%;
+        height: 4px;
+        cursor: pointer;
+        background: rgba(124, 139, 154, 0.25);
+        border-radius: 2px;
+    }
+
+    .kg-audio-player-container input[type='range']::-moz-range-progress {
+        background: currentColor;
+        border-radius: 2px;
+    }
+
+    .kg-audio-player-container input[type='range']::-moz-range-thumb {
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-audio-player-container input[type='range']:active::-moz-range-thumb {
+        transform: scale(1.2);
+    }
+
+    /* Edge & IE styles
+/* --------------------------------------------------------------- */
+
+    .kg-audio-player-container input[type='range']::-ms-track {
+        width: 100%;
+        height: 3px;
+        border: solid transparent;
+        color: transparent;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    .kg-audio-player-container input[type='range']::-ms-fill-lower {
+        background: #fff;
+    }
+
+    .kg-audio-player-container input[type='range']::-ms-fill-upper {
+        background: currentColor;
+    }
+
+    .kg-audio-player-container input[type='range']::-ms-thumb {
+        box-sizing: content-box;
+        width: 13px;
+        height: 13px;
+        border: 0;
+        cursor: pointer;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.24);
+    }
+
+    .kg-audio-player-container input[type='range']:active::-ms-thumb {
+        transform: scale(1.2);
+    }
+</style>

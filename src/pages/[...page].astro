@@ -1,0 +1,52 @@
+---
+import Layout from '@layouts/Layout.astro';
+import StoryGrid from '@components/story/StoryGrid.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getPosts } from '@utils/post';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+---
+
+<Layout isHome={true} footer={true} isPost={false} bodyClass="is-frontpage">
+    <MetaData slot="head" location={Astro.url.pathname} />
+    <div class="site-post feed-entry-content container mx-auto pt-10">
+        <div class="feed-entry-wrap max-w-1100 mx-auto">
+            <div class="row">
+                {
+                    page.data.map((item, i) => {
+                        if (i === 0) {
+                            return (
+                                <div class="col s12 m6 l12 ss1">
+                                    <StoryGrid post={item} imageSize={'large'} />
+                                </div>
+                            );
+                        } else if (i === 4 || i === 5) {
+                            return (
+                                <div class="col s12 m6 ss2">
+                                    <StoryGrid post={item} imageSize={'medium'} />
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <div class="col s12 m6 l4">
+                                    <StoryGrid post={item} imageSize={'small'} />
+                                </div>
+                            );
+                        }
+                    })
+                }
+                <Pagination pageContext={page} />
+            </div>
+        </div>
+    </div>
+</Layout>

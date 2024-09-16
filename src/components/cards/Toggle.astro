@@ -1,0 +1,150 @@
+---
+export interface Props {
+    title: string;
+    text: string;
+}
+
+const { title, text } = Astro.props;
+---
+
+<div class="kg-card kg-toggle-card" data-kg-toggle-state="close">
+    <div class="kg-toggle-heading">
+        <h4 class="kg-toggle-heading-text">{title}</h4>
+        <button class="kg-toggle-card-icon">
+            <svg id="Regular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path class="cls-1" d="M23.25,7.311,12.53,18.03a.749.749,0,0,1-1.06,0L.75,7.311"></path>
+            </svg>
+        </button>
+    </div><div class="kg-toggle-content"><p>{text}</p></div>
+</div>
+
+<script>
+    (function () {
+        const toggleHeadingElements = document.getElementsByClassName('kg-toggle-heading');
+
+        const toggleFn = function (event: Event) {
+            const targetElement = event.target as HTMLElement;
+            const parentElement = targetElement.closest('.kg-toggle-card') as HTMLElement;
+            const toggleState = parentElement.getAttribute('data-kg-toggle-state');
+            if (toggleState === 'close') {
+                parentElement.setAttribute('data-kg-toggle-state', 'open');
+            } else {
+                parentElement.setAttribute('data-kg-toggle-state', 'close');
+            }
+        };
+
+        for (let i = 0; i < toggleHeadingElements.length; i++) {
+            toggleHeadingElements[i].addEventListener('click', toggleFn, false);
+        }
+    })();
+</script>
+
+<style>
+    .kg-card {
+        @extend %font-sans;
+    }
+
+    .kg-card:not(.kg-callout-card) {
+        font-size: 1rem;
+    }
+
+    .kg-toggle-card,
+    .kg-toggle-card * {
+        box-sizing: border-box;
+    }
+
+    .kg-toggle-card {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px rgba(124, 139, 154, 0.25);
+        border-radius: 4px;
+        padding: 1.2em;
+    }
+
+    .kg-toggle-card[data-kg-toggle-state='close'] .kg-toggle-content {
+        height: 0;
+        overflow: hidden;
+        transition:
+            opacity 0.5s ease,
+            top 0.35s ease;
+        opacity: 0;
+        top: -0.5em;
+        position: relative;
+    }
+
+    .kg-toggle-content {
+        height: auto;
+        opacity: 1;
+        transition:
+            opacity 1s ease,
+            top 0.35s ease;
+        top: 0;
+        position: relative;
+    }
+
+    .kg-toggle-card[data-kg-toggle-state='close'] svg {
+        transform: unset;
+    }
+
+    .kg-toggle-heading {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .kg-toggle-card h4.kg-toggle-heading-text {
+        font-size: 1.15em;
+        font-weight: 700;
+        line-height: 1.3em;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .kg-toggle-content p:first-of-type {
+        margin-top: 0.5em;
+    }
+
+    .kg-toggle-card .kg-toggle-content p,
+    .kg-toggle-card .kg-toggle-content ol,
+    .kg-toggle-card .kg-toggle-content ul {
+        font-size: 0.95em;
+        line-height: 1.5em;
+        margin-top: 0.95em;
+        margin-bottom: 0;
+    }
+
+    .kg-toggle-card li + li {
+        margin-top: 0.5em;
+    }
+
+    .kg-toggle-card-icon {
+        height: 24px;
+        width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 1em;
+        background: none;
+        border: 0;
+    }
+
+    .kg-toggle-heading svg {
+        width: 14px;
+        color: rgba(124, 139, 154, 0.5);
+        transition: all 0.3s;
+        transform: rotate(-180deg);
+    }
+
+    .kg-toggle-heading path {
+        fill: none;
+        stroke: currentcolor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5;
+        fill-rule: evenodd;
+    }
+
+    .kg-toggle-card + .kg-toggle-card {
+        margin-top: 1em;
+    }
+</style>

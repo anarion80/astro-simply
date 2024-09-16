@@ -1,0 +1,69 @@
+---
+import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+import Layout from '@layouts/Layout.astro';
+import Pagination from '@components/Pagination.astro';
+import { CONFIG } from '@config/config';
+import MetaData from '@components/meta/MetaData.astro';
+import StoryPodcast from '@components/story/StoryPodcast.astro';
+import { getPosts } from '@utils/post';
+import { t } from '@utils/use-lang';
+import { Icon } from 'astro-icon/components';
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const posts = await getPosts();
+    return paginate(posts, { pageSize: CONFIG.postsPerPage });
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page }: Props = Astro.props;
+---
+
+<Layout footer={true} isPost={false} bodyClass="is-podcast has-cover is-head-transparent">
+    <MetaData slot="head" location={Astro.url.pathname} title={t(`Podcasts`, `Podcasts`)} />
+    <div
+        class="spc-header simply-hero-cover min-h-lg bg-dark relative flex items-center justify-center overflow-hidden px-4 py-24"
+    >
+        <article
+            class="spc-h-inner z-3 animated bounceIn relative flex max-w-4xl flex-col pt-16 text-center text-2xl text-white md:text-3xl"
+        >
+            <h1 class="spc-h-t text-5xl text-white md:text-6xl">Podcasts</h1>
+            <p class="spc-h-e">The Podcast</p>
+            <p class="spc-des">
+                Updates and behind the scenes stories about the world of Ghost. Hosted by Ghost founders <em
+                    >John O&apos;Nolan</em
+                > &amp; <em>Hannah Wolfe</em>.
+            </p>
+            {/* <p class="spc-des" dangerouslySetInnerHTML={{ __html: page.html }}></p> */}
+            <div class="spc-buttons">
+                <a href="https://itunes.apple.com/" class="button">
+                    <Icon name="fa6-brands:itunes" class="icon is-stroke" />
+                    <span>iTunes</span>
+                </a>&nbsp;
+
+                <a href="https://www.pocketcasts.com/" class="button">
+                    <Icon name="cbi:pocketcasts" class="icon is-stroke" />
+                    <span>Pocket Casts</span>
+                </a>&nbsp;
+
+                <a href="https://anchor.fm/" class="button">
+                    <Icon name="fa6-solid:square-rss" class="icon is-stroke" />
+                    <span>RSS</span>
+                </a>
+            </div>
+        </article>
+
+        {/* <MediaCover background={page.localFeatureImage} hasGradient={true} altTitle={page.title} /> */}
+    </div>
+    <div class="feed-entry-content px-4 py-12">
+        <div class="feed-entry-wrap mx-auto max-w-4xl">
+            {
+                page.data.map((item) => {
+                    return <StoryPodcast post={item} />;
+                })
+            }
+
+            <Pagination pageContext={page} />
+        </div>
+    </div>
+</Layout>
