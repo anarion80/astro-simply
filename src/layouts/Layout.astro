@@ -33,7 +33,7 @@ const hasDropDown = !!CONFIG.menuDropdown;
         <meta name="generator" content={Astro.generator} />
         <meta name="HandheldFriendly" content="True" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <ViewTransitions fallback="none" />
+        {site.viewTransitions && <ViewTransitions fallback="none" />}
         <slot name="head" />
     </head>
     <body class={bodyClass}>

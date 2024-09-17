@@ -23,6 +23,7 @@ export const configSchema = z.object({
     accentColor: z.string().min(1),
     lang: z.string().min(1),
     locale: z.string().min(1),
+    viewTransitions: z.boolean().optional().default(false),
     navigation: z
         .object({
             label: z.string().min(1),
