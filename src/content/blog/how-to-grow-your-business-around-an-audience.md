@@ -6,7 +6,7 @@ title: How to grow your business around an audience
 excerpt: A guide to collaborating with other staff users to publish, and some resources to help you with the next steps of growing your business
 heroImage: https://gatsby-ghost-simply.netlify.app/static/e4134c829a67be07f057d83a9bff5839/6b4f8/admin-settings.webp
 # heroImage: '../../content/blog/_images/2024-08-06-strange-connection-issues/connection.jpg'
-featured: false
+featured: true
 draft: false
 category: others
 tags:
@@ -16,7 +16,7 @@ tags:
     - other
 ---
 
-> Post Type: `Post`
+> Post Type: `PostHeaderImage`
 > Post Featured: `true`
 
 As you grow, you'll probably want to start inviting team members and collaborators to your site. Ghost has a number of different user roles for your team:

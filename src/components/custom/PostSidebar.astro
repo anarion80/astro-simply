@@ -10,6 +10,7 @@ import SidebarPost from '@components/sidebar/SidebarPost.astro';
 import { t } from '@utils/use-lang';
 import MetaData from '@components/meta/MetaData.astro';
 import type { Post } from 'src/schemas/post';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 
 export interface Props {
     post: Post;
@@ -19,6 +20,7 @@ export interface Props {
 }
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
 const { Content } = await post.render();
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <Layout footer={true} bodyClass="is-article is-sidebar" isPost={true}>
@@ -29,12 +31,24 @@ const { Content } = await post.render();
                 <div class="col s12 l7">
                     <article>
                         <header class="story-post-header mb-5">
-                            <h1 class="text-title mb-5 text-4xl leading-tight">
+                            <h1
+                                class="text-title mb-5 text-4xl leading-tight"
+                                transition:name={getTransitionNameFromElementId({
+                                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+                                })}
+                            >
                                 {post.data.title}
                             </h1>
                             {
                                 post.data.excerpt && (
-                                    <p class="post-excerpt my-6 text-xl text-gray-500">{post.data.excerpt}</p>
+                                    <p
+                                        class="post-excerpt my-6 text-xl text-gray-500"
+                                        transition:name={getTransitionNameFromElementId({
+                                            elementId: TRANSITION_ELEMENT_IDS.POST_CARD.EXCERPT,
+                                        })}
+                                    >
+                                        {post.data.excerpt}
+                                    </p>
                                 )
                             }
                             {

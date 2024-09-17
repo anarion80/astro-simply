@@ -3,6 +3,7 @@ import SocialShare from '@components/SocialShare.astro';
 import Author from '@components/Author.astro';
 import { getCategory } from '@utils/post';
 import type { Post } from 'src/schemas/post';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 
 export interface Props {
     post: Post;
@@ -10,12 +11,18 @@ export interface Props {
 
 const { post } = Astro.props;
 const category = post.data.category && (await getCategory(post.data.category.slug));
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <header class="post-header max-w-740 z-3 relative mx-auto px-4">
     {
         category && (
-            <div class="mb-3 text-sm font-medium tracking-wider text-gray-500">
+            <div
+                class="mb-3 text-sm font-medium tracking-wider text-gray-500"
+                transition:name={getTransitionNameFromElementId({
+                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,
+                })}
+            >
                 <a
                     class="uppercase hover:underline"
                     href={`/blog/category/${category.slug}/`}
@@ -28,10 +35,26 @@ const category = post.data.category && (await getCategory(post.data.category.slu
         )
     }
 
-    <h1 class="post-title text-32 lg:text-44 text-title leading-tight md:text-4xl">
+    <h1
+        class="post-title text-32 lg:text-44 text-title leading-tight md:text-4xl"
+        transition:name={getTransitionNameFromElementId({
+            elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+        })}
+    >
         {post.data.title}
     </h1>
-    {post.data.excerpt && <p class="post-excerpt text-22 mt-6 text-gray-500">{post.data.excerpt}</p>}
+    {
+        post.data.excerpt && (
+            <p
+                class="post-excerpt text-22 mt-6 text-gray-500"
+                transition:name={getTransitionNameFromElementId({
+                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.EXCERPT,
+                })}
+            >
+                {post.data.excerpt}
+            </p>
+        )
+    }
 
     <div class="post-share mt-8 flex flex-col md:flex-row">
         <Author post={post} />

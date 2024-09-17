@@ -6,6 +6,7 @@ import { t } from '@utils/use-lang';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
 import { Icon } from 'astro-icon/components';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 export interface Props {
     post: Post;
     storyTitle?: string;
@@ -14,16 +15,27 @@ export interface Props {
 
 const { post } = Astro.props;
 const image = post.data.heroImage as ImageMetadata;
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <article class="podcast-card relative mb-12 flex w-full flex-col overflow-hidden md:flex-row">
     <header class="podcast-card-header order-2 p-5 md:ml-4">
         <Author post={post} />
 
-        <h2 class="spc-c-title text-title my-5 font-sans text-2xl">
+        <h2
+            class="spc-c-title text-title my-5 font-sans text-2xl"
+            transition:name={getTransitionNameFromElementId({
+                elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+            })}
+        >
             <a href={relativeUrl(post.href)} class="z-3 relative">{post.data.title}</a>
         </h2>
-        <p class="spc-c-excerpt mb-5">
+        <p
+            class="spc-c-excerpt mb-5"
+            transition:name={getTransitionNameFromElementId({
+                elementId: TRANSITION_ELEMENT_IDS.POST_CARD.EXCERPT,
+            })}
+        >
             {post.data.excerpt && post.data.excerpt.split(` `).splice(0, 30).join(` `)}
         </p>
         <a href={relativeUrl(post.href)} class="listen-btn button is-primary z-3 relative" data-astro-prefetch="hover">
@@ -55,6 +67,9 @@ const image = post.data.heroImage as ImageMetadata;
                     width="300"
                     height="280"
                     loading="eager"
+                    transition:name={getTransitionNameFromElementId({
+                        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                    })}
                 />
             )
         }

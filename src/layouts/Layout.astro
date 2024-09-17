@@ -3,9 +3,10 @@ import { CONFIG } from '@config/config';
 import Header from '@components/Header.astro';
 import FooterDark from '@components/FooterDark.astro';
 // import Footer from "@components/Footer.astro";
+//import FooterNotMenu from '@components/FooterNotMenu.astro';
 import { getContrastRatio, adjustColorForContrast } from '@utils/colors';
 import '@styles/main.css';
-//import FooterNotMenu from '@components/FooterNotMenu.astro';
+import { ViewTransitions } from 'astro:transitions';
 
 export interface Props {
     bodyClass?: string;
@@ -32,6 +33,7 @@ const hasDropDown = !!CONFIG.menuDropdown;
         <meta name="generator" content={Astro.generator} />
         <meta name="HandheldFriendly" content="True" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ViewTransitions fallback="none" />
         <slot name="head" />
     </head>
     <body class={bodyClass}>

@@ -4,6 +4,7 @@ import { relativeUrl } from '@utils/relativeUrl';
 import { t } from '@utils/use-lang';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 export interface Props {
     post: Post;
     storyTitle?: string;
@@ -12,6 +13,7 @@ export interface Props {
 
 const { post } = Astro.props;
 const image = post.data.heroImage as ImageMetadata;
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <article
@@ -35,12 +37,22 @@ const image = post.data.heroImage as ImageMetadata;
                     sizes={`(max-width: 1000px) 400px, 800px`}
                     width="300"
                     height="280"
+                    transition:name={getTransitionNameFromElementId({
+                        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                    })}
                 />
             )
         }
 
         <div class="portfolio-card-body z-4 overlay-toggle relative px-4 py-16 text-center text-white">
-            <h2 class="mb-4 text-xl font-medium capitalize">{post.data.title}</h2>
+            <h2
+                class="mb-4 text-xl font-medium capitalize"
+                transition:name={getTransitionNameFromElementId({
+                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+                })}
+            >
+                {post.data.title}
+            </h2>
             <div class="tracking-wide">
                 <span class="button is-small is-primary">{t(`View Project`)}</span>
             </div>
