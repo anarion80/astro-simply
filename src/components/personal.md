@@ -10,12 +10,24 @@ title: Anarion Dunedain
 
 <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
 <script>
-    var app = document.getElementById('typewriter');
+    function initializeTypewriter() {
+        try {
+            let app = document.getElementById('typewriter');
 
-    var typewriter = new Typewriter(app, {
-        strings: ['Self-hoster', 'Home-labber', 'Tinkerer', 'Developer'],
-        loop: true,
-        delay: 90,
-        autoStart: true,
+            let typewriter = new Typewriter(app, {
+                strings: ['Self-hoster', 'Home-labber', 'Tinkerer', 'Developer'],
+                loop: true,
+                delay: 90,
+                autoStart: true,
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    initializeTypewriter();
+
+    document.addEventListener('astro:page-load', () => {
+        initializeTypewriter();
     });
 </script>
