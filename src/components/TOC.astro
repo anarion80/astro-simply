@@ -41,7 +41,7 @@ const toc = generateToc(headings);
 }
 
 <script>
-    window.onload = function () {
+    const tocProgress = () => {
         // Create some WeakMaps to store the distances to the top and
         // bottom of each link
         const linkStarts = new WeakMap();
@@ -151,4 +151,8 @@ const toc = generateToc(headings);
             observer.observe(section);
         });
     };
+
+    document.addEventListener('astro:page-load', () => {
+        tocProgress();
+    });
 </script>
