@@ -38,31 +38,6 @@ const hasDropDown = !!CONFIG.menuDropdown;
     </head>
     <body class={bodyClass}>
         <div class="simply-viewport flexColumnTop">
-            <script>
-                /* to turn the Header transparent when hero picture is used (and back to normal when srolled down) */
-                const headerTransparency = () => {
-                    const hasCover = document.body.closest('.has-cover');
-                    const $jsHeader = document.querySelector('.js-header');
-
-                    window.addEventListener('scroll', () => {
-                        const lastScrollY = window.scrollY;
-
-                        if (lastScrollY > 5) {
-                            $jsHeader && $jsHeader.classList.add('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
-                        } else {
-                            $jsHeader && $jsHeader.classList.remove('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
-                        }
-
-                        if (!hasCover) return;
-
-                        lastScrollY >= 20 // eslint-disable-line @typescript-eslint/no-unused-expressions
-                            ? document.body.classList.remove('is-head-transparent')
-                            : document.body.classList.add('is-head-transparent');
-                    });
-                };
-
-                headerTransparency();
-            </script>
             <Header site={site} hasDropDown={hasDropDown} />
 
             <main class="simply-main min-h-lg relative"><slot /></main>
@@ -83,10 +58,14 @@ const hasDropDown = !!CONFIG.menuDropdown;
     import resizeImageGalleries from '@utils/resizeImageGalleries';
     import videoResponsive from '@utils/videoResponsive';
 
-    videoResponsive(); // responsive, bigger embedded videos in posts
-    resizeImageGalleries(); // proper sizes of images in galleries in posts
+    document.addEventListener('astro:page-load', () => {
+        videoResponsive(); // responsive, bigger embedded videos in posts
+        resizeImageGalleries(); // proper sizes of images in galleries in posts
+        headerTransparency();
+        hamburgerMenu();
+    });
 
-    (function () {
+    const hamburgerMenu = () => {
         document.querySelector(`.js-menu-toggle`)?.addEventListener(`click`, function (e) {
             e.preventDefault();
             document.body.classList.toggle(`has-menu`);
@@ -95,5 +74,31 @@ const hasDropDown = !!CONFIG.menuDropdown;
             //e.preventDefault()
             document.body.classList.toggle(`has-menu`);
         });
-    })();
+    };
+
+    /* to turn the Header transparent when hero picture is used (and back to normal when srolled down) */
+    const headerTransparency = () => {
+        window.removeEventListener('scroll', scrollHandler);
+
+        // Add the scroll event listener
+        window.addEventListener('scroll', scrollHandler);
+    };
+
+    const scrollHandler = () => {
+        const hasCover = document.body.closest('.has-cover');
+        const $jsHeader = document.querySelector('.js-header');
+        const lastScrollY = window.scrollY;
+
+        if (lastScrollY > 5) {
+            $jsHeader && $jsHeader.classList.add('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
+        } else {
+            $jsHeader && $jsHeader.classList.remove('shadow-header', 'header-bg'); // eslint-disable-line @typescript-eslint/no-unused-expressions
+        }
+
+        if (!hasCover) return;
+
+        lastScrollY >= 20 // eslint-disable-line @typescript-eslint/no-unused-expressions
+            ? document.body.classList.remove('is-head-transparent')
+            : document.body.classList.add('is-head-transparent');
+    };
 </script>
