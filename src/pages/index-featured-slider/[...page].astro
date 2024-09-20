@@ -80,17 +80,31 @@ const featuredPosts = await getFeaturedPosts();
 </Layout>
 <script>
     import { tns } from '../../../node_modules/tiny-slider/src/tiny-slider.js';
-    tns({
-        container: `.simply-slider`,
-        loop: true,
-        mouseDrag: true,
-        items: 1,
-        nav: false,
-        speed: 400,
-        autoplay: true,
-        autoplayButtonOutput: false,
-        prevButton: `.simply-slider-prev`,
-        nextButton: `.simply-slider-next`,
-        mode: `gallery`,
+    const initializeSlider = () => {
+        try {
+            if (document.querySelector('.simply-slider')) {
+                tns({
+                    container: `.simply-slider`,
+                    loop: true,
+                    mouseDrag: true,
+                    items: 1,
+                    nav: false,
+                    speed: 400,
+                    autoplay: true,
+                    autoplayButtonOutput: false,
+                    prevButton: `.simply-slider-prev`,
+                    nextButton: `.simply-slider-next`,
+                    mode: `gallery`,
+                });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    initializeSlider();
+
+    document.addEventListener('astro:page-load', () => {
+        initializeSlider();
     });
 </script>
