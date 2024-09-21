@@ -45,8 +45,16 @@ const CustomPage = await dynamic(postType);
 </>
 
 <script>
-    import mediumZoomImg from '@utils/mediumZoom.ts';
-    mediumZoomImg();
+    import mediumZoom from 'medium-zoom/dist/pure';
+    import 'medium-zoom/dist/style.css';
+
+    const mediumZoomImg = () => {
+        mediumZoom('.simply-zoom', {
+            margin: 20,
+            background: `hsla(0,0%,100%,.85)`,
+        });
+    };
+    document.addEventListener('astro:page-load', mediumZoomImg);
 </script>
 
 <script>
