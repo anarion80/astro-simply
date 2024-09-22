@@ -81,7 +81,7 @@ const posterSpacerSrc = `https://img.spacergif.org/v1/960x540/0a/spacer.png`;
 </figure>
 
 <script>
-    (() => {
+    const handleVideoCard = () => {
         interface PlaybackRate {
             rate: number;
             label: string;
@@ -322,7 +322,10 @@ const posterSpacerSrc = `https://img.spacergif.org/v1/960x540/0a/spacer.png`;
         videoCardElements.forEach((element) => {
             handleVideoPlayer(element as HTMLElement);
         });
-    })();
+    };
+
+    document.addEventListener('astro:after-swap', handleVideoCard);
+    handleVideoCard();
 </script>
 
 <style>

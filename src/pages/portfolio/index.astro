@@ -59,7 +59,7 @@ const tags = [...new Set(posts.map((item) => item.data.tags[0]).filter((a) => a)
 </Layout>
 
 <script>
-    (() => {
+    const handlePortfolioFilter = () => {
         const filterBtn = document.querySelectorAll<HTMLElement>(`.js-filter-btn`);
 
         function filterSelection(str: string): void {
@@ -88,5 +88,8 @@ const tags = [...new Set(posts.map((item) => item.data.tags[0]).filter((a) => a)
                 }
             });
         });
-    })();
+    };
+
+    document.addEventListener('astro:after-swap', handlePortfolioFilter);
+    handlePortfolioFilter();
 </script>

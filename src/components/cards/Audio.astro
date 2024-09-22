@@ -74,7 +74,7 @@ const emptyThumbnailCls = thumbnailSrc
 </div>
 
 <script>
-    (() => {
+    const handleAudioCard = () => {
         const handleAudioPlayer = (audioElementContainer: HTMLElement) => {
             const audioPlayerContainer = audioElementContainer.querySelector(
                 '.kg-audio-player-container'
@@ -233,7 +233,10 @@ const emptyThumbnailCls = thumbnailSrc
         audioCardElements.forEach((element) => {
             handleAudioPlayer(element as HTMLElement);
         });
-    })();
+    };
+
+    document.addEventListener('astro:after-swap', handleAudioCard);
+    handleAudioCard();
 </script>
 
 <style>
