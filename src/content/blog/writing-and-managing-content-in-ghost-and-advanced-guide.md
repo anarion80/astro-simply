@@ -1,7 +1,7 @@
 ---
 postFormat: Post
 publishDate: 2023-07-19T00:00:00Z
-authors: ['anarion-dunedain']
+authors: ['anarion-dunedain', 'john-doe']
 title: Writing and managing content in Ghost, an advanced guide
 excerpt: A full overview of all the features built into the Ghost editor, including powerful workflow automations to speed up your creative process.
 heroImage: https://gatsby-ghost-simply.netlify.app/static/fc44c1e564ddcebb36f6c873615a4e76/6b4f8/writing-posts-with-ghost.webp
@@ -16,7 +16,7 @@ tags:
     - other
 ---
 
-> Post Type: `PostHeaderImage`
+> Post Type: `Post`
 > Table of Contents: `enabled`
 
 Ghost comes with a best-in-class editor which does its very best to get out of the way, and let you focus on your content. Don't let its minimal looks fool you, though, beneath the surface lies a powerful editing toolset designed to accommodate the extensive needs of modern creators.

@@ -8,6 +8,7 @@ import { Image } from 'astro:assets';
 import MetaData from '@components/meta/MetaData.astro';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 
 export interface Props {
     post: Post;
@@ -17,6 +18,7 @@ export interface Props {
 }
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
 const image = post.data.heroImage as ImageMetadata;
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <Layout footer={true} bodyClass="is-article is-article-image-right" isPost={true}>
@@ -27,16 +29,37 @@ const image = post.data.heroImage as ImageMetadata;
                 <header class="post-header max-w-740 px-4 pt-8 md:pb-8 lg:mr-16">
                     {
                         post.data.category && (
-                            <div class="mb-3 text-sm font-medium tracking-wider text-gray-500">
+                            <div
+                                class="mb-3 text-sm font-medium tracking-wider text-gray-500"
+                                transition:name={getTransitionNameFromElementId({
+                                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,
+                                })}
+                            >
                                 <Category category={post.data.category.slug} tagClass="uppercase hover:underline" />
                             </div>
                         )
                     }
 
-                    <h1 class="post-title text-32 text-title leading-tight md:text-4xl lg:text-5xl">
+                    <h1
+                        class="post-title text-32 text-title leading-tight md:text-4xl lg:text-5xl"
+                        transition:name={getTransitionNameFromElementId({
+                            elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+                        })}
+                    >
                         {post.data.title}
                     </h1>
-                    {post.data.excerpt && <p class="post-excerpt mt-6 text-xl text-gray-500">{post.data.excerpt}</p>}
+                    {
+                        post.data.excerpt && (
+                            <p
+                                class="post-excerpt mt-6 text-xl text-gray-500"
+                                transition:name={getTransitionNameFromElementId({
+                                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.EXCERPT,
+                                })}
+                            >
+                                {post.data.excerpt}
+                            </p>
+                        )
+                    }
 
                     {/* {!-- [Author, DateTime, Reading Time] - ./partials/components/author-meta.hbs --} */}
                     <div class="mt-8 flex"><Author post={post} /></div>
@@ -54,6 +77,9 @@ const image = post.data.heroImage as ImageMetadata;
                             sizes="(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw"
                             width="750"
                             height="520"
+                            transition:name={getTransitionNameFromElementId({
+                                elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                            })}
                         />
                     </figure>
                 )

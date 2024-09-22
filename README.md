@@ -68,7 +68,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 ## ✏ TODO
 
 - [ ] The whole re-used CSS is a mess and would need a proper rewrite.
-- [ ] Astro transistions
+- [x] Astro view transistions
 - [x] Contact Page
 - [ ] Search
 - [ ] Comments
@@ -112,6 +112,7 @@ Update `SITE_URL` environment variable in `.env` file or in your deployment envi
     accentColor: '#d0000fff',
     lang: 'en',
     locale: 'en',
+    viewTransitions: true, // set to true to enable Astro view transitions
     navigation: [
         {
             label: 'Blog',

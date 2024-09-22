@@ -17,6 +17,7 @@ const configData: ConfigType = {
     accentColor: '#d0000fff',
     lang: 'en',
     locale: 'en',
+    viewTransitions: true,
     navigation: [
         {
             label: 'Blog',

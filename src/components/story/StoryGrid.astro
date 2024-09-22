@@ -4,6 +4,7 @@ import Author from '../Author.astro';
 import { Image, inferRemoteSize } from 'astro:assets';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 
 export interface Props {
     post: Post;
@@ -23,6 +24,8 @@ const { width, size } = {
     medium: { width: 540, size: '540px' },
     large: { width: 720, size: '720px' },
 }[imageSize] || { width: 720, size: '720px' };
+
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
 <article class="story relative mb-5 border-b border-gray-100 pb-5 md:border-0">
@@ -46,6 +49,9 @@ const { width, size } = {
                             objectFit: `cover`,
                         }}
                         class="story-img u-image blur-up lazyloaded absolute block"
+                        transition:name={getTransitionNameFromElementId({
+                            elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                        })}
                     />
                 </a>
             ) : (
@@ -54,7 +60,12 @@ const { width, size } = {
         }
         {
             category && (
-                <div class="absolute right-0 top-0">
+                <div
+                    class="absolute right-0 top-0"
+                    transition:name={getTransitionNameFromElementId({
+                        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,
+                    })}
+                >
                     <Category category={category} />
                 </div>
             )
@@ -64,13 +75,23 @@ const { width, size } = {
     <div class="story-body flexColumnTop pt-5">
         <!-- {<DateTimeComponent post={post} />} -->
 
-        <h2 class="story-title text-title mb-3 font-sans text-2xl leading-tight">
+        <h2
+            class="story-title text-title mb-3 font-sans text-2xl leading-tight"
+            transition:name={getTransitionNameFromElementId({
+                elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
+            })}
+        >
             <a href={url} class="block" data-astro-prefetch="hover">{post.data.title}</a>
         </h2>
 
         {
             post.data.excerpt && (
-                <p class="story-excerpt mb-5 text-lg leading-normal text-gray-500">
+                <p
+                    class="story-excerpt mb-5 text-lg leading-normal text-gray-500"
+                    transition:name={getTransitionNameFromElementId({
+                        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.EXCERPT,
+                    })}
+                >
                     <a href={url} class="block" data-astro-prefetch="hover">
                         {post.data.excerpt.split(` `).splice(0, 30).join(` `)}
                     </a>

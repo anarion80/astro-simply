@@ -2,6 +2,8 @@
 import { Image } from 'astro:assets';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
+
 export interface Props {
     article: Post;
     figureClass?: string;
@@ -13,6 +15,8 @@ export interface Props {
 const { article, figureClass, divClass, imgClass, zoomable } = Astro.props;
 const image = article.data.heroImage as ImageMetadata;
 const imageClass = typeof imgClass === 'undefined' ? 'mx-auto simply-zoom' : imgClass;
+
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: article.slug });
 ---
 
 <figure class={`post-image ` + figureClass}>
@@ -29,6 +33,9 @@ const imageClass = typeof imgClass === 'undefined' ? 'mx-auto simply-zoom' : img
                     widths={[300, 600, 1000, 2000]}
                     sizes={`(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw`}
                     loading="eager"
+                    transition:name={getTransitionNameFromElementId({
+                        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                    })}
                 />
             </div>
         ) : (
@@ -40,6 +47,9 @@ const imageClass = typeof imgClass === 'undefined' ? 'mx-auto simply-zoom' : img
                 width="1200"
                 height="628"
                 loading="eager"
+                transition:name={getTransitionNameFromElementId({
+                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                })}
             />
         )
     }

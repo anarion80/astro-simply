@@ -7,7 +7,7 @@ import type { Post } from 'src/schemas/post';
 import AvatarImage from '@assets/images/avatar.png';
 import { t } from '@utils/use-lang';
 import type { ImageMetadata } from 'astro';
-
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 export interface Props {
     post: Post;
     hideAvatar?: boolean;
@@ -33,9 +33,15 @@ const authorImages = await Promise.all(
     })
 );
 const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), {});
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
 
-<div class="hh z-4 relative flex flex-auto items-center overflow-hidden leading-snug">
+<div
+    class="hh z-4 relative flex flex-auto items-center overflow-hidden leading-snug"
+    transition:name={getTransitionNameFromElementId({
+        elementId: TRANSITION_ELEMENT_IDS.POST_CARD.AUTHOR,
+    })}
+>
     {
         !hideAvatar && (
             <ul class="hh-author mr-3 flex flex-none flex-wrap">

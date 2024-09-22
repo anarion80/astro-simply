@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-
+import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 export interface Props {
     background?: ImageMetadata;
     hasGradient?: boolean;
@@ -9,6 +9,7 @@ export interface Props {
 }
 
 const { background, hasGradient, altTitle } = Astro.props;
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: Astro.params.slug || '' });
 ---
 
 {
@@ -29,6 +30,11 @@ const { background, hasGradient, altTitle } = Astro.props;
             widths={[300, 600, 1000, 2000]}
             sizes={`(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw`}
             loading="eager"
+            {...(Astro.params.slug !== undefined && {
+                'transition:name': getTransitionNameFromElementId({
+                    elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
+                }),
+            })}
         />
     )
 }
