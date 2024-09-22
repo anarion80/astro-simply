@@ -25,9 +25,5 @@ title: Anarion Dunedain
         }
     };
 
-    initializeTypewriter();
-
-    document.addEventListener('astro:page-load', () => {
-        initializeTypewriter();
-    });
+    document.addEventListener('astro:page-load', initializeTypewriter);
 </script>

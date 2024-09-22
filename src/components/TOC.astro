@@ -152,7 +152,6 @@ const toc = generateToc(headings);
         });
     };
 
-    document.addEventListener('astro:page-load', () => {
-        tocProgress();
-    });
+    document.addEventListener('astro:after-swap', tocProgress);
+    tocProgress();
 </script>

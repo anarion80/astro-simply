@@ -148,7 +148,5 @@ const featuredPosts = (await getCollection('blog'))
 
     initializeSlider();
 
-    document.addEventListener('astro:page-load', () => {
-        initializeSlider();
-    });
+    document.addEventListener('astro:after-swap', initializeSlider);
 </script>
