@@ -38,7 +38,7 @@
         "dotenv": "^16.4.5",
         "flexsearch": "^0.7.43",
         "fuzzysort": "^2.0.4",
-        "jsdom": "^25.0.0",
+        "jsdom": "^25.0.1",
         "mdast-util-to-string": "^4.0.0",
         "medium-zoom": "^1.1.0",
         "metascraper": "^5.45.23",
