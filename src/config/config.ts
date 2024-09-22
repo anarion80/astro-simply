@@ -16,7 +16,7 @@ const configData: ConfigType = {
     shareImageHeight: 600,
     accentColor: '#d0000fff',
     lang: 'en',
-    locale: 'en',
+    locale: 'en-GB',
     viewTransitions: true,
     navigation: [
         {

@@ -18,7 +18,7 @@ for (const [path, lang] of Object.entries(modules)) {
 }
 
 const useLang = (): Record<string, string> => {
-    return languages[settings.locale.replace(/-/g, '_')];
+    return languages[settings.lang.replace(/-/g, '_')];
 };
 
 const t = (name: string, fallback: string | null = null): string => {
