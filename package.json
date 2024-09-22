@@ -88,7 +88,7 @@
         "@typescript-eslint/eslint-plugin": "^8.2.0",
         "@typescript-eslint/parser": "^8.4.0",
         "astro-eslint-parser": "^1.0.2",
-        "esbuild": "^0.21.5",
+        "esbuild": "^0.24.0",
         "eslint": "^9.9.1",
         "eslint-plugin-astro": "^1.2.4",
         "eslint-plugin-mdx": "^3.1.5",
