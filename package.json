@@ -90,7 +90,7 @@
         "astro-eslint-parser": "^1.0.2",
         "esbuild": "^0.21.5",
         "eslint": "^9.9.1",
-        "eslint-plugin-astro": "^1.2.3",
+        "eslint-plugin-astro": "^1.2.4",
         "eslint-plugin-mdx": "^3.1.5",
         "eslint-plugin-no-only-tests": "^3.3.0",
         "eslint-plugin-regexp": "^2.6.0",
