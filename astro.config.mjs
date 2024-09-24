@@ -25,7 +25,6 @@ import {
 import Cache from '@remark-embedder/cache';
 import { PROCESS_ENV } from './src/config/process-env';
 import icon from 'astro-icon';
-import pagefind from "astro-pagefind";
 const { SITE_URL } = PROCESS_ENV;
 
 const cache = new Cache.default();
@@ -248,7 +247,7 @@ export default defineConfig({
             "devicon-plain": ["astro"],
             "fxemoji": ["leftmagnifyingglass", "whitesun", "waningcrescentmoon"],
         },
-    }), pagefind()],
+    })],
     image: {
         domains: ['unsplash.com'],
         remotePatterns: [
