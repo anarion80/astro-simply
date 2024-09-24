@@ -1,7 +1,6 @@
 ---
 import { t } from '@utils/use-lang';
 import { Icon } from 'astro-icon/components';
-import '@pagefind/default-ui/css/ui.css';
 import { CONFIG } from '@config/config.ts';
 import { PROCESS_ENV } from '@config/process-env';
 
@@ -75,7 +74,7 @@ const { SITE_URL } = PROCESS_ENV;
         const pagefind = await import(scriptUrl);
         await pagefind.options({
             excerptLength: 20,
-            highlightParam: 'highlight',
+            // highlightParam: 'highlight',
         });
         pagefind.init();
         window.pagefind = pagefind;
@@ -151,8 +150,8 @@ const { SITE_URL } = PROCESS_ENV;
             const resultsHTML = results
                 .map(
                     (post) => `
-                        <div class="w-full max-w-2xl mx-auto p-2">
-                            <a href=${post.sub_results[0].url} class="text-lg font-semibold text-blue-600">
+                        <div class="search-results-item w-full max-w-2xl mx-auto p-2">
+                            <a href=${post.sub_results[0].url} class="text-lg font-semibold">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 self-center">
                                     <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 4a6.5 6.5 0 0 1 6.5 6.5c0 1.62-.59 3.1-1.57 4.23l5.65 5.65l-.71.71l-5.65-5.65A6.47 6.47 0 0 1 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 4m0 1A5.5 5.5 0 0 0 4 10.5A5.5 5.5 0 0 0 9.5 16a5.5 5.5 0 0 0 5.5-5.5A5.5 5.5 0 0 0 9.5 5"/></svg>
@@ -160,14 +159,14 @@ const { SITE_URL } = PROCESS_ENV;
                                 <div class="flex-grow pl-2">
                                     <div class="flex flex-col space-y-2">
 
-                                        <div class="text-lg font-semibold text-blue-600">
+                                        <div class="text-lg font-semibold">
                                             ${post.sub_results[0].title}
                                         </div>
-                                        <div class="text-sm text-green-600 truncate max-w-[50%]">
+                                        <div class="text-gray-400 text-xs italic truncate max-w-[50%]">
                                             ${post.sub_results[0].url}
                                         </div>
 
-                                        <p class="text-sm text-gray-600 mt-2">
+                                        <p class="text-sm text-gray-500 mt-2">
                                         ${post.sub_results[0].excerpt}
                                         </p>
                                     </div>
@@ -202,7 +201,8 @@ const { SITE_URL } = PROCESS_ENV;
         /* when the Enter key is pressed
   /* ---------------------------------------------------------- */
         function enterKey() {
-            const link = $results.querySelector(`a.${classIsActive}`);
+            const link = $results.querySelector(`.search-results-item.${classIsActive} a`);
+            console.log('🚀 ~ enterKey ~ link:', link);
             link && link.click(); // eslint-disable-line @typescript-eslint/no-unused-expressions
         }
 
@@ -212,8 +212,9 @@ const { SITE_URL } = PROCESS_ENV;
             index = index || 0;
             upDown = upDown || 'up';
 
-            const allSearchLinks = $results.querySelectorAll(`a`);
+            const allSearchLinks = $results.querySelectorAll(`.search-results-item`);
 
+            console.log('🚀 ~ searchResultActive ~ allSearchLinks:', allSearchLinks);
             // Return if there are no results
             if (!allSearchLinks.length) return;
 

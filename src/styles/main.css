@@ -626,6 +626,7 @@ textarea {
     -webkit-overflow-scrolling: touch;
 }
 
+.search-results > .search-results-item.is-active,
 .search-results a.is-active,
 .search-results a:hover {
     background: hsla(0, 0%, 66.7%, 0.35);
