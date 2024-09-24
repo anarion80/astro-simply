@@ -21,7 +21,7 @@ const { headings } = await post.render();
 
 <Layout footer={true} bodyClass="is-article" isPost={true}>
     <MetaData slot="head" location={Astro.url.pathname} type="article" data={post as Post} title={post.data.title} />
-    <div class="max-w-extreme mx-auto flex flex-col pb-16 px-4 lg:flex-row">
+    <div class="max-w-extreme mx-auto flex flex-col pb-16 px-4 lg:flex-row" data-pagefind-body>
         <div class="sidebar flex-none md:w-64 lg:order-none">
             <div class="sticky top-16 pr-5"></div>
         </div>

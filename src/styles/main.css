@@ -3094,6 +3094,10 @@ a > code[class*='language-'] {
     align-self: flex-start;
 }
 
+.self-center {
+    align-self: center;
+}
+
 .overflow-auto {
     overflow: auto;
 }

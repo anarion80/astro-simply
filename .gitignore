@@ -30,3 +30,6 @@ pnpm-debug.log*
 .jampack/
 
 .cursorrules
+
+# pagefind
+public/pagefind
