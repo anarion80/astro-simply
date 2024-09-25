@@ -101,8 +101,8 @@ export default {
     Authors: 'Autorzy',
     'Our writers': 'Nasi twórcy',
     Categories: 'Kategorie',
-    'Main blog categories': 'Głość kategorie wpisów',
-    'All tags': 'Wszystkie tagi ze wszystkich postów',
-    'Posts in Category': 'Posts z kategorii',
+    'Main blog categories': 'Główne kategorie wpisów',
+    'All tags': 'Wszystkie tagi ze wszystkich wpisów',
+    'Posts in Category': 'Wpisy z kategorii',
     'Featured story': 'Wyróżniony wpis',
 };
