@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "astro dev",
         "start": "astro dev",
-        "build": "astro check && astro build && jampack ./dist",
+        "build": "astro check && astro build && jampack ./dist && npx pagefind --site dist",
         "preview": "astro preview",
         "sync": "astro sync",
         "astro": "astro",
