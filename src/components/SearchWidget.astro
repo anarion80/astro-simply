@@ -68,7 +68,7 @@ const { SITE_URL } = PROCESS_ENV;
     </div>
 </div>
 
-<script is:inline define:vars={{ scriptUrl: `${SITE_URL || CONFIG.siteUrl}/pagefind/pagefind.js` }}>
+<script is:inline define:vars={{ scriptUrl: `/pagefind/pagefind.js` }}>
     async function loadPagefind() {
         const pagefind = await import(scriptUrl);
         await pagefind.options({
@@ -106,44 +106,11 @@ const { SITE_URL } = PROCESS_ENV;
         // Show icon search in header
         document.querySelector('span[data-target=modal-search]').classList.remove('hidden');
 
-        function escapeHTML(str) {
-            return str.replace(
-                /[&<>'"]/g,
-                (tag) =>
-                    ({
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        "'": '&#39;',
-                        '"': '&quot;',
-                    })[tag] || tag
-            );
-        }
-
         const displaySearch = async (results) => {
-            console.log('🚀 ~ afterDisplaySearch ~ results:', results);
             // Active class to link search
             if (!$results) {
                 return;
             }
-
-            // if (!results || results.length === 0) {
-            //     $searchMessage.innerHTML = '<p>No results found.</p>';
-            //     return;
-            // }
-
-            // const resultsHTML = results
-            //     .map(
-            //         (post) => `
-            //             <a href="${post.url}" class="block py-2 pr-3 pl-10">
-            //             <svg class="icon icon--search" style="margin-left:-28px">
-            //                 <use xlink:href="#icon-search"></use>
-            //             </svg>
-            //             ${escapeHTML(post.excerpt)}
-            //             </a>
-            //         `
-            //     )
-            //     .join('');
 
             const resultsHTML = results
                 .map(
@@ -200,7 +167,6 @@ const { SITE_URL } = PROCESS_ENV;
   /* ---------------------------------------------------------- */
         function enterKey() {
             const link = $results.querySelector(`.search-results-item.${classIsActive} a`);
-            console.log('🚀 ~ enterKey ~ link:', link);
             link && link.click(); // eslint-disable-line @typescript-eslint/no-unused-expressions
         }
 
@@ -212,7 +178,6 @@ const { SITE_URL } = PROCESS_ENV;
 
             const allSearchLinks = $results.querySelectorAll(`.search-results-item`);
 
-            console.log('🚀 ~ searchResultActive ~ allSearchLinks:', allSearchLinks);
             // Return if there are no results
             if (!allSearchLinks.length) return;
 
@@ -312,13 +277,10 @@ const { SITE_URL } = PROCESS_ENV;
 
         $input.addEventListener('input', async function () {
             const query = $input.value;
-            console.log('🚀 ~ $input.addEventListener query:', query);
             if (query) {
                 // Trigger the search function
                 const results = await search(query);
-                console.log('🚀 ~ $input.addEventListener results:', results);
                 // Display the search results
-                // $results.innerHTML = results;
                 displaySearch(results);
             } else {
                 // Clear the results if the input is empty
