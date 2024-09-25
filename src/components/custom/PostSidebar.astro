@@ -11,6 +11,7 @@ import { t } from '@utils/use-lang';
 import MetaData from '@components/meta/MetaData.astro';
 import type { Post } from 'src/schemas/post';
 import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
+import { getCategory } from '@utils/post';
 
 export interface Props {
     post: Post;
@@ -19,6 +20,7 @@ export interface Props {
     relatedPosts?: Post[];
 }
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
+const category = post.data.category && (await getCategory(post.data.category.slug));
 const { Content } = await post.render();
 const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
 ---
@@ -31,6 +33,25 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                 <div class="col s12 l7">
                     <article data-pagefind-body>
                         <header class="story-post-header mb-5">
+                            {
+                                category && (
+                                    <div
+                                        class="mb-3 text-sm font-medium tracking-wider text-gray-500"
+                                        transition:name={getTransitionNameFromElementId({
+                                            elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,
+                                        })}
+                                    >
+                                        <a
+                                            class="uppercase hover:underline"
+                                            href={`/blog/category/${category.slug}/`}
+                                            data-astro-prefetch="hover"
+                                        >
+                                            {category.data.title}
+                                        </a>{' '}
+                                        {/* TODO: update to proper link */}
+                                    </div>
+                                )
+                            }
                             <h1
                                 class="text-title mb-5 text-4xl leading-tight"
                                 transition:name={getTransitionNameFromElementId({
