@@ -18,7 +18,7 @@ const { post, nextPost, prevPost, relatedPosts } = Astro.props;
 
 <Layout footer={true} bodyClass="is-article is-article-header-image is-head-transparent has-cover" isPost={true}>
     <MetaData slot="head" location={Astro.url.pathname} type="article" data={post} />
-    <article class="post relative mb-10">
+    <article class="post relative mb-10" data-pagefind-body>
         {
             post.data.heroImage && (
                 <ArticleFeaturedImage

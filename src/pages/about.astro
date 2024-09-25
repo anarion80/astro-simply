@@ -13,7 +13,10 @@ const image = greatPost.frontmatter.heroImage as ImageMetadata;
 
 <Layout isHome={true} footer={false} isPost={false} bodyClass="has-cover is-head-transparent overflow-hidden">
     <MetaData slot="head" location={Astro.url.pathname} />
-    <article class="simply-hero-cover bg-dark relative flex min-h-screen items-center justify-center py-24">
+    <article
+        class="simply-hero-cover bg-dark relative flex min-h-screen items-center justify-center py-24"
+        data-pagefind-body
+    >
         {image && <MediaCover background={image} hasGradient={true} altTitle={greatPost.frontmatter.title} />}
 
         <div class="max-w-740 z-3 mx-auto p-24 px-4 text-center text-white">

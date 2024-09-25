@@ -23,7 +23,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
 <Layout footer={true} bodyClass="is-article is-article-image-right" isPost={true}>
     <MetaData slot="head" location={Astro.url.pathname} type="article" data={post} />
-    <article class="post relative mb-10">
+    <article class="post relative mb-10" data-pagefind-body>
         <div class="flex flex-col-reverse md:flex-row lg:mx-12">
             <div class="flex flex-col justify-center md:w-3/6">
                 <header class="post-header max-w-740 px-4 pt-8 md:pb-8 lg:mr-16">
