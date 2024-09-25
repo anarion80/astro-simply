@@ -1,12 +1,8 @@
 ---
 import { t } from '@utils/use-lang';
 import { Icon } from 'astro-icon/components';
-import { CONFIG } from '@config/config.ts';
-import { PROCESS_ENV } from '@config/process-env';
 
 type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no-unused-vars
-
-const { SITE_URL } = PROCESS_ENV;
 ---
 
 <span
@@ -84,255 +80,233 @@ const { SITE_URL } = PROCESS_ENV;
 </script>
 
 <script>
-    // @ts-nocheck
+    interface SearchResult {
+        sub_results: {
+            url: string;
+            title: string;
+            excerpt: string;
+        }[];
+    }
 
-    const initSearch = async () => {
-        const $body = document.body;
-        const $input = document.querySelector('#search-field');
-        const $results = document.querySelector('#search-results');
-        const $searchMessage = document.querySelector('.js-search-message');
+    interface Pagefind {
+        debouncedSearch: (keyword: string) => Promise<{ results: { data: () => Promise<SearchResult> }[] }>;
+    }
 
-        const classIsActive = `is-active`;
-        const rootEl = document.documentElement;
-        const documentBody = document.body;
+    declare global {
+        interface Window {
+            pagefind?: Pagefind;
+        }
+    }
 
-        let allSearchLinksLength = 0;
+    class SearchModule {
+        private $body: HTMLElement;
+        private $input: HTMLInputElement;
+        private $results: HTMLElement;
+        private $searchMessage: HTMLElement;
+        private allSearchLinksLength: number = 0;
+        private searchResultsHeight: { outer: number; scroll: number } = { outer: 0, scroll: 0 };
+        private classIsActive: string = 'is-active';
 
-        let searchResultsHeight = {
-            outer: 0,
-            scroll: 0,
-        };
+        constructor() {
+            this.$body = document.body;
+            this.$input = document.querySelector('#search-field') as HTMLInputElement;
+            this.$results = document.querySelector('#search-results') as HTMLElement;
+            this.$searchMessage = document.querySelector('.js-search-message') as HTMLElement;
 
-        // Show icon search in header
-        document.querySelector('span[data-target=modal-search]').classList.remove('hidden');
-
-        const displaySearch = async (results) => {
-            // Active class to link search
-            if (!$results) {
-                return;
-            }
-
-            const resultsHTML = results
-                .map(
-                    (post) => `
-                        <div class="search-results-item w-full max-w-2xl mx-auto p-2">
-                            <a href=${post.sub_results[0].url} class="text-lg font-semibold">
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 self-center">
-                                    <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 4a6.5 6.5 0 0 1 6.5 6.5c0 1.62-.59 3.1-1.57 4.23l5.65 5.65l-.71.71l-5.65-5.65A6.47 6.47 0 0 1 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 4m0 1A5.5 5.5 0 0 0 4 10.5A5.5 5.5 0 0 0 9.5 16a5.5 5.5 0 0 0 5.5-5.5A5.5 5.5 0 0 0 9.5 5"/></svg>
-                                </div>
-                                <div class="flex-grow pl-2">
-                                    <div class="flex flex-col space-y-2">
-
-                                        <div class="text-lg font-semibold">
-                                            ${post.sub_results[0].title}
-                                        </div>
-                                        <div class="text-gray-400 text-xs italic truncate max-w-[50%]">
-                                            ${post.sub_results[0].url}
-                                        </div>
-
-                                        <p class="text-sm text-gray-500 mt-2">
-                                        ${post.sub_results[0].excerpt}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            </a>
-                        </div>
-                    `
-                )
-                .join('');
-
-            $results.innerHTML = resultsHTML;
-
-            searchResultActive();
-
-            allSearchLinksLength = results.length;
-
-            searchResultsHeight = {
-                outer: $results.offsetHeight,
-                scroll: $results.scrollHeight,
-            };
-
-            if (results.length === 0 && $input.value !== ``) {
-                $searchMessage.classList.remove(`hidden`);
-                $body.removeEventListener(`keydown`, mySearchKey);
-            } else {
-                $searchMessage.classList.add(`hidden`);
-                $body.addEventListener(`keydown`, mySearchKey);
-            }
-        };
-
-        /* when the Enter key is pressed
-  /* ---------------------------------------------------------- */
-        function enterKey() {
-            const link = $results.querySelector(`.search-results-item.${classIsActive} a`);
-            link && link.click(); // eslint-disable-line @typescript-eslint/no-unused-expressions
+            this.initEventListeners();
+            this.initModalFunctionality();
         }
 
-        /* Appending the active class to the search link
-  /* ---------------------------------------------------------- */
-        function searchResultActive(index, upDown) {
-            index = index || 0;
-            upDown = upDown || 'up';
+        private initEventListeners(): void {
+            this.$input.addEventListener('input', this.handleInput.bind(this));
+            this.$body.addEventListener('keydown', this.handleKeydown.bind(this));
 
-            const allSearchLinks = $results.querySelectorAll(`.search-results-item`);
+            // Prevent form submission on Enter key
+            this.$input.closest('form')?.addEventListener('submit', (e) => e.preventDefault());
 
-            // Return if there are no results
-            if (!allSearchLinks.length) return;
-
-            // Remove All class Active
-            allSearchLinks.forEach((element) => element.classList.remove(classIsActive));
-
-            // Add class active
-            allSearchLinks[index].classList.add(classIsActive);
-
-            // Scroll for results box
-            const linkOffSetTop = allSearchLinks[index].offsetTop;
-            let scrollPosition = 0;
-
-            upDown === 'down' && linkOffSetTop > searchResultsHeight.outer / 2 // eslint-disable-line @typescript-eslint/no-unused-expressions
-                ? (scrollPosition = linkOffSetTop - searchResultsHeight.outer / 2)
-                : upDown === 'up' &&
-                  (scrollPosition =
-                      linkOffSetTop < searchResultsHeight.scroll - searchResultsHeight.outer / 2
-                          ? linkOffSetTop - searchResultsHeight.outer / 2
-                          : searchResultsHeight.scroll);
-
-            $results.scrollTo(0, scrollPosition);
+            document.querySelector('span[data-target=modal-search]')?.classList.remove('hidden');
         }
 
-        /* Reacted to the up or down keys
-  /* ---------------------------------------------------------- */
-        function arrowKeyUpDown(keyNumber) {
-            let upDown;
-            let indexTheLink = 0;
+        private initModalFunctionality(): void {
+            const $modalButtons = document.querySelectorAll('.js-modal-button');
+            const $modalCloses = document.querySelectorAll('.js-modal-close');
 
-            const resultActive = $results.querySelector(`.is-active`);
+            $modalButtons.forEach(($el) =>
+                $el.addEventListener('click', () => this.openModal($el.getAttribute('data-target')))
+            );
+            $modalCloses.forEach((el) => el.addEventListener('click', () => this.closeModals()));
 
-            if (resultActive) {
-                indexTheLink = [].slice.call(resultActive.parentNode.children).indexOf(resultActive);
-            }
-
-            $input.blur();
-
-            // 38 === UP
-            if (keyNumber === 38) {
-                upDown = 'up';
-
-                if (indexTheLink <= 0) {
-                    $input.focus();
-                    indexTheLink = 0;
-                } else {
-                    indexTheLink -= 1;
-                }
-            } else {
-                upDown = 'down';
-
-                if (indexTheLink >= allSearchLinksLength - 1) {
-                    indexTheLink = 0;
-                } else {
-                    indexTheLink += 1;
-                }
-            }
-
-            searchResultActive(indexTheLink, upDown);
-        }
-
-        /* Adding functions to the keys
-  /* ---------------------------------------------------------- */
-        function mySearchKey(e) {
-            const keyNumber = e.keyCode;
-
-            /**
-             * 38 => Up
-             * 40 => down
-             * 13 => enter
-             **/
-
-            if (keyNumber === 13) {
-                $input.blur();
-                enterKey();
-            } else if (keyNumber === 38 || keyNumber === 40) {
-                arrowKeyUpDown(keyNumber);
-                e.preventDefault();
-            }
-        }
-
-        /* Search
-  /* ---------------------------------------------------------- */
-
-        const search = async (keyword: string) => {
-            const arr = [];
-            const ret = await pagefind.debouncedSearch(keyword);
-            try {
-                for (const item of ret.results) {
-                    arr.push(await item.data());
-                }
-            } catch (error) {
-                console.log('🚀 ~ search ~ error:', error);
-            }
-            return arr;
-        };
-
-        $input.addEventListener('input', async function () {
-            const query = $input.value;
-            if (query) {
-                // Trigger the search function
-                const results = await search(query);
-                // Display the search results
-                displaySearch(results);
-            } else {
-                // Clear the results if the input is empty
-                $results.innerHTML = '';
-            }
-        });
-
-        /*  Toggle modal
-  /* ---------------------------------------------------------- */
-        const simplyModal = () => {
-            const getAll = (selector, parent = document) =>
-                Array.prototype.slice.call(parent.querySelectorAll(selector), 0);
-            const $modals = getAll('.js-modal');
-            const $modalButtons = getAll('.js-modal-button');
-            const $modalCloses = getAll('.js-modal-close');
-
-            // Modal Click Open
-            if (!$modalButtons.length) return;
-            $modalButtons.forEach(($el) => $el.addEventListener('click', () => openModal($el.dataset.target)));
-
-            // Modal Click Close
-            if (!$modalCloses.length) return;
-            $modalCloses.forEach((el) => el.addEventListener('click', () => closeModals()));
-
-            const openModal = (target) => {
-                documentBody.classList.remove('has-menu');
-                const $target = document.getElementById(target);
-                rootEl.classList.add('overflow-hidden');
-                $target.classList.add('is-active');
-
-                if (target === 'modal-search') {
-                    document.querySelector('#search-field').focus();
-                }
-            };
-
-            const closeModals = () => {
-                rootEl.classList.remove('overflow-hidden');
-                $modals.forEach(($el) => $el.classList.remove('is-active'));
-            };
-
-            document.addEventListener('keydown', function (event) {
-                const e = event || window.event;
-                if (e.keyCode === 27) {
-                    closeModals();
-                    // closeDropdowns()
+            document.addEventListener('keydown', (event: KeyboardEvent) => {
+                if (event.key === 'Escape') {
+                    this.closeModals();
                 }
             });
-            document.addEventListener('astro:after-swap', closeModals);
-        };
 
-        simplyModal();
+            document.addEventListener('astro:after-swap', () => this.closeModals());
+        }
+
+        private openModal(target: string | null): void {
+            if (!target) return;
+
+            this.$body.classList.remove('has-menu');
+            const $target = document.getElementById(target);
+            if (!$target) return;
+
+            document.documentElement.classList.add('overflow-hidden');
+            $target.classList.add('is-active');
+
+            if (target === 'modal-search') {
+                this.$input.focus();
+            }
+        }
+
+        private closeModals(): void {
+            document.documentElement.classList.remove('overflow-hidden');
+            document.querySelectorAll('.js-modal').forEach(($el) => $el.classList.remove('is-active'));
+        }
+
+        private async handleInput(): Promise<void> {
+            const query = this.$input.value;
+            if (query) {
+                const results = await this.search(query);
+                this.displaySearch(results);
+            } else {
+                this.$results.innerHTML = '';
+                this.$searchMessage.classList.add('hidden');
+            }
+        }
+
+        private async search(keyword: string): Promise<SearchResult[]> {
+            if (!window.pagefind) {
+                console.error('Pagefind is not loaded yet');
+                return [];
+            }
+
+            const ret = await window.pagefind.debouncedSearch(keyword);
+            if (ret === null) {
+                return [];
+            } else {
+                return await Promise.all(ret.results.map((item) => item.data()));
+            }
+        }
+
+        private displaySearch(results: SearchResult[]): void {
+            if (!this.$results) return;
+
+            const resultsHTML = results.map(this.createResultHTML).join('');
+            this.$results.innerHTML = resultsHTML;
+
+            this.allSearchLinksLength = results.length;
+            this.updateSearchResultsHeight();
+
+            if (results.length === 0 && this.$input.value !== '') {
+                this.$searchMessage.classList.remove('hidden');
+            } else {
+                this.$searchMessage.classList.add('hidden');
+            }
+        }
+
+        private createResultHTML(post: SearchResult): string {
+            const { url, title, excerpt } = post.sub_results[0];
+            return `
+            <div class="search-results-item w-full max-w-2xl mx-auto p-2">
+                <a href="${url}" class="text-lg font-semibold">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 self-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 4a6.5 6.5 0 0 1 6.5 6.5c0 1.62-.59 3.1-1.57 4.23l5.65 5.65l-.71.71l-5.65-5.65A6.47 6.47 0 0 1 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 4m0 1A5.5 5.5 0 0 0 4 10.5A5.5 5.5 0 0 0 9.5 16a5.5 5.5 0 0 0 5.5-5.5A5.5 5.5 0 0 0 9.5 5"/></svg>
+                        </div>
+                        <div class="flex-grow pl-2">
+                            <div class="flex flex-col space-y-2">
+                                <div class="text-lg font-semibold">${title}</div>
+                                <div class="text-gray-400 text-xs italic truncate max-w-[50%]">${url}</div>
+                                <p class="text-sm text-gray-500 mt-2">${excerpt}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        `;
+        }
+
+        private updateSearchResultsHeight(): void {
+            this.searchResultsHeight = {
+                outer: this.$results.offsetHeight,
+                scroll: this.$results.scrollHeight,
+            };
+        }
+
+        private handleKeydown(e: KeyboardEvent): void {
+            switch (e.key) {
+                case 'Enter':
+                    e.preventDefault(); // Prevent default form submission
+                    this.handleEnterKey();
+                    break;
+                case 'ArrowUp':
+                    this.handleArrowKey('up');
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    this.handleArrowKey('down');
+                    e.preventDefault();
+                    break;
+            }
+        }
+
+        private handleEnterKey(): void {
+            const activeLink = this.$results.querySelector(
+                `.search-results-item.${this.classIsActive} a`
+            ) as HTMLAnchorElement;
+            if (activeLink) {
+                activeLink.click();
+                this.closeModals(); // Close the modal after selection
+            }
+        }
+
+        private handleArrowKey(direction: 'up' | 'down'): void {
+            const allSearchLinks = this.$results.querySelectorAll('.search-results-item');
+            if (!allSearchLinks.length) return;
+
+            let index = Array.from(allSearchLinks).findIndex((el) => el.classList.contains(this.classIsActive));
+            index = direction === 'up' ? Math.max(0, index - 1) : (index + 1) % allSearchLinks.length;
+
+            allSearchLinks.forEach((el) => el.classList.remove(this.classIsActive));
+            allSearchLinks[index].classList.add(this.classIsActive);
+
+            this.scrollToActiveResult(allSearchLinks[index] as HTMLElement, direction);
+        }
+
+        private scrollToActiveResult(activeElement: HTMLElement, direction: 'up' | 'down'): void {
+            const { offsetTop } = activeElement;
+            const { outer } = this.searchResultsHeight;
+            let scrollPosition = 0;
+
+            if (direction === 'down' && offsetTop > outer / 2) {
+                scrollPosition = offsetTop - outer / 2;
+            } else if (direction === 'up') {
+                scrollPosition =
+                    offsetTop < this.searchResultsHeight.scroll - outer / 2
+                        ? offsetTop - outer / 2
+                        : this.searchResultsHeight.scroll;
+            }
+
+            this.$results.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+    }
+
+    // Initialize the search module
+    const initSearch = () => {
+        new SearchModule();
     };
-    document.addEventListener('astro:after-swap', initSearch);
-    initSearch();
+
+    // Wait for pagefind to be loaded before initializing the search module
+    const waitForPagefind = () => {
+        if (window.pagefind) {
+            initSearch();
+        } else {
+            setTimeout(waitForPagefind, 100);
+        }
+    };
+
+    document.addEventListener('astro:after-swap', waitForPagefind);
+    waitForPagefind();
 </script>
