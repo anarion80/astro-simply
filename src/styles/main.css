@@ -13,6 +13,7 @@
     --dropdown-bg: #fff;
     --title-color: #18181b;
     --color-link: var(--ghost-accent-color);
+    --color-mark: rgba(255, 255, 0, 0.7);
     --border-color: #e2ecec;
     --gray-100: #fafafa;
     --gray-150: #f8fafc;
@@ -630,6 +631,11 @@ textarea {
 .search-results a.is-active,
 .search-results a:hover {
     background: hsla(0, 0%, 66.7%, 0.35);
+}
+
+.search-results mark {
+    background-color: var(--color-mark);
+    color: inherit;
 }
 
 /* .kg-bookmark-container {
