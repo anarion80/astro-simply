@@ -64,13 +64,15 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 - Medium style image zoom
 - RSS Feed
 - Sitemap
+- Search (Pagefind)
+- View Transitions
 
 ## ✏ TODO
 
 - [ ] The whole re-used CSS is a mess and would need a proper rewrite.
 - [x] Astro view transistions
 - [x] Contact Page
-- [ ] Search
+- [x] Search
 - [ ] Comments
 
 ## 🏗 Installing

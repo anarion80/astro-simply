@@ -22,7 +22,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
 <Layout footer={true} bodyClass="is-article has-cover is-head-transparent" isPost={true}>
     <MetaData slot="head" location={Astro.url.pathname} title={post.data.title} data={post} />
-    <article class="post relative mb-10">
+    <article class="post relative mb-10" data-pagefind-body>
         <div class="postImage simply-hero-cover bg-dark min-h-lg relative py-24 lg:min-h-screen">
             {/* {!-- Featured Media - partials/components/media-cover.hbs --} */}
             <MediaCover
@@ -50,6 +50,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                     transition:name={getTransitionNameFromElementId({
                         elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
                     })}
+                    data-pagefind-meta="title"
                 >
                     {post.data.title}
                 </h1>
@@ -76,3 +77,12 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
     </article>
     {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
 </Layout>
+
+<script is:inline>
+    async function highlightResults() {
+        await import('/pagefind/pagefind-highlight.js');
+        new PagefindHighlight({ highlightParam: 'highlight' });
+    }
+    document.addEventListener('astro:after-swap', highlightResults);
+    highlightResults();
+</script>

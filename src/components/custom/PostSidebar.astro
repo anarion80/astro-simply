@@ -29,13 +29,14 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
         <div class="max-w-1100 mx-auto">
             <div class="row">
                 <div class="col s12 l7">
-                    <article>
+                    <article data-pagefind-body>
                         <header class="story-post-header mb-5">
                             <h1
                                 class="text-title mb-5 text-4xl leading-tight"
                                 transition:name={getTransitionNameFromElementId({
                                     elementId: TRANSITION_ELEMENT_IDS.POST_CARD.TITLE,
                                 })}
+                                data-pagefind-meta="title"
                             >
                                 {post.data.title}
                             </h1>
@@ -112,3 +113,12 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
     {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
 </Layout>
+
+<script is:inline>
+    async function highlightResults() {
+        await import('/pagefind/pagefind-highlight.js');
+        new PagefindHighlight({ highlightParam: 'highlight' });
+    }
+    document.addEventListener('astro:after-swap', highlightResults);
+    highlightResults();
+</script>

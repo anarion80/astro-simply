@@ -26,7 +26,7 @@ const { headings } = await post.render();
             <div class="sticky top-16 pr-5"></div>
         </div>
 
-        <article class="post relative mb-10 pt-8 lg:pt-10">
+        <article class="post relative mb-10 pt-8 lg:pt-10" data-pagefind-body>
             <ArticleHeader post={post} />
             {
                 post.data.heroImage && (
@@ -44,3 +44,12 @@ const { headings } = await post.render();
     </div>
     {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
 </Layout>
+
+<script is:inline>
+    async function highlightResults() {
+        await import('/pagefind/pagefind-highlight.js');
+        new PagefindHighlight({ highlightParam: 'highlight' });
+    }
+    document.addEventListener('astro:after-swap', highlightResults);
+    highlightResults();
+</script>

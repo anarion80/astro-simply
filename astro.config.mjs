@@ -247,7 +247,7 @@ export default defineConfig({
             "devicon-plain": ["astro"],
             "fxemoji": ["leftmagnifyingglass", "whitesun", "waningcrescentmoon"],
         },
-    }),],
+    })],
     image: {
         domains: ['unsplash.com'],
         remotePatterns: [
