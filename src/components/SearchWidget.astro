@@ -68,7 +68,6 @@ const { SITE_URL } = PROCESS_ENV;
     </div>
 </div>
 
-<!-- {import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: `${import.meta.env.BASE_URL}/pagefind/pagefind.js`}}> -->
 <script is:inline define:vars={{ scriptUrl: `${SITE_URL || CONFIG.siteUrl}/pagefind/pagefind.js` }}>
     async function loadPagefind() {
         const pagefind = await import(scriptUrl);
@@ -80,15 +79,14 @@ const { SITE_URL } = PROCESS_ENV;
         window.pagefind = pagefind;
         pagefind.search(''); // speed up the first search
     }
+    document.addEventListener('astro:after-swap', loadPagefind);
     loadPagefind();
 </script>
 
 <script>
     // @ts-nocheck
-    // import { siteConfig } from 'src/config';
-    // import SearchinGhost from '@utils/ghostSearch.js';
 
-    (async function (document) {
+    const initSearch = async () => {
         const $body = document.body;
         const $input = document.querySelector('#search-field');
         const $results = document.querySelector('#search-results');
@@ -372,5 +370,7 @@ const { SITE_URL } = PROCESS_ENV;
         };
 
         simplyModal();
-    })(document);
+    };
+    document.addEventListener('astro:after-swap', initSearch);
+    initSearch();
 </script>
