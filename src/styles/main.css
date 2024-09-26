@@ -1172,7 +1172,7 @@ textarea:not([rows]) {
 textarea[rows] {
     height: auto;
 }
-/*
+
 .button {
     background-color: #f2f2f2;
     background-color: var(--button-bg);
@@ -1251,7 +1251,6 @@ textarea[rows] {
     padding: 0;
     width: 2.25rem;
 }
-    */
 
 .buttons {
     align-items: center;
@@ -1266,73 +1265,6 @@ textarea[rows] {
 
 .buttons .button:not(:last-child) {
     margin-right: 0.5rem;
-}
-
-.button {
-    background-color: #fff;
-    border-color: #757575;
-    border-width: 1px;
-    color: #292929;
-    cursor: pointer;
-    justify-content: center;
-    padding: 0 0.875em;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.button:hover {
-    color: #18181b;
-}
-
-.button:active,
-.button:hover {
-    border-color: #292929;
-}
-
-.button .icon,
-.button .icon.is-large,
-.button .icon.is-medium,
-.button .icon.is-small {
-    height: 1.5em;
-    width: 1.5em;
-}
-
-.button .icon:first-child:not(:last-child) {
-    margin-left: calc(-0.5em - 1px);
-    margin-right: 0.25em;
-}
-
-.button .icon:last-child:not(:first-child) {
-    margin-left: 0.25em;
-    margin-right: calc(-0.5em - 1px);
-}
-
-.button .icon:first-child:last-child {
-    margin-left: calc(-0.5em - 1px);
-    margin-right: calc(-0.5em - 1px);
-}
-
-.button.is-primary,
-.button.is-primary:hover {
-    background-color: var(--ghost-accent-color);
-    border-color: transparent;
-    color: #fff;
-}
-
-.button.is-primary:hover {
-    opacity: 0.92;
-}
-
-.button.is-primary.is-outlined {
-    background-color: transparent;
-    border-color: var(--ghost-accent-color);
-    color: var(--ghost-accent-color);
-}
-
-.button.is-primary.is-outlined:hover {
-    background-color: var(--ghost-accent-color);
-    border-color: var(--ghost-accent-color);
-    color: #fff;
 }
 
 .button.is-dark-blue {

@@ -105,7 +105,7 @@ const tags = Object.entries(
     <div class="buttons">
         {
             tags.map((item) => (
-                <a href={`/blog/tag/${item.name}/`} class="button is-light text-sm font-medium capitalize">
+                <a href={`/blog/tag/${item.name}/`} class="button text-sm font-medium capitalize">
                     {`#${item.name} (${item.count})`}
                 </a>
             ))
