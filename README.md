@@ -66,6 +66,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 - Sitemap
 - Search (Pagefind)
 - View Transitions
+- Comments (Giscus)
 
 ## ✏ TODO
 
@@ -73,7 +74,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 - [x] Astro view transistions
 - [x] Contact Page
 - [x] Search
-- [ ] Comments
+- [x] Comments
 
 ## 🏗 Installing
 
@@ -148,6 +149,19 @@ Update `SITE_URL` environment variable in `.env` file or in your deployment envi
         .
         .
     ],
+    giscus: true,
+    giscusConfig: {
+        repo: 'anarion80/astro-simply',
+        repoId: 'R_kgDOMyRoiA',
+        category: 'General',
+        categoryId: 'DIC_kwDOMyRoiM4CizO3',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        inputPosition: 'bottom',
+        lang: 'en',
+        loading: 'lazy',
+    },
 }
 ```
 

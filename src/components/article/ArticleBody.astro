@@ -15,6 +15,8 @@ import File from '@components/cards/File.astro';
 import Blockquote from '@components/Blockquote.astro';
 import Bookmark from '@components/cards/Bookmark.astro';
 import Gallery from '@components/cards/Gallery.astro';
+import Comments from '@components/Comments';
+import { CONFIG } from '@config/config';
 export interface Props {
     post: Post;
     nextPost?: Post;
@@ -44,6 +46,9 @@ const { Content: PostContent } = await post.render();
         /> -->
         <SocialShare post={post} trackingName="Footer" divClass="order-first mb-6 md:mb-0 md:order-none" />
     </div>
+
+    {/*{!-- Giscus comments --}*/}
+    {CONFIG.giscus && <Comments client:only="react" />}
 
     {/*{!-- Previous and next article --}*/}
     <div class="prev-next pb-8">

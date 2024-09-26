@@ -12,6 +12,8 @@ import MetaData from '@components/meta/MetaData.astro';
 import type { Post } from 'src/schemas/post';
 import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 import { getCategory } from '@utils/post';
+import Comments from '@components/Comments';
+import { CONFIG } from '@config/config';
 
 export interface Props {
     post: Post;
@@ -100,6 +102,9 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
                             {/* {!-- Social Share - ./partials/components/social-share --} */}
                             <SocialShare post={post} trackingName="Footer" divClass="block" />
+
+                            {/*{!-- Giscus comments --}*/}
+                            {CONFIG.giscus && <Comments client:only="react" />}
 
                             {/*{!-- Previous and next article --}*/}
                             <div class="prev-next pb-8">
