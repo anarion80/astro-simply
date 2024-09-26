@@ -39,7 +39,7 @@ export default function Comments({ lightTheme = 'light', darkTheme = 'dark' }: C
 
     return (
         <div className="giscus mx-auto mt-10 w-full">
-            <Giscus theme={theme === 'light' ? lightTheme : darkTheme} {...CONFIG.giscus} />
+            <Giscus theme={theme === 'light' ? lightTheme : darkTheme} {...CONFIG.giscusConfig} />
         </div>
     );
 }

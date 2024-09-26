@@ -55,7 +55,8 @@ export const configSchema = z.object({
             url: z.string().url(),
         })
         .array(),
-    giscus: z.object({
+    giscus: z.boolean().optional().default(false),
+    giscusConfig: z.object({
         repo: z.custom<Repo>(
             (val): val is Repo => {
                 return typeof val === 'string' && /^[^/]+\/[^/]+$/.test(val);

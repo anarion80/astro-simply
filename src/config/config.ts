@@ -146,7 +146,8 @@ const configData: ConfigType = {
             url: 'https://x.com/astro',
         },
     ],
-    giscus: {
+    giscus: true,
+    giscusConfig: {
         repo: 'anarion80/astro-simply',
         repoId: 'R_kgDOMyRoiA',
         category: 'General',

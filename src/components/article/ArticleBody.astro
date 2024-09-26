@@ -16,6 +16,7 @@ import Blockquote from '@components/Blockquote.astro';
 import Bookmark from '@components/cards/Bookmark.astro';
 import Gallery from '@components/cards/Gallery.astro';
 import Comments from '@components/Comments';
+import { CONFIG } from '@config/config';
 export interface Props {
     post: Post;
     nextPost?: Post;
@@ -47,7 +48,7 @@ const { Content: PostContent } = await post.render();
     </div>
 
     {/*{!-- Giscus comments --}*/}
-    <Comments client:only="react" />
+    {CONFIG.giscus && <Comments client:only="react" />}
 
     {/*{!-- Previous and next article --}*/}
     <div class="prev-next pb-8">
