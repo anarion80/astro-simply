@@ -103,7 +103,6 @@ type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no
         private $input: HTMLInputElement;
         private $results: HTMLElement;
         private $searchMessage: HTMLElement;
-        private allSearchLinksLength: number = 0;
         private searchResultsHeight: { outer: number; scroll: number } = { outer: 0, scroll: 0 };
         private classIsActive: string = 'is-active';
 
@@ -196,7 +195,6 @@ type Props = Record<string, never>; // eslint-disable-line @typescript-eslint/no
             const resultsHTML = results.map(this.createResultHTML).join('');
             this.$results.innerHTML = resultsHTML;
 
-            this.allSearchLinksLength = results.length;
             this.updateSearchResultsHeight();
 
             if (results.length === 0 && this.$input.value !== '') {
