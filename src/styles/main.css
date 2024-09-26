@@ -40,6 +40,9 @@
     --input-focus-border-color: #80bdff;
     --placeholder-color: rgba(54, 54, 54, 0.8);
     --bg-cta: #fff;
+    --bookmark-background-color: #fff;
+    --bookmark-border-color: rgb(124 139 154 / 25%);
+    --bookmark-text-color: #222;
 }
 
 .dark {
@@ -75,6 +78,9 @@
     --input-border-color: #444;
     --placeholder-color: #aaa;
     --bg-cta: #111;
+    --bookmark-background-color: rgb(21, 32, 43);
+    --bookmark-border-color: rgb(124 139 154 / 25%);
+    --bookmark-text-color: #acacac;
 }
 
 .dark table td,
@@ -5514,12 +5520,12 @@ except for when immediately preceeded by a heading */
 .kg-bookmark-card a.kg-bookmark-container,
 .kg-bookmark-card a.kg-bookmark-container:hover {
     display: flex;
-    background: #fff;
+    background: var(--bookmark-background-color);
     text-decoration: none;
     border-radius: 6px;
-    border: 1px solid rgb(124 139 154 / 25%);
+    border: 1px solid var(--bookmark-border-color);
     overflow: hidden;
-    color: #222;
+    color: var(--bookmark-text-color);
 }
 
 .kg-bookmark-content {
