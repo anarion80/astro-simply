@@ -51,7 +51,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 - [Sidebar ToC navigation](https://astro-simply.pages.dev/blog/writing-and-managing-content-in-ghost-and-advanced-guide/)
 - [Social accounts link](https://godofredo.ninja/ghost-theme/simply/settings/#socialmedia)
 - [GDPR Cookie Consent](https://github.com/jop-software/astro-cookieconsent)
-- Ghost cards (GIF, Buttons, Callouts, Toggles, Custom blockquotes, Products, Audio, Video, Files, Headers)
+- Ghost cards ([Buttons](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#button), [Callouts](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#callout), [Toggles](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#toggle), [Custom blockquotes](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#blockquote), [Products](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#product-card), [Audio](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#audio-card), [Video](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#video-card), [Files](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#file-card), [Headings](https://astro-simply.pages.dev/blog/2024-08-29-card-examples/#heading-text))
   - can be used only in `*.mdx` files via importing and using appropriate component
 - Config file
 - Pagination
@@ -152,9 +152,9 @@ Update `SITE_URL` environment variable in `.env` file or in your deployment envi
     giscus: true,
     giscusConfig: {
         repo: 'anarion80/astro-simply',
-        repoId: 'R_kgDOMyRoiA',
+        repoId: '[REPO ID]',
         category: 'General',
-        categoryId: 'DIC_kwDOMyRoiM4CizO3',
+        categoryId: '[CATEGORY ID]',
         mapping: 'pathname',
         reactionsEnabled: '1',
         emitMetadata: '0',
