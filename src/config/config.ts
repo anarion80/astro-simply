@@ -146,6 +146,18 @@ const configData: ConfigType = {
             url: 'https://x.com/astro',
         },
     ],
+    giscus: {
+        repo: 'anarion80/astro-simply',
+        repoId: 'R_kgDOMyRoiA',
+        category: 'General',
+        categoryId: 'DIC_kwDOMyRoiM4CizO3',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        inputPosition: 'bottom',
+        lang: 'en',
+        loading: 'lazy',
+    },
 };
 
 export const CONFIG = validateData(configData, configSchema);

@@ -8,6 +8,8 @@ export const processEnvSchema = z.object({
     FACEBOOK_ACCESS_TOKEN: z.string().optional(),
 });
 
+type Repo = `${string}/${string}`;
+
 export const configSchema = z.object({
     title: z.string().min(1),
     shortTitle: z.string().min(1),
@@ -53,6 +55,25 @@ export const configSchema = z.object({
             url: z.string().url(),
         })
         .array(),
+    giscus: z.object({
+        repo: z.custom<Repo>(
+            (val): val is Repo => {
+                return typeof val === 'string' && /^[^/]+\/[^/]+$/.test(val);
+            },
+            {
+                message: "Invalid repo format. Expected 'owner/repo'",
+            }
+        ),
+        repoId: z.string().min(1), // [ENTER REPO ID HERE]
+        category: z.string().min(1), // [ENTER CATEGORY NAME HERE]
+        categoryId: z.string().min(1), // [ENTER CATEGORY ID HERE]
+        mapping: z.enum(['url', 'title', 'og:title', 'specific', 'number', 'pathname']).default('pathname'),
+        reactionsEnabled: z.enum(['0', '1']).default('0'),
+        emitMetadata: z.enum(['0', '1']).default('0'),
+        inputPosition: z.enum(['top', 'bottom']).default('bottom'),
+        lang: z.string().min(1).default('en'),
+        loading: z.enum(['lazy', 'eager']).default('lazy'),
+    }),
 });
 
 export type ConfigSchemaType = typeof configSchema;
