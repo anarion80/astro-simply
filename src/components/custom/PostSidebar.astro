@@ -98,10 +98,11 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
                         {/* {!-- Tags - ./partials/components/tags,hbs --} */}
                         <footer class="post-footer max-w-740 mx-auto px-4 pt-10">
-                            <Tags tags={post.data.tags} />
+                            <div class="post-share mt-8 flex flex-col md:flex-row">
+                                <Tags tags={post.data.tags} />
 
-                            {/* {!-- Social Share - ./partials/components/social-share --} */}
-                            <SocialShare post={post} trackingName="Footer" divClass="block" />
+                                <SocialShare post={post} trackingName="Footer" divClass="block" />
+                            </div>
 
                             {/*{!-- Giscus comments --}*/}
                             {CONFIG.giscus && <Comments client:only="react" />}
