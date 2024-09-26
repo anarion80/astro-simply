@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { JSDOM } from 'jsdom';
+import { Window } from 'happy-dom';
 
 export interface LinkData {
     title: string;
@@ -73,8 +73,17 @@ export const getURLMetadata = async (
         publisher: metadata.publisher || '',
     };
 
-    const dom = new JSDOM(html, { pretendToBeVisual: true, resources: 'usable' });
-    const doc = dom.window.document;
+    const window = new Window({
+        url: url,
+        settings: {
+            disableCSSFileLoading: true,
+            disableComputedStyleRendering: true,
+            navigator: {
+                userAgent: 'Mozilla/5.0 (X11; Linux x64) AppleWebKit/537.36 (KHTML, like Gecko) HappyDOM/2.0.0',
+            },
+        },
+    });
+    const doc = window.document;
 
     if (!linkData.title)
         linkData.title =
@@ -116,6 +125,7 @@ export const getURLMetadata = async (
             new URL(url).origin ||
             '';
 
+    window.close();
     return linkData;
 };
 
