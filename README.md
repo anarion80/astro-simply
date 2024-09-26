@@ -208,9 +208,9 @@ npm run preview
 - [Nemanjam](https://github.com/nemanjam) for [Developer blog website built with Astro and Tailwind](https://github.com/nemanjam/nemanjam.github.io)
 - [Hakim El Hattab](https://hakim.se/) and [Kld.dev](https://kld.dev/) for [Progress Nav](https://lab.hakim.se/progress-nav/), [Table of contents animation](https://kld.dev/toc-animation/)
 - [Reza Zahedi](https://rezahedi.dev/) for [sectionize](https://rezahedi.dev/blog/create-table-of-contents-in-astro-and-sectionize-the-markdown-content)
-- [surjithctly](https://github.com/surjithctly) for [astroship](https://github.com/surjithctly/astroship), demo: https://astroship.web3templates.com
-- [satnaing](https://github.com/satnaing) for [astro-paper](https://github.com/satnaing/astro-paper), demo: https://astro-paper.pages.dev/posts
-- [onwidget](https://github.com/onwidget) for [astrowind](https://github.com/onwidget/astrowind), demo: https://astrowind.vercel.app
+- [surjithctly](https://github.com/surjithctly) for [astroship](https://github.com/surjithctly/astroship), demo: [https://astroship.web3templates.com](https://astroship.web3templates.com)
+- [satnaing](https://github.com/satnaing) for [astro-paper](https://github.com/satnaing/astro-paper), demo: [https://astro-paper.pages.dev/posts](https://astro-paper.pages.dev/posts)
+- [onwidget](https://github.com/onwidget) for [astrowind](https://github.com/onwidget/astrowind), demo: [https://astrowind.vercel.app](https://astrowind.vercel.app)
 
 ## 📝 Copyright & License
 
