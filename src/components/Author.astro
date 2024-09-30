@@ -55,7 +55,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                         >
                             {author.data.profile_image ? (
                                 <Image
-                                    src={authorImagesObj[author.slug].default}
+                                    src={authorImagesObj[author.slug]?.default ?? AvatarImage}
                                     class="rounded-full object-cover"
                                     alt={t(`Go to the profile of`) + ' ' + author.data.name}
                                     widths={[36]}

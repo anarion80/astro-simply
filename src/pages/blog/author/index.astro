@@ -102,7 +102,7 @@ const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), 
                                     <a href={`/blog/author/${author.slug}/`}>
                                         {author.data.profile_image ? (
                                             <Image
-                                                src={authorImagesObj[author.slug].default}
+                                                src={authorImagesObj[author.slug]?.default ?? AvatarImage}
                                                 class="avatar is-100x100 rounded-full object-cover"
                                                 alt={`${t(`Hi! I'm`)}  ` + ' ' + author.data.name}
                                                 widths={[50, 80, 100]}

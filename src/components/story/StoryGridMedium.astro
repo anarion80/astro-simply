@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-const AvatarImage = '/assets/images/authors/default_avatar.png';
+import AvatarImage from '@assets/images/avatar.png';
 import type { Post } from 'src/schemas/post';
 import DateTimeComponent from '@components/DateTimeComponent.astro';
 import { t } from '@utils/use-lang';
@@ -51,7 +51,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                     authors[0].data.profile_image ? (
                         <Image
                             class="h-5 w-5 rounded-full object-cover"
-                            src={authorImagesObj[authors[0].slug].default}
+                            src={authorImagesObj[authors[0].slug]?.default ?? AvatarImage}
                             alt={t(`Go to the profile of`) + authors[0].data.name}
                             width="20"
                             height="20"
