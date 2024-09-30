@@ -17,15 +17,7 @@ const { site, hasDropDown } = Astro.props;
 
 {
     hasDropDown && (
-        <li
-            class={
-                `dropdown is-hoverable ml-5 ` +
-                (!(
-                    site.followSocialMedia.some((item) => item.service === 'twitter') ||
-                    site.followSocialMedia.some((item) => item.service === 'facebook')
-                ) && `hidden`)
-            }
-        >
+        <li class={`dropdown is-hoverable ml-5 ` + (!menuDropdown && `hidden`)}>
             <span class="mainMenu-link dropdown-trigger hover:text-primary font-medium" data-astro-prefetch="hover">
                 <span>{t(`More`)}</span>
                 <Icon name="fa6-solid:angle-down" class="icon is-small" />
@@ -33,7 +25,7 @@ const { site, hasDropDown } = Astro.props;
             <div class="dropdown-menu whitespace-normal">
                 <div class="dropdown-content">
                     <div class="js-dropdown-menu">
-                        {menuDropdown.map((menuItem) => (
+                        {menuDropdown?.map((menuItem) => (
                             <a
                                 class="dropdown-item hover:text-primary"
                                 href={menuItem.url}

@@ -58,17 +58,18 @@ const pathname = new URL(Astro.request.url).pathname;
                     </a>
                 </li>
             ))}
-            {menuDropdown.map((navItem) => (
-                <li>
-                    <a
-                        href={relativeUrl(navItem.url)}
-                        class="text-22 block px-5 py-2 font-medium leading-tight"
-                        data-astro-prefetch="tap"
-                    >
-                        {navItem.label}
-                    </a>
-                </li>
-            ))}
+            {menuDropdown &&
+                menuDropdown.map((navItem) => (
+                    <li>
+                        <a
+                            href={relativeUrl(navItem.url)}
+                            class="text-22 block px-5 py-2 font-medium leading-tight"
+                            data-astro-prefetch="tap"
+                        >
+                            {navItem.label}
+                        </a>
+                    </li>
+                ))}
         </ul>
     ) : (
         site.navigation.map((navItem, i) => {

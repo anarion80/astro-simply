@@ -45,7 +45,8 @@ export const configSchema = z.object({
             label: z.string().min(1),
             url: z.string().startsWith('/'),
         })
-        .array(),
+        .array()
+        .optional(),
 
     followSocialMedia: z
         .object({
