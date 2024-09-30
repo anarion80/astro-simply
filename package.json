@@ -87,7 +87,7 @@
         "@types/node": "^22.5.2",
         "@types/remark-oembed": "^1.2.4",
         "@typescript-eslint/eslint-plugin": "^8.2.0",
-        "@typescript-eslint/parser": "^8.4.0",
+        "@typescript-eslint/parser": "^8.7.0",
         "astro-eslint-parser": "^1.0.3",
         "esbuild": "^0.24.0",
         "eslint": "^9.9.1",
