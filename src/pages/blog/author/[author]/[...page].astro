@@ -97,7 +97,7 @@ const authorImage = image ? await images[image]() : undefined;
                 }
 
                 <a
-                    href={`https://feedly.com/i/subscription/feed/` + author.slug + `rss/`}
+                    href={`${CONFIG.siteUrl}/blog/author/${author.slug}/rss.xml`}
                     class="author-stats button is-transparent"
                     target="_blank"
                     rel="noopener noreferrer"
