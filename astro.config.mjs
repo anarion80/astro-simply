@@ -104,7 +104,11 @@ export default defineConfig({
             // }],
         ],
         shikiConfig: {
-            theme: 'slack-dark',
+            // theme: 'slack-dark',
+            themes: {
+                light: 'slack-ochin',
+                dark: 'slack-dark',
+            },
             langs: [],
             wrap: true,
             transformers: [
