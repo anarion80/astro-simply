@@ -58,3 +58,12 @@ const { Content: PostContent } = await post.render();
         {nextPost && <StoryPreviousNext post={nextPost} storyTitle={t(`Next article`)} divClass="" />}
     </div>
 </footer>
+
+<script is:inline>
+    async function highlightResults() {
+        await import('/pagefind/pagefind-highlight.js');
+        new PagefindHighlight({ highlightParam: 'highlight' });
+    }
+    document.addEventListener('astro:after-swap', highlightResults);
+    highlightResults();
+</script>

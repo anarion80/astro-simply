@@ -35,12 +35,3 @@ const { post, nextPost, prevPost, relatedPosts } = Astro.props;
     </article>
     {relatedPosts && <ArticleRelated relatedPosts={relatedPosts} />}
 </Layout>
-
-<script is:inline>
-    async function highlightResults() {
-        await import('/pagefind/pagefind-highlight.js');
-        new PagefindHighlight({ highlightParam: 'highlight' });
-    }
-    document.addEventListener('astro:after-swap', highlightResults);
-    highlightResults();
-</script>
