@@ -14,6 +14,7 @@ import { CONFIG } from './src/config/config.ts';
 import { rehypeHeadingIds } from '@astrojs/markdown-remark';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSectionize from '@hbsnow/rehype-sectionize';
+import rehypeImageZoom from './src/utils/rehypeImageZoom.ts';
 import { h } from 'hastscript';
 import {
     transformerNotationDiff,
@@ -95,6 +96,7 @@ export default defineConfig({
                     ],
                 },
             ],
+            rehypeImageZoom,
             // [addBookmarks, {
             //     domain: [
             //         "twitter.com",
