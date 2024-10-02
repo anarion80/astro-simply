@@ -25,6 +25,7 @@ const { width: shareImageWidth, height: shareImageHeight } =
     typeof post.data.heroImage === 'string' ? await inferRemoteSize(post.data.heroImage) : post.data.heroImage;
 
 const publisherLogo = Logo || CONFIG.siteIcon ? new URL(Logo || CONFIG.siteIcon, CONFIG.siteUrl).toString() : null;
+const { width: publisherLogoImageWidth, height: publisherLogoImageHeight } = await inferRemoteSize(publisherLogo ?? '');
 
 const jsonLd = {
     '@context': 'https://schema.org/',
@@ -45,7 +46,7 @@ const jsonLd = {
     image: shareImage
         ? {
               '@type': 'ImageObject',
-              url: shareImage,
+              url: new URL(typeof shareImage === 'string' ? shareImage : shareImage.src, CONFIG.siteUrl).toString(),
               width: shareImageWidth || CONFIG.shareImageWidth,
               height: shareImageHeight || CONFIG.shareImageHeight,
           }
@@ -56,8 +57,8 @@ const jsonLd = {
         logo: {
             '@type': 'ImageObject',
             url: publisherLogo,
-            width: 60,
-            height: 60,
+            width: publisherLogoImageWidth,
+            height: publisherLogoImageHeight,
         },
     },
     description: post.data.excerpt || undefined,

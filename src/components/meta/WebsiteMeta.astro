@@ -2,6 +2,7 @@
 import { URL } from 'node:url';
 import { CONFIG } from '@config/config';
 import ImageMeta from './ImageMeta.astro';
+import { inferRemoteSize } from 'astro:assets';
 
 export interface Props {
     // data?: any;
@@ -14,6 +15,7 @@ export interface Props {
 const Logo = 'full-logo-dark.png';
 const { canonical, title, description, type } = Astro.props;
 const publisherLogo = new URL(Logo || CONFIG.siteIcon, CONFIG.siteUrl).toString();
+const { width: publisherLogoImageWidth, height: publisherLogoImageHeight } = await inferRemoteSize(publisherLogo ?? '');
 
 const shareImage = new URL(CONFIG.shareImage || CONFIG.siteIcon, CONFIG.siteUrl).toString();
 
@@ -38,8 +40,10 @@ const jsonLd = {
         logo: {
             '@type': 'ImageObject',
             url: publisherLogo,
-            width: 60,
-            height: 60,
+            width: publisherLogoImageWidth,
+            height: publisherLogoImageHeight,
+            // width: 60,
+            // height: 60,
         },
     },
     mainEntityOfPage: {

@@ -2,7 +2,7 @@
 import ImageMeta from './ImageMeta.astro';
 import { CONFIG } from '@config/config';
 import type { Author } from 'src/schemas/author';
-import { resolveUrl } from '@utils/relativeUrl';
+import { inferRemoteSize } from 'astro:assets';
 const AvatarImage = '/assets/images/authors/default_avatar.png';
 
 export interface Props {
@@ -13,9 +13,12 @@ export interface Props {
 const Logo = 'full-logo-dark.png';
 const { data, canonical } = Astro.props;
 const author = data;
+
 const shareImage = author.data.profile_image
-    ? new URL(resolveUrl(author.data.profile_image), CONFIG.siteUrl).toString()
-    : AvatarImage;
+    ? new URL(author.data.profile_image, CONFIG.siteUrl).toString()
+    : new URL(AvatarImage, CONFIG.siteUrl).toString();
+
+const { width: shareImageWidth, height: shareImageHeight } = await inferRemoteSize(shareImage);
 
 const title = `${author.data.name} - ${CONFIG.title}`;
 const description = author.data.bio || CONFIG.siteDescriptionMeta;
@@ -31,8 +34,8 @@ const jsonLd = {
         ? {
               '@type': 'ImageObject',
               url: shareImage,
-              width: CONFIG.shareImageWidth,
-              height: CONFIG.shareImageHeight,
+              width: shareImageWidth || CONFIG.shareImageWidth,
+              height: shareImageHeight || CONFIG.shareImageHeight,
           }
         : undefined,
     mainEntityOfPage: {
