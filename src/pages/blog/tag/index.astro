@@ -12,6 +12,7 @@ const posts: Post[] = await getCollection('blog');
 // Calculate posts for each category and turn into a list
 const tags = Object.entries(
     posts
+        .filter((post) => !post.data.draft)
         .flatMap((post) => post.data.tags)
         .reduce<{
             [key: string]: number;
