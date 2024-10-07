@@ -76,7 +76,7 @@
         "!(*.{js,md})": "prettier --write --ignore-unknown"
     },
     "devDependencies": {
-        "@astrojs/check": "^0.9.3",
+        "@astrojs/check": "^0.9.4",
         "@divriots/jampack": "^0.28.0",
         "@eslint/js": "^9.11.0",
         "@shikijs/transformers": "^1.16.2",
