@@ -5,11 +5,9 @@ import { Image } from 'astro:assets';
 import type { Post } from 'src/schemas/post';
 import type { ImageMetadata } from 'astro';
 import { render } from 'astro:content';
-// import type { CollectionEntry } from 'astro:content';
 
 export interface Props {
     post: Post;
-    // post: CollectionEntry<'blog'>;
 }
 
 const { post } = Astro.props;

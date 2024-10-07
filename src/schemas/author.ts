@@ -6,7 +6,6 @@ export const authorSchema = ({ image }: SchemaContext) =>
         id: z.string().optional(),
         name: z.string(),
         meta_title: z.string().optional(),
-        // profile_image: image().optional(),
         profile_image: z.string().optional(),
         cover_image: image()
             .refine((img) => img.width >= 1080, {

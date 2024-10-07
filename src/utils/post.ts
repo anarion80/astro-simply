@@ -13,12 +13,6 @@ export const getCategory = async (id: string) => {
 export const getAuthors = async (id?: string) => {
     if (id) {
         const post_ref = (await getEntry('blog', id)) as CollectionEntry<'blog'>;
-        // const authors = await getEntries(
-        //     post_ref.data.authors.map((author) => ({
-        //         collection: 'authors',
-        //         id: author.id,
-        //     }))
-        // );
         const authors = getCollection('authors', ({ data }) => {
             return post_ref.data.authors.some((author) => author.id === data.id);
         });
@@ -27,18 +21,8 @@ export const getAuthors = async (id?: string) => {
     }
     return await getCollection('authors');
 };
-// export const getAuthors = async (id: string) => {
-//     if (id)
-//         {
-//             const post_ref = await getEntry('blog', id) as CollectionEntry<'blog'>;
-//             const authors = await getEntries(post_ref.data.authors);
-//             return authors
-//         }
-//     return await getCollection('authors')
-// }
 
 export const getAuthor = async (id: string) => {
-    // const post_ref = await getEntry('authors', id) as CollectionEntry<'authors'>;
     return (await getEntry('authors', id)) as CollectionEntry<'authors'>;
 };
 

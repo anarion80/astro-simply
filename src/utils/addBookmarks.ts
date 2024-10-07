@@ -4,7 +4,6 @@ import type { Element } from 'hast';
 import fetch from 'node-fetch';
 import { JSDOM } from 'jsdom';
 import type { Parent } from 'unist';
-// import { h } from 'hastscript';
 
 interface Options {
     domain: string[];

@@ -46,36 +46,14 @@ const tags = Object.entries(
             {
                 tags.map((tag) => (
                     <article class="topic-story bg-primary relative overflow-hidden rounded-md">
-                        {/* {tag.data.image && (
-                            <>
-                                <a href={`/blog/category/${tag}/`}>
-                                    <Image
-                                        class="inset-image blur-up lazyloaded"
-                                        src={tag.data.image}
-                                        widths={[300, 600]}
-                                        sizes={`(max-width: 1000px) 400px, 600px`}
-                                        alt={tag.data.title}
-                                        width="600"
-                                        height="400"
-                                    />
-                                </a>
-                                <div
-                                    class="z-2 absolute inset-0"
-                                    style={{
-                                        background: `linear-gradient(135deg,rgb(6 10 25 / 70%),rgb(5 17 19 / 60%))`,
-                                    }}
-                                />
-                            </>
-                        )} */}
-
                         <header class="z-4 relative w-full px-4 py-6 text-center text-white lg:px-6">
                             <div class="mb-3 text-xs font-medium uppercase tracking-widest opacity-90">
                                 {tag.count}{' '}
                                 {tag.count === 0
                                     ? t(`No Stories`, `No Stories`)
                                     : tag.count === 1
-                                      ? t(`1 Story`, `1 Story`)
-                                      : t(`% Stories`, `% Stories`)}
+                                        ? t(`1 Story`, `1 Story`)
+                                        : t(`% Stories`, `% Stories`)}
                             </div>
                             <h2 class="text-xl font-semibold capitalize tracking-wide">
                                 <a href={`/blog/tag/${tag.name}`}>{tag.name}</a>
