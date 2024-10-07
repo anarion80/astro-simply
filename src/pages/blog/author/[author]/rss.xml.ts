@@ -9,10 +9,10 @@ export const getStaticPaths = (async () => {
     const posts = await getPosts();
     return authors.flatMap((author) => {
         const filteredPosts = posts.filter((post) => {
-            return post.data.authors.map((author) => author.slug).includes(author.slug);
+            return post.data.authors.map((author) => author.id).includes(author.id);
         });
         return filteredPosts.map((post) => ({
-            params: { author: post.data.authors[0].slug },
+            params: { author: post.data.authors[0].id },
             props: { author },
         }));
     });
@@ -24,7 +24,7 @@ export async function GET(context: any) {
         return !post.data.draft;
     });
     const items = [...blog].filter((post) => {
-        return post.data.authors.map((author) => author.slug).includes(context.props.author.slug);
+        return post.data.authors.map((author) => author.id).includes(context.props.author.id);
     });
     return rss({
         title: site.title,
@@ -34,7 +34,7 @@ export async function GET(context: any) {
             title: item.data.title,
             description: item.data.excerpt,
             pubDate: item.data.publishDate,
-            link: `/${item.collection}/${item.slug}/`,
+            link: `/${item.collection}/${item.id}/`,
         })),
     });
 }

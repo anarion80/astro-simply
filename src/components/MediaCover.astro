@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const { background, hasGradient, altTitle } = Astro.props;
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: Astro.params.slug || '' });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: Astro.params.id || '' });
 ---
 
 {
@@ -30,7 +30,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: Astro.param
             widths={[300, 600, 1000, 2000]}
             sizes={`(max-width: 400px) 300px,(max-width: 730px) 600px, (max-width: 1600px) 100vw`}
             loading="eager"
-            {...(Astro.params.slug !== undefined && {
+            {...(Astro.params.id !== undefined && {
                 'transition:name': getTransitionNameFromElementId({
                     elementId: TRANSITION_ELEMENT_IDS.POST_CARD.FEATURE_IMAGE,
                 }),

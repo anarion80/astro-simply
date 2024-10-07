@@ -7,6 +7,7 @@ import MetaData from '@components/meta/MetaData.astro';
 import type { Post } from 'src/schemas/post';
 import TOC from '@components/TOC.astro';
 import ArticleRelated from '@components/article/ArticleRelated.astro';
+import { render } from 'astro:content';
 
 export interface Props {
     post: Post;
@@ -16,7 +17,7 @@ export interface Props {
 }
 
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
-const { headings } = await post.render();
+const { headings } = await render(post);
 ---
 
 <Layout footer={true} bodyClass="is-article" isPost={true}>

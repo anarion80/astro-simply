@@ -20,7 +20,7 @@ export async function GET(context) {
             title: item.data.title,
             description: item.data.excerpt,
             pubDate: item.data.publishDate,
-            link: `/${item.collection}/${item.slug}/`,
+            link: `/${item.collection}/${item.id}/`,
         })),
     });
 }

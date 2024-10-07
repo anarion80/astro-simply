@@ -10,7 +10,7 @@ const categories: Category[] = await getCategories();
     categories.map((category) => (
         <div class="mb-3 flex items-center justify-between leading-tight">
             <a
-                href={`/blog/category` + `/${category.slug}/`}
+                href={`/blog/category` + `/${category.id}/`}
                 title={category.data.title}
                 class="border-primary border-l-4 pl-3 capitalize"
                 data-astro-prefetch="hover"

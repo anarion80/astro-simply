@@ -19,11 +19,11 @@ const { post, storyTitle, divClass } = Astro.props;
     class={`flex relative godo-tracking ` + divClass}
     data-event-category="Article"
     data-event-action={storyTitle}
-    data-event-label={`/blog/${post.slug}/`}
+    data-event-label={`/blog/${post.id}/`}
     data-event-non-interaction="true"
 >
     <a
-        href={`/blog/${post.slug}/`}
+        href={`/blog/${post.id}/`}
         class="prev-next-image-link relative w-4/12 flex-none border border-gray-100 bg-gray-200"
         aria-label={post.data.title}
         data-astro-prefetch="viewport"
@@ -44,7 +44,7 @@ const { post, storyTitle, divClass } = Astro.props;
     </a>
 
     <div class="prev-next-body flex-auto pl-6">
-        <a href={`/blog/${post.slug}/`} data-astro-prefetch="viewport">
+        <a href={`/blog/${post.id}/`} data-astro-prefetch="viewport">
             <div class="mb-2 text-sm font-medium leading-none text-gray-500">
                 {storyTitle}
             </div>

@@ -14,9 +14,9 @@ export const getStaticPaths = (async ({ paginate }) => {
     const posts = await getPosts();
 
     return categories.flatMap((category) => {
-        const filteredPosts = posts.filter((post) => post.data.category.slug === category.slug);
+        const filteredPosts = posts.filter((post) => post.data.category.id === category.id);
         return paginate(filteredPosts, {
-            params: { category: category.slug },
+            params: { category: category.id },
             props: { category },
             pageSize: CONFIG.postsPerPage,
         });

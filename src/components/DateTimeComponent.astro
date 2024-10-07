@@ -14,7 +14,7 @@ export interface Props {
 const { post, dateTimeClass } = Astro.props;
 // console.log("🚀 ~ post.data.updateDate :", post.data.updateDate )
 
-const readingTime = getReadingTime(post.body);
+const readingTime = getReadingTime(`${post.readingTime}`);
 // console.log("🚀 ~ readingTime:", readingTime);
 
 // const readingTime = readingTimeHelper(post, {

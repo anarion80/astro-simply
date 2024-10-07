@@ -15,11 +15,11 @@ export interface Props {
 
 const { post } = Astro.props;
 
-const post_ref = (await getEntry('blog', post.slug)) as CollectionEntry<'blog'>;
+const post_ref = (await getEntry('blog', post.id)) as CollectionEntry<'blog'>;
 const authors = await getEntries(post_ref.data.authors);
-const category = await getCategory(post.data.category.slug);
+const category = await getCategory(post.data.category.id);
 
-const url = post.href || `/blog/${post.slug}/`;
+const url = post.href || `/blog/${post.id}/`;
 
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/images/authors/*.{jpeg,jpg,png,gif,svg}');
 
@@ -30,20 +30,20 @@ const authorImages = await Promise.all(
             throw new Error(`"${image}" does not exist in glob: "/src/assets/images/authors/*.{jpeg,jpg,png,gif,svg}"`);
         }
         if (image && images[image]) {
-            return { [author.slug]: await images[image]() };
+            return { [author.id]: await images[image]() };
         }
         return {};
     })
 );
 const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), {});
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.id });
 ---
 
 <article class="mb-12 flex items-center justify-between">
     <header class="mr-5 w-full">
         <div class="mb-2 flex flex-row items-center">
             <a
-                href={`/blog/author/${authors[0].slug}/`}
+                href={`/blog/author/${authors[0].id}/`}
                 title={t(`Go to the profile of`) + ' ' + authors[0].data.name}
                 data-astro-prefetch="hover"
             >
@@ -51,7 +51,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                     authors[0].data.profile_image ? (
                         <Image
                             class="h-5 w-5 rounded-full object-cover"
-                            src={authorImagesObj[authors[0].slug]?.default ?? AvatarImage}
+                            src={authorImagesObj[authors[0].id]?.default ?? AvatarImage}
                             alt={t(`Go to the profile of`) + authors[0].data.name}
                             width="20"
                             height="20"
@@ -72,7 +72,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
 
             <div class="ml-2 text-sm">
                 <a
-                    href={`/blog/author/${authors[0].slug}/`}
+                    href={`/blog/author/${authors[0].id}/`}
                     title={t(`Go to the profile of`) + ' ' + authors[0].data.name}
                     data-astro-prefetch="hover"
                 >
@@ -83,7 +83,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                         <>
                             <span class="text-gray-500"> {t(`in`)} </span>
                             <a
-                                href={`/blog/category/${category.slug}/`}
+                                href={`/blog/category/${category.id}/`}
                                 data-astro-prefetch="hover"
                                 transition:name={getTransitionNameFromElementId({
                                     elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,

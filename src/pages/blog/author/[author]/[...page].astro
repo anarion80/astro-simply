@@ -20,10 +20,10 @@ export const getStaticPaths = (async ({ paginate }) => {
 
     return authors.flatMap((author) => {
         const filteredPosts = posts.filter((post) => {
-            return post.data.authors.map((author) => author.slug).includes(author.slug);
+            return post.data.authors.map((author) => author.id).includes(author.id);
         });
         return paginate(filteredPosts, {
-            params: { author: author.slug },
+            params: { author: author.id },
             props: { author },
             pageSize: CONFIG.postsPerPage,
         });
@@ -97,7 +97,7 @@ const authorImage = image ? await images[image]() : undefined;
                 }
 
                 <a
-                    href={`${CONFIG.siteUrl}/blog/author/${author.slug}/rss.xml`}
+                    href={`${CONFIG.siteUrl}/blog/author/${author.id}/rss.xml`}
                     class="author-stats button is-transparent"
                     target="_blank"
                     rel="noopener noreferrer"

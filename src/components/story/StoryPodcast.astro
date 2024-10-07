@@ -15,7 +15,7 @@ export interface Props {
 
 const { post } = Astro.props;
 const image = post.data.heroImage as ImageMetadata;
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.id });
 ---
 
 <article class="podcast-card relative mb-12 flex w-full flex-col overflow-hidden md:flex-row">

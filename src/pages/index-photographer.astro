@@ -17,7 +17,7 @@ const featuredPosts = (await getCollection('blog'))
     .slice(0, 3)
     .map<CollectionEntry<'blog'> & { href: string }>((post) => {
         return {
-            href: `/blog/${post.slug}/`,
+            href: `/blog/${post.id}/`,
             ...post,
         };
     });
@@ -39,7 +39,7 @@ const featuredPosts = (await getCollection('blog'))
                                     {/* {!-- Primary Tag- partials/components/primary-tag.hbs --} */}
                                     {item.data.category && (
                                         <div class="mb-4">
-                                            <Category category={item.data.category.slug} tagClass=" relative z-3" />
+                                            <Category category={item.data.category.id} tagClass=" relative z-3" />
                                         </div>
                                     )}
 
@@ -101,7 +101,7 @@ const featuredPosts = (await getCollection('blog'))
                                 {/* {!-- Primary Tag- partials/components/primary-tag.hbs --} */}
                                 {item.data.category && (
                                     <div class="mb-4">
-                                        <Category category={item.data.category.slug} tagClass="relative z-3" />
+                                        <Category category={item.data.category.id} tagClass="relative z-3" />
                                     </div>
                                 )}
 

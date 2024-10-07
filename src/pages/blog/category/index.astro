@@ -16,7 +16,7 @@ const posts: Post[] = await getPosts();
 // Calculate posts for each category and turn into a list
 const counts = Object.entries(
     posts
-        .flatMap((post) => post.data.category.slug)
+        .flatMap((post) => post.data.category.id)
         .reduce<{
             [key: string]: number;
         }>((result, c) => {
@@ -31,7 +31,7 @@ const counts = Object.entries(
 
 // Append to original list
 for (const category of categories) {
-    const matchingCount = counts.find((count) => count.name === category.slug);
+    const matchingCount = counts.find((count) => count.name === category.id);
     category.data.count = matchingCount ? matchingCount.count : 0;
 }
 ---
@@ -57,7 +57,7 @@ for (const category of categories) {
                     <article class="topic-story bg-dark relative overflow-hidden rounded-md">
                         {category.data.image && (
                             <>
-                                <a href={`/blog/category/${category.slug}/`}>
+                                <a href={`/blog/category/${category.id}/`}>
                                     <Image
                                         class="inset-image blur-up lazyloaded"
                                         src={category.data.image as ImageMetadata}
@@ -92,12 +92,12 @@ for (const category of categories) {
                                 )}
                             </div>
                             <h2 class="text-2xl font-semibold capitalize tracking-wide">
-                                <a href={`/blog/category/${category.slug}`}>{category.data.title}</a>
+                                <a href={`/blog/category/${category.id}`}>{category.data.title}</a>
                             </h2>
                         </header>
 
                         <a
-                            href={`/blog/category/${category.slug}/`}
+                            href={`/blog/category/${category.id}/`}
                             class="z-4 absolute inset-0"
                             aria-label={category.data.title}
                         />
