@@ -18,7 +18,7 @@ export interface Props {
 }
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
 const image = post.data.heroImage as ImageMetadata;
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.id });
 ---
 
 <Layout footer={true} bodyClass="is-article is-article-image-right" isPost={true}>
@@ -35,7 +35,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                                     elementId: TRANSITION_ELEMENT_IDS.POST_CARD.CATEGORY,
                                 })}
                             >
-                                <Category category={post.data.category.slug} tagClass="uppercase hover:underline" />
+                                <Category category={post.data.category.id} tagClass="uppercase hover:underline" />
                             </div>
                         )
                     }

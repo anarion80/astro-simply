@@ -12,12 +12,12 @@ export interface Props {
 }
 
 const { post, imageSize } = Astro.props;
-const url = post.href || `/blog/${post.slug}/`;
+const url = post.href || `/blog/${post.id}/`;
 const featureImage = post.data.heroImage as ImageMetadata;
 const { width: featureImageWidth, height: featureImageHeight } =
     typeof post.data.heroImage === 'string' ? await inferRemoteSize(post.data.heroImage) : post.data.heroImage;
 
-const category = post.data.category?.slug;
+const category = post.data.category?.id;
 
 const { width, size } = {
     small: { width: 340, size: '340px' },
@@ -25,7 +25,7 @@ const { width, size } = {
     large: { width: 720, size: '720px' },
 }[imageSize] || { width: 720, size: '720px' };
 
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.id });
 ---
 
 <article class="story relative mb-5 border-b border-gray-100 pb-5 md:border-0">

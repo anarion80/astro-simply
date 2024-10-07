@@ -12,10 +12,10 @@ export interface Props {
 
 const { post, divClass, trackingName } = Astro.props;
 
-const url = `${CONFIG.siteUrl}${post.collection ? `/${post.collection}` : '/'}/${post.slug}/`;
+const url = `${CONFIG.siteUrl}${post.collection ? `/${post.collection}` : '/'}/${post.id}/`;
 ---
 
-<aside class={`post-share flex items-center flex-none lg:block hidden ` + (divClass ? divClass : `md:justify-end`)}>
+<aside class={`post-share flex items-center flex-none md:block hidden ` + (divClass ? divClass : `md:justify-end`)}>
     <span class="share-label mr-2 text-sm text-gray-500">{t(`Share`)}:</span>
     {/*{!-- Share on Twitter --}*/}
     <a

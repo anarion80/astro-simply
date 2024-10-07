@@ -22,7 +22,7 @@ const authorImages = await Promise.all(
             throw new Error(`"${image}" does not exist in glob: "/src/assets/images/authors/*.{jpeg,jpg,png,gif,svg}"`);
         }
         if (image && images[image]) {
-            return { [author.slug]: await images[image]() };
+            return { [author.id]: await images[image]() };
         }
         return {};
     })
@@ -54,7 +54,7 @@ const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), 
                             <article class="author-card bg-blank relative mb-8 flex flex-1 flex-col rounded-lg p-5 shadow-lg">
                                 <header class="flex-1">
                                     <h2 class="author-card-name underscore text-2xl font-semibold capitalize">
-                                        <a href={`/blog/author/${author.slug}/`}>{author.data.name}</a>
+                                        <a href={`/blog/author/${author.id}/`}>{author.data.name}</a>
                                     </h2>
                                     {author.data.bio && <p class="author-card-bio text-gray-600">{author.data.bio}</p>}
                                 </header>
@@ -99,10 +99,10 @@ const authorImagesObj = authorImages.reduce((acc, cur) => ({ ...acc, ...cur }), 
                                         )}
                                     </div>
 
-                                    <a href={`/blog/author/${author.slug}/`}>
+                                    <a href={`/blog/author/${author.id}/`}>
                                         {author.data.profile_image ? (
                                             <Image
-                                                src={authorImagesObj[author.slug]?.default ?? AvatarImage}
+                                                src={authorImagesObj[author.id]?.default ?? AvatarImage}
                                                 class="avatar is-100x100 rounded-full object-cover"
                                                 alt={`${t(`Hi! I'm`)}  ` + ' ' + author.data.name}
                                                 widths={[50, 80, 100]}

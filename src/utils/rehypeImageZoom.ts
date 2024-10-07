@@ -5,7 +5,7 @@ import { isElement } from 'hast-util-is-element';
 
 const rehypeImageZoom: Plugin<[], Root> = () => {
     return (tree: Root) => {
-        visit(tree, 'element', (node, index, parent) => {
+        visit(tree, 'element', (node, _index, parent) => {
             if (isElement(node) && node.tagName === 'img' && isElement(parent)) {
                 if (
                     // do not zoom links

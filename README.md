@@ -67,6 +67,7 @@ After porting the [Simply Ghost Theme](https://github.com/godofredoninja/simply)
 - Search (Pagefind)
 - View Transitions
 - Comments (Giscus)
+- Using Astro Content Layer API
 
 ## ✏ TODO
 

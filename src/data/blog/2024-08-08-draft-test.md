@@ -4,7 +4,7 @@ publishDate: 2023-08-06T00:00:00Z
 authors: ['anarion-dunedain']
 title: Draft test
 excerpt: Lorem Ipsum
-heroImage: '../../content/blog/_images/2024-08-08-draft-test/connection.jpg'
+heroImage: '../../data/blog/_images/2024-08-08-draft-test/connection.jpg'
 featured: false
 draft: true
 category: technology

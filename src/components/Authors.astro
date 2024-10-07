@@ -10,7 +10,7 @@ const { authors } = Astro.props;
 {
     authors.map((author, i) => (
         <span class="hh-author-name noWrapWithEllipsis text-sm">
-            <a href={`/blog/author` + `/${author.slug}/`} data-astro-prefetch="hover" aria-label={author.data.name}>
+            <a href={`/blog/author` + `/${author.id}/`} data-astro-prefetch="hover" aria-label={author.data.name}>
                 {author.data.name}
             </a>
             {authors.length === 2 && i === 0 && `,\u00A0`}

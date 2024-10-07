@@ -1,41 +1,29 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { getEntry, getEntries } from 'astro:content';
+import { getEntry } from 'astro:content';
 import type { Post } from 'src/schemas/post';
 
 export const getCategories = async () => {
     return await getCollection('categories');
 };
 
-export const getCategory = async (slug: string) => {
-    return (await getEntry('categories', slug)) as CollectionEntry<'categories'>;
+export const getCategory = async (id: string) => {
+    return (await getEntry('categories', id)) as CollectionEntry<'categories'>;
 };
 
-export const getAuthors = async (slug?: string) => {
-    if (slug) {
-        const post_ref = (await getEntry('blog', slug)) as CollectionEntry<'blog'>;
-        const authors = await getEntries(
-            post_ref.data.authors.map((author) => ({
-                collection: 'authors',
-                slug: author.slug,
-            }))
-        );
+export const getAuthors = async (id?: string) => {
+    if (id) {
+        const post_ref = (await getEntry('blog', id)) as CollectionEntry<'blog'>;
+        const authors = getCollection('authors', ({ data }) => {
+            return post_ref.data.authors.some((author) => author.id === data.id);
+        });
+
         return authors;
     }
     return await getCollection('authors');
 };
-// export const getAuthors = async (slug: string) => {
-//     if (slug)
-//         {
-//             const post_ref = await getEntry('blog', slug) as CollectionEntry<'blog'>;
-//             const authors = await getEntries(post_ref.data.authors);
-//             return authors
-//         }
-//     return await getCollection('authors')
-// }
 
-export const getAuthor = async (slug: string) => {
-    // const post_ref = await getEntry('authors', slug) as CollectionEntry<'authors'>;
-    return (await getEntry('authors', slug)) as CollectionEntry<'authors'>;
+export const getAuthor = async (id: string) => {
+    return (await getEntry('authors', id)) as CollectionEntry<'authors'>;
 };
 
 export const getPosts = async (max?: number) => {
@@ -45,7 +33,7 @@ export const getPosts = async (max?: number) => {
         .slice(0, max)
         .map<CollectionEntry<'blog'> & { href: string }>((post) => {
             return {
-                href: `/blog/${post.slug}/`,
+                href: `/blog/${post.id}/`,
                 ...post,
             };
         });
@@ -59,23 +47,21 @@ export const getFeaturedPosts = async (max?: number) => {
         .slice(0, max)
         .map<CollectionEntry<'blog'> & { href: string }>((post) => {
             return {
-                href: `/blog/${post.slug}/`,
+                href: `/blog/${post.id}/`,
                 ...post,
             };
         });
 };
 
-export const getPost = async (slug: string) => {
-    const post = await getEntry({
-        collection: 'blog',
-        slug: slug,
-    });
+export const getPost = async (id: string) => {
+    const post = await getEntry('blog', id);
+
     if (!post) {
-        throw new Error(`Post not found with slug ${slug}`);
+        throw new Error(`Post not found with id ${id}`);
     }
     return {
         ...post,
-        href: `/blog/${post.slug}/`,
+        href: `/blog/${post.id}/`,
     };
 };
 
@@ -107,73 +93,44 @@ export const getPostByTag = async (tag: string) => {
 
 export const filterPostsByCategory = async (category: string) => {
     const posts = await getPosts();
-    return posts.filter((post) => post.data.category.slug.toLowerCase() === category);
+    return posts.filter((post) => post.data.category.id.toLowerCase() === category);
 };
 
-export const getNextPost: (slug: string) => Promise<Post | undefined> = async (slug: string) => {
+export const getNextPost: (id: string) => Promise<Post | undefined> = async (id: string) => {
     let postIndex: number;
     const posts: Post[] = await getPosts();
     for (const post of posts) {
-        if (post.slug === slug) {
+        if (post.id === id) {
             postIndex = posts.indexOf(post);
             return posts[postIndex - 1];
         }
     }
 };
 
-export const getPrevPost: (slug: string) => Promise<Post | undefined> = async (slug: string) => {
+export const getPrevPost: (id: string) => Promise<Post | undefined> = async (id: string) => {
     let postIndex: number;
     const posts: Post[] = await getPosts();
     for (const post of posts) {
-        if (post.slug === slug) {
+        if (post.id === id) {
             postIndex = posts.indexOf(post);
             return posts[postIndex + 1];
         }
     }
 };
 
-export const getRelatedPosts: (slug: string) => Promise<Post[] | undefined> = async (slug: string) => {
-    if (!slug) return;
-    const post = await getPost(slug);
+export const getRelatedPosts: (id: string) => Promise<Post[] | undefined> = async (id: string) => {
+    if (!id) return;
+    const post = await getPost(id);
     return (await getCollection('blog'))
         .filter((post) => !post.data.draft)
-        .filter((item) => item.data.category.slug === post?.data.category.slug)
+        .filter((item) => item.data.category.id === post?.data.category.id)
         .filter((item) => item != post)
         .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
         .slice(0, 6)
         .map<CollectionEntry<'blog'> & { href: string }>((post) => {
             return {
-                href: `/blog/${post.slug}/`,
+                href: `/blog/${post.id}/`,
                 ...post,
             };
         });
 };
-
-// export const getAuthorProperties = primaryAuthor => {
-//     let authorProfiles = [];
-
-//     authorProfiles.push(
-//         primaryAuthor.website ? primaryAuthor.website : null,
-//         primaryAuthor.twitter
-//             ? `https://twitter.com/${primaryAuthor.twitter.replace(/^@/, ``)}/`
-//             : null,
-//         primaryAuthor.facebook
-//             ? `https://www.facebook.com/${primaryAuthor.facebook.replace(/^\//, ``)}/`
-//             : null
-//     );
-
-//     authorProfiles = authorProfiles.filter(profile => profile);
-
-//     return {
-//         name: primaryAuthor.name || null,
-//         sameAsArray: authorProfiles.length
-//             ? `["${authorProfiles.join('", "')}"]`
-//             : null,
-//         image: primaryAuthor.profile_image || null,
-//         facebookUrl: primaryAuthor.facebook
-//             ? `https://www.facebook.com/${primaryAuthor.facebook.replace(/^\//, ``)}/`
-//             : null,
-//     };
-// };
-
-// export default getAuthorProperties;

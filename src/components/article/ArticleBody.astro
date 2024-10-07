@@ -4,19 +4,9 @@ import StoryPreviousNext from '../story/StoryPreviousNext.astro';
 import { t } from '@utils/use-lang';
 import SocialShare from '@components/SocialShare.astro';
 import type { Post } from 'src/schemas/post';
-import Button from '@components/cards/Button.astro'; // workaround for https://github.com/withastro/astro/issues/7761
-import Callout from '@components/cards/Callout.astro';
-import Toggle from '@components/cards/Toggle.astro';
-import Header from '@components/cards/Header.astro';
-import Product from '@components/cards/Product.astro';
-import Audio from '@components/cards/Audio.astro';
-import Video from '@components/cards/Video.astro';
-import File from '@components/cards/File.astro';
-import Blockquote from '@components/Blockquote.astro';
-import Bookmark from '@components/cards/Bookmark.astro';
-import Gallery from '@components/cards/Gallery.astro';
 import Comments from '@components/Comments';
 import { CONFIG } from '@config/config';
+import { render } from 'astro:content';
 export interface Props {
     post: Post;
     nextPost?: Post;
@@ -25,14 +15,12 @@ export interface Props {
 
 const { post, nextPost, prevPost } = Astro.props;
 
-const { Content: PostContent } = await post.render();
+const { Content } = await render(post);
 ---
 
 <div class="post-wrap max-w-1100 relative mx-auto">
     <div id="post-body" class="post-body max-w-740 relative mx-auto px-4">
-        <PostContent
-            components={{ Button, Callout, Toggle, Header, Product, Audio, Video, File, Blockquote, Bookmark, Gallery }}
-        />
+        <Content />
     </div>
 </div>
 

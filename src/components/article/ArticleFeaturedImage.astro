@@ -16,7 +16,7 @@ const { article, figureClass, divClass, imgClass, zoomable } = Astro.props;
 const image = article.data.heroImage as ImageMetadata;
 const imageClass = typeof imgClass === 'undefined' ? 'mx-auto simply-zoom' : imgClass;
 
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: article.slug });
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: article.id });
 ---
 
 <figure class={`post-image ` + figureClass}>

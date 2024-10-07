@@ -9,19 +9,19 @@ export const getStaticPaths = (async () => {
     const posts = (await getCollection('blog')).filter((post) => !post.data.draft);
 
     return posts.map((post) => ({
-        params: { slug: post.slug },
+        params: { id: post.id },
         props: { post },
     }));
 }) satisfies GetStaticPaths;
 
 export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { slug } = Astro.params;
+const { id } = Astro.params;
 
-const post = await getPost(slug);
+const post = await getPost(id);
 
-const nextPost = await getNextPost(Astro.params.slug);
-const prevPost = await getPrevPost(Astro.params.slug);
+const nextPost = await getNextPost(Astro.params.id);
+const prevPost = await getPrevPost(Astro.params.id);
 ---
 
 <Post post={post} nextPost={nextPost as PostSchema} prevPost={prevPost as PostSchema} />

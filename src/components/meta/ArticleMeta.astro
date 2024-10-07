@@ -17,8 +17,8 @@ const Logo = 'full-logo-dark.png';
 const { data, canonical } = Astro.props;
 const post = data;
 const title = `${post.data.title} - ${CONFIG.title}`;
-const authors = await getAuthors(post.slug);
-const category = post?.data.category && (await getCategory(post.data.category.slug));
+const authors = await getAuthors(post.id);
+const category = post?.data.category && (await getCategory(post.data.category.id));
 
 const shareImage = post?.data.heroImage ?? defaultShareImage;
 const { width: shareImageWidth, height: shareImageHeight } =

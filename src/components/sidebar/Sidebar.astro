@@ -11,7 +11,7 @@ const featuredPosts = (await getCollection('blog'))
     .sort((a, b) => a.data.publishDate.valueOf() - b.data.publishDate.valueOf())
     .map<CollectionEntry<'blog'> & { href: string }>((post) => {
         return {
-            href: `/blog/${post.slug}/`,
+            href: `/blog/${post.id}/`,
             ...post,
         };
     });

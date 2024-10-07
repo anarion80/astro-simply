@@ -14,6 +14,7 @@ import { setTransitionSlug, TRANSITION_ELEMENT_IDS } from '@utils/transitions';
 import { getCategory } from '@utils/post';
 import Comments from '@components/Comments';
 import { CONFIG } from '@config/config';
+import { render } from 'astro:content';
 
 export interface Props {
     post: Post;
@@ -22,9 +23,9 @@ export interface Props {
     relatedPosts?: Post[];
 }
 const { post, nextPost, prevPost, relatedPosts } = Astro.props;
-const category = post.data.category && (await getCategory(post.data.category.slug));
-const { Content } = await post.render();
-const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug });
+const category = post.data.category && (await getCategory(post.data.category.id));
+const { Content } = await render(post);
+const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.id });
 ---
 
 <Layout footer={true} bodyClass="is-article is-sidebar" isPost={true}>
@@ -45,7 +46,7 @@ const getTransitionNameFromElementId = setTransitionSlug({ pageSlug: post.slug }
                                     >
                                         <a
                                             class="uppercase hover:underline"
-                                            href={`/blog/category/${category.slug}/`}
+                                            href={`/blog/category/${category.id}/`}
                                             data-astro-prefetch="hover"
                                         >
                                             {category.data.title}

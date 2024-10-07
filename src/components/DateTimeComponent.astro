@@ -12,15 +12,8 @@ export interface Props {
 }
 
 const { post, dateTimeClass } = Astro.props;
-// console.log("🚀 ~ post.data.updateDate :", post.data.updateDate )
 
-const readingTime = getReadingTime(post.body);
-// console.log("🚀 ~ readingTime:", readingTime);
-
-// const readingTime = readingTimeHelper(post, {
-//     minute: await t(`1 min read`),
-//     minutes: await t(`% min read`),
-// });
+const readingTime = getReadingTime(`${post.readingTime}`);
 ---
 
 <div class={`hh-date flex items-center ` + (dateTimeClass ? dateTimeClass : `text-gray-500 text-sm`)}>
