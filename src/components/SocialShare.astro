@@ -19,7 +19,14 @@ const url = `${CONFIG.siteUrl}${post.collection ? `/${post.collection}` : '/'}/$
     <span class="share-label mr-2 text-sm text-gray-500">{t(`Share`)}:</span>
     {/*{!-- Share on Twitter --}*/}
     <a
-        href={`https://x.com/share?url=` + url}
+        href={`https://twitter.com/intent/tweet?url=` +
+            url +
+            `%0A%0A` +
+            `&text=` +
+            post.data.title +
+            `%0A%0A` +
+            `&hashtags=` +
+            post.data.tags.join(`,`)}
         target="_blank"
         rel="noopener noreferrer"
         class="godo-tracking mr-2"
