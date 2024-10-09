@@ -13,7 +13,7 @@ export interface Props {
 
 const { post, dateTimeClass } = Astro.props;
 
-const readingTime = getReadingTime(`${post.readingTime}`);
+const readingTime = getReadingTime(post.body || '');
 ---
 
 <div class={`hh-date flex items-center ` + (dateTimeClass ? dateTimeClass : `text-gray-500 text-sm`)}>

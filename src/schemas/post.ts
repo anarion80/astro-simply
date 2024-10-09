@@ -57,4 +57,5 @@ export type PostCollection = CollectionEntry<'blog'>;
 export type Post = PostCollection & {
     readingTime?: number;
     href: string;
+    body?: string;
 };

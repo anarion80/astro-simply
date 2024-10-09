@@ -31,7 +31,7 @@ export const getPosts = async (max?: number) => {
         .filter((post) => !post.data.draft)
         .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
         .slice(0, max)
-        .map<CollectionEntry<'blog'> & { href: string }>((post) => {
+        .map<Post>((post) => {
             return {
                 href: `/blog/${post.id}/`,
                 ...post,
@@ -45,7 +45,7 @@ export const getFeaturedPosts = async (max?: number) => {
         .filter((post) => post.data.featured)
         .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
         .slice(0, max)
-        .map<CollectionEntry<'blog'> & { href: string }>((post) => {
+        .map<Post>((post) => {
             return {
                 href: `/blog/${post.id}/`,
                 ...post,
@@ -127,7 +127,7 @@ export const getRelatedPosts: (id: string) => Promise<Post[] | undefined> = asyn
         .filter((item) => item != post)
         .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
         .slice(0, 6)
-        .map<CollectionEntry<'blog'> & { href: string }>((post) => {
+        .map<Post>((post) => {
             return {
                 href: `/blog/${post.id}/`,
                 ...post,
