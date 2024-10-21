@@ -48,7 +48,7 @@
         "metascraper-logo-favicon": "^5.45.22",
         "metascraper-publisher": "^5.45.25",
         "metascraper-title": "^5.45.25",
-        "metascraper-url": "^5.45.22",
+        "metascraper-url": "^5.45.25",
         "node-fetch": "^3.3.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
