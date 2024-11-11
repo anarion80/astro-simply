@@ -28,7 +28,7 @@
         "@iconify-json/fa6-brands": "^1.2.1",
         "@iconify-json/fa6-solid": "^1.2.1",
         "@iconify-json/fxemoji": "^1.2.0",
-        "@jop-software/astro-cookieconsent": "^3.0.0",
+        "@jop-software/astro-cookieconsent": "^3.0.1",
         "@remark-embedder/cache": "^2.1.0",
         "@remark-embedder/core": "^3.0.3",
         "astro": "^4.16.8",
