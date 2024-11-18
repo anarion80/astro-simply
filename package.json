@@ -32,7 +32,7 @@
         "@remark-embedder/cache": "^2.1.0",
         "@remark-embedder/core": "^3.0.3",
         "astro": "^4.16.8",
-        "astro-auto-import": "^0.4.2",
+        "astro-auto-import": "^0.4.4",
         "astro-dynamic-import": "^1.1.1",
         "astro-icon": "^1.1.1",
         "date-fns": "^4.1.0",
