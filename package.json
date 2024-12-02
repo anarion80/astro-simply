@@ -23,7 +23,7 @@
         "@fontsource/pt-serif": "^5.1.0",
         "@giscus/react": "^3.0.0",
         "@hbsnow/rehype-sectionize": "^1.0.7",
-        "@iconify-json/cbi": "^1.2.5",
+        "@iconify-json/cbi": "^1.2.6",
         "@iconify-json/devicon-plain": "^1.2.4",
         "@iconify-json/fa6-brands": "^1.2.1",
         "@iconify-json/fa6-solid": "^1.2.1",
