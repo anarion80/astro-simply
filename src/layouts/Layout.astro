@@ -6,7 +6,7 @@ import FooterDark from '@components/FooterDark.astro';
 //import FooterNotMenu from '@components/FooterNotMenu.astro';
 import { getContrastRatio, adjustColorForContrast } from '@utils/colors';
 import '@styles/main.css';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 export interface Props {
     bodyClass?: string;
@@ -39,7 +39,7 @@ const hasDropDown = !!CONFIG.menuDropdown;
             title="Astro Example Blog"
             href={new URL('rss.xml', Astro.site)}
         />
-        {site.viewTransitions && <ViewTransitions fallback="none" />}
+        {site.viewTransitions && <ClientRouter fallback="none" />}
         <slot name="head" />
     </head>
     <body class={bodyClass}>
