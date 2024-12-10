@@ -61,7 +61,7 @@
         "sanitize-html": "^2.13.1",
         "sharp": "^0.33.5",
         "tiny-slider": "^2.9.4",
-        "typescript": "^5.6.2",
+        "typescript": "^5.7.2",
         "vanilla-cookieconsent": "^3.0.1",
         "zod": "^3.23.4"
     },
@@ -101,7 +101,7 @@
         "prettier-plugin-astro": "^0.14.1",
         "prettier-plugin-tailwindcss": "^0.6.8",
         "turbo": "^2.3.3",
-        "typescript": "~5.6.2",
+        "typescript": "~5.7.2",
         "typescript-eslint": "^8.16.0"
     }
 }
