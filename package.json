@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@astrojs/markdown-remark": "^6.0.0",
-        "@astrojs/mdx": "^4.0.1",
+        "@astrojs/mdx": "^4.0.2",
         "@astrojs/react": "^4.1.0",
         "@astrojs/rss": "^4.0.10",
         "@astrojs/sitemap": "^3.2.1",
