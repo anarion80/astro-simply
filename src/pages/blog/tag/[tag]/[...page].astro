@@ -30,35 +30,33 @@ const { page, tag }: Props = Astro.props;
 
 <Layout footer={true} isPost={false} bodyClass="is-tag">
     <MetaData slot="head" location={Astro.url.pathname} type="tag" title={`Tag: ${tag}`} />
-    <>
-        <section class="tag md:py-vw6 bg-gray-150 py-12">
-            <div class="max-w-1000 mx-auto px-4 text-center">
-                <h1 class="text-title text-4xl capitalize lg:text-5xl">
-                    {tag}
-                </h1>
+    <section class="tag md:py-vw6 bg-gray-150 py-12">
+        <div class="max-w-1000 mx-auto px-4 text-center">
+            <h1 class="text-title text-4xl capitalize lg:text-5xl">
+                {tag}
+            </h1>
 
-                <div class="mt-8 text-center font-medium">
-                    <a class="hover:text-primary" href={CONFIG.siteUrl}>{t(`Home`)}</a>
-                    <Icon name="fa6-solid:chevron-right" class="icon h-2 w-2" />
-                    <span class="text-gray-500">{t(`Posts Tagged`)}{': '}{tag}</span>
-                </div>
-            </div>
-        </section>
-        <div class="site-post feed-entry-content px-4 py-12">
-            <div class="max-w-1100 feed-entry-wrap mx-auto">
-                <div class="row">
-                    {
-                        page.data.map((item) => {
-                            return (
-                                <div class="col s12 m6 l4">
-                                    <StoryGrid post={item} imageSize={'small'} />
-                                </div>
-                            );
-                        })
-                    }
-                </div>
-                <Pagination pageContext={page} />
+            <div class="mt-8 text-center font-medium">
+                <a class="hover:text-primary" href={CONFIG.siteUrl}>{t(`Home`)}</a>
+                <Icon name="fa6-solid:chevron-right" class="icon h-2 w-2" />
+                <span class="text-gray-500">{t(`Posts Tagged`)}{': '}{tag}</span>
             </div>
         </div>
-    </>
+    </section>
+    <div class="site-post feed-entry-content px-4 py-12">
+        <div class="max-w-1100 feed-entry-wrap mx-auto">
+            <div class="row">
+                {
+                    page.data.map((item) => {
+                        return (
+                            <div class="col s12 m6 l4">
+                                <StoryGrid post={item} imageSize={'small'} />
+                            </div>
+                        );
+                    })
+                }
+            </div>
+            <Pagination pageContext={page} />
+        </div>
+    </div>
 </Layout>
