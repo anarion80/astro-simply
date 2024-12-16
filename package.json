@@ -16,7 +16,7 @@
     "dependencies": {
         "@astrojs/markdown-remark": "^6.0.0",
         "@astrojs/mdx": "^4.0.1",
-        "@astrojs/react": "^4.0.0",
+        "@astrojs/react": "^4.1.0",
         "@astrojs/rss": "^4.0.10",
         "@astrojs/sitemap": "^3.2.1",
         "@fontsource-variable/inter": "^5.1.0",
