@@ -27,7 +27,7 @@
         "@iconify-json/devicon-plain": "^1.2.4",
         "@iconify-json/fa6-brands": "^1.2.3",
         "@iconify-json/fa6-solid": "^1.2.1",
-        "@iconify-json/fxemoji": "^1.2.0",
+        "@iconify-json/fxemoji": "^1.2.1",
         "@jop-software/astro-cookieconsent": "^3.0.1",
         "@remark-embedder/cache": "^2.1.0",
         "@remark-embedder/core": "^3.0.3",
