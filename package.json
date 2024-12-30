@@ -36,7 +36,7 @@
         "astro-dynamic-import": "^2.0.0",
         "astro-icon": "^1.1.4",
         "date-fns": "^4.1.0",
-        "dotenv": "^16.4.5",
+        "dotenv": "^16.4.7",
         "happy-dom": "^15.11.7",
         "mdast-util-to-string": "^4.0.0",
         "medium-zoom": "^1.1.0",
