@@ -33,7 +33,7 @@
         "@remark-embedder/core": "^3.0.3",
         "astro": "^5.1.5",
         "astro-auto-import": "^0.4.4",
-        "astro-dynamic-import": "^2.0.0",
+        "astro-dynamic-import": "^2.0.3",
         "astro-icon": "^1.1.5",
         "date-fns": "^4.1.0",
         "dotenv": "^16.4.7",
