@@ -35,7 +35,7 @@ Portal makes all of this possible, and it appears by default as a floating butto
 
 The floating Portal button is completely optional. If you prefer, you can add manual links to your content, navigation, or theme to trigger it instead.
 
-Like this! [Sign up here](#)
+Like this! [Sign up here](https://example.com)
 
 ---
 
@@ -43,4 +43,4 @@ As you start to grow your registered audience, you'll be able to get a sense of 
 
 Social networks go in and out of fashion all the time. Email addresses are timeless.
 
-Growing your audience is valuable no matter what type of site you run, but if your content is your business, then you might also be interested in [setting up premium subscriptions](#).
+Growing your audience is valuable no matter what type of site you run, but if your content is your business, then you might also be interested in [setting up premium subscriptions](https://example.com).

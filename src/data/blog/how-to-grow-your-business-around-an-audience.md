@@ -47,22 +47,22 @@ There is only ever one owner of a Ghost site. The owner is a special user which 
 
 If you're looking for insights, tips and reference materials to expand your content business, here's 5 top resources to get you started:
 
--   How to create a premium newsletter (+ some case studies)
+- How to create a premium newsletter (+ some case studies)
 
     Learn how others run successful paid email newsletter products
 
--   The ultimate guide to membership websites for creators
+- The ultimate guide to membership websites for creators
 
     Tips to help you build, launch and grow your new membership business
 
--   The Newsletter Guide
+- The Newsletter Guide
 
     A 201 guide for taking your newsletters to the next level
 
--   The proven way to find your niche, explained
+- The proven way to find your niche, explained
 
     Find the overlap and find a monetizable niche that gets noticed
 
--   Should you launch a referral program?
+- Should you launch a referral program?
 
     Strategies for building a sustainable referral growth machine

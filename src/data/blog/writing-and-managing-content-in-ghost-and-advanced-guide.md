@@ -64,15 +64,15 @@ Galleries and image cards can be combined in so many different ways — the only
 
 ## Build workflows with snippets
 
-One of the most powerful features of the Ghost editor is the ability to create and re-use content snippets. If you've ever used an email client with a concept of saved replies then this will be immediately intuitive.
+One of the most powerful features of the Ghost editor is the ability to create and reuse content snippets. If you've ever used an email client with a concept of saved replies then this will be immediately intuitive.
 
-To create a snippet, select a piece of content in the editor that you'd like to re-use in future, then click on the snippet icon in the toolbar. Give your snippet a name, and you're all done. Now your snippet will be available from within the card menu, or you can search for it directly using the / command.
+To create a snippet, select a piece of content in the editor that you'd like to reuse in future, then click on the snippet icon in the toolbar. Give your snippet a name, and you're all done. Now your snippet will be available from within the card menu, or you can search for it directly using the / command.
 
 This works really well for saving images you might want to use often, like a company logo or team photo, links to resources you find yourself often linking to, or introductions and passages that you want to remember.
 
 ![Picture](https://static.ghost.org/v4.0.0/images/createsnippet.png)
 
-You can even build entire post templates or outlines to create a quick, re-usable workflow for publishing over time. Or build custom design elements for your post with an HTML card, and use a snippet to insert it.
+You can even build entire post templates or outlines to create a quick, reusable workflow for publishing over time. Or build custom design elements for your post with an HTML card, and use a snippet to insert it.
 
 Once you get a few useful snippets set up, it's difficult to go back to the old way of diving through media libraries and trawling for that one thing you know you used somewhere that one time.
 

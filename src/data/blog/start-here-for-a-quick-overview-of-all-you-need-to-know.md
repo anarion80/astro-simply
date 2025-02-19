@@ -37,12 +37,12 @@ Once you're ready to begin publishing and want to clear out these starter posts,
 
 ## Your guide to Ghost
 
--   Customizing your brand and site settings
--   Writing & managing content, an advanced guide for creators
--   Building your audience with subscriber signups
--   Selling premium memberships with recurring revenue
--   How to grow your business around an audience
--   Setting up custom integrations and apps
+- Customizing your brand and site settings
+- Writing & managing content, an advanced guide for creators
+- Building your audience with subscriber signups
+- Selling premium memberships with recurring revenue
+- How to grow your business around an audience
+- Setting up custom integrations and apps
 
 If you get through all those and you're hungry for more, you can find an extensive library of content for creators over on the [Ghost blog](https://ghost.org/blog/).
 

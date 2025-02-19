@@ -31,17 +31,17 @@ When selecting an accent color, try to choose something which will contrast well
 
 ## Installing Ghost themes
 
-By default, new sites are created with Ghost's friendly publication tsheme, called Casper. Everything in Casper is optimized to work for the most common types of blog, newsletter and publication that people create with Ghost — so it's a perfect place to start.
+By default, new sites are created with Ghost's friendly publication theme, called Casper. Everything in Casper is optimized to work for the most common types of blog, newsletter and publication that people create with Ghost — so it's a perfect place to start.
 
 However, there are hundreds of different themes available to install, so you can pick out a look and feel that suits you best.Ghost Admin → Settings → Theme
 
 Inside Ghost's theme settings you'll find 4 more official themes that can be directly installed and activated. Each theme is suited to slightly different use-cases.
 
--   **Casper (default)** — Made for all sorts of blogs and newsletters
--   **Edition** — A beautiful minimal template for newsletter authors
--   **Alto** — A slick news/magazine style design for creators
--   **London** — A light photography theme with a bold grid
--   **Ease** — A library theme for organizing large content archives
+- **Casper (default)** — Made for all sorts of blogs and newsletters
+- **Edition** — A beautiful minimal template for newsletter authors
+- **Alto** — A slick news/magazine style design for creators
+- **London** — A light photography theme with a bold grid
+- **Ease** — A library theme for organizing large content archives
 
 And if none of those feel quite right, head on over to the Ghost Marketplace, where you'll find a huge variety of both free and premium themes.
 
