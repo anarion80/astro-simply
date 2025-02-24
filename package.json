@@ -84,7 +84,7 @@
         "@types/jsdom": "^21.1.7",
         "@types/node": "^22.13.5",
         "@types/remark-oembed": "^1.2.4",
-        "@typescript-eslint/eslint-plugin": "^8.20.0",
+        "@typescript-eslint/eslint-plugin": "^8.25.0",
         "@typescript-eslint/parser": "^8.23.0",
         "astro-eslint-parser": "^1.2.1",
         "esbuild": "^0.25.0",
