@@ -41,7 +41,7 @@
         "mdast-util-to-string": "^4.0.0",
         "medium-zoom": "^1.1.0",
         "metascraper": "^5.46.7",
-        "metascraper-author": "^5.46.5",
+        "metascraper-author": "^5.46.18",
         "metascraper-description": "^5.45.28",
         "metascraper-image": "^5.46.5",
         "metascraper-logo": "^5.46.5",
