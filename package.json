@@ -95,7 +95,7 @@
         "eslint-plugin-regexp": "^2.7.0",
         "globals": "^16.0.0",
         "globby": "^14.0.2",
-        "lint-staged": "^15.4.3",
+        "lint-staged": "^16.1.0",
         "only-allow": "^1.2.1",
         "prettier": "^3.5.2",
         "prettier-plugin-astro": "^0.14.1",
