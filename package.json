@@ -20,7 +20,7 @@
         "@astrojs/rss": "^4.0.11",
         "@astrojs/sitemap": "^3.2.1",
         "@fontsource-variable/inter": "^5.2.5",
-        "@fontsource/pt-serif": "^5.1.1",
+        "@fontsource/pt-serif": "^5.2.6",
         "@giscus/react": "^3.1.0",
         "@hbsnow/rehype-sectionize": "^1.0.7",
         "@iconify-json/cbi": "^1.2.11",
