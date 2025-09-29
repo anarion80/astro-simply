@@ -1,10 +1,10 @@
-import { z, ZodSchema } from 'zod';
+import * as z from 'zod';
 
-export const validateData = <T extends ZodSchema>(config: z.infer<T>, schema: T): z.infer<T> => {
+export const validateData = <T extends z.ZodSchema>(config: z.infer<T>, schema: T): z.infer<T> => {
     const parsedConfig = schema.safeParse(config);
 
     if (!parsedConfig.success) {
-        console.error('Zod validation failed: ', parsedConfig.error.flatten().fieldErrors);
+        console.error('Zod validation failed: ', z.prettifyError(parsedConfig.error));
         throw new Error('Zod validation failed');
     }
 

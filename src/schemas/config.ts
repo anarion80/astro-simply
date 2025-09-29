@@ -4,7 +4,7 @@ export const nodeEnvValues = ['development', 'test', 'production'] as const;
 
 export const processEnvSchema = z.object({
     NODE_ENV: z.enum(nodeEnvValues),
-    SITE_URL: z.string().url().regex(/[^/]$/, 'siteUrl should end with a slash "/"'),
+    SITE_URL: z.url().regex(/[^/]$/, 'siteUrl should end with a slash "/"'),
     FACEBOOK_ACCESS_TOKEN: z.string().optional(),
 });
 
@@ -16,7 +16,7 @@ export const configSchema = z.object({
     siteDescriptionMeta: z.string().min(1),
     logo: z.string().min(1),
     logoDarkMode: z.string().min(1),
-    siteUrl: z.string().url().regex(/[^/]$/, 'siteUrl should end with a slash "/"'),
+    siteUrl: z.url().regex(/[^/]$/, 'siteUrl should end with a slash "/"'),
     postsPerPage: z.number(),
     shareImage: z.string().min(1),
     shareImageWidth: z.number(),
@@ -53,7 +53,7 @@ export const configSchema = z.object({
             service: z.string().min(1),
             icon: z.string().min(1),
             title: z.string().min(1),
-            url: z.string().url(),
+            url: z.url(),
         })
         .array(),
     giscus: z.boolean().optional().default(false),
