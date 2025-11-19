@@ -32,7 +32,7 @@
         "@jop-software/astro-cookieconsent": "^3.0.1",
         "@remark-embedder/cache": "^2.1.0",
         "@remark-embedder/core": "^3.0.3",
-        "astro": "^5.14.1",
+        "astro": "^5.15.9",
         "astro-auto-import": "^0.4.4",
         "astro-dynamic-import": "^2.0.4",
         "astro-icon": "^1.1.5",
