@@ -1,6 +1,10 @@
-{ pkgs, lib, config, inputs, ... }:
-
 {
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}: {
   # https://devenv.sh/basics/
   env.GREET = "astro-simply devenv";
 
@@ -10,14 +14,14 @@
     # pkgs.nodePackages.npm # globally install npm
     # pkgs.nodePackages.prettier
     # pkgs.nodejs_23
-   ];
+  ];
 
   # https://devenv.sh/languages/
   languages.javascript = {
     enable = true;
-    package = pkgs.nodejs_22;
+    package = pkgs.nodejs_24;
     npm.install.enable = true;
-    };
+  };
   languages.typescript.enable = true;
 
   # https://devenv.sh/processes/
@@ -31,8 +35,8 @@
     echo hello from $GREET
   '';
 
-  scripts.install-deps.exec =  "npm install";
-  scripts.run-dev.exec =  "npm run dev";
+  scripts.install-deps.exec = "npm install";
+  scripts.run-dev.exec = "npm run dev";
 
   enterShell = ''
     hello
@@ -58,8 +62,8 @@
   dotenv.enable = true;
 
   # Optionally, you can choose which filename to load.
-  # 
+  #
   # dotenv.filename = ".env.production";
   # or
-  dotenv.filename = [ ".env.production" ".env.development" ];
+  dotenv.filename = [".env.production" ".env.development"];
 }
