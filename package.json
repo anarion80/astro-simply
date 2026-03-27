@@ -38,7 +38,7 @@
         "astro-icon": "^1.1.5",
         "date-fns": "^4.1.0",
         "dotenv": "^17.3.1",
-        "happy-dom": "^20.6.2",
+        "happy-dom": "^20.8.8",
         "mdast-util-to-string": "^4.0.0",
         "medium-zoom": "^1.1.0",
         "metascraper": "^5.49.24",
